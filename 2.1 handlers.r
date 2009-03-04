@@ -2,12 +2,12 @@
 # Updated: guided_Tours, and axes location
 # Using Global variables
 
-source(file.choose())
-library(gWidgets)
-options("guiToolkit"="RGtk2")
+#source(file.choose())
+#library(gWidgets)
+#options("guiToolkit"="RGtk2")
 #===================================================
-w = gwindow("2D Tour plot example")
-g = ggroup(cont = w, horizontal = FALSE)
+#w = gwindow("2D Tour plot example")
+#g = ggroup(cont = w, horizontal = FALSE)
 
 
 x=c(1,2)
