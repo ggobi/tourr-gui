@@ -166,3 +166,10 @@ buttonGroup = ggroup(horizontal = F, cont=g)
    addHandlerClicked(okButton, handler = displayTour)
    addSpace(buttonGroup, 10)
    cancelButton = gbutton("cancel", cont=buttonGroup)
+
+
+#########################################################
+#We need to double clike on the gtable variables, 
+#or it will not print the current object, what's more, 
+#it will not give us the ClIndex.
+###########################################################
