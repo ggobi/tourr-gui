@@ -21,7 +21,7 @@ ClIndex <<- c(1:length(x))
 Class = 1
 axes_location="center"
 
-#=====================Debug===================================
+#=====================split data set===================================
 idx <- sapply(1:(dim(x)[2]), 
    function(i) return(is.factor(x[,i]) | is.character(x[,i])))
 x1 <- x[,which(idx==FALSE)]
@@ -58,17 +58,26 @@ getClass = function (h,...)
 
 displayTour = function (h,...)
 {
-	if (type == "Grand")
-		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=as.numeric(as.factor(t(x2[ClIndex])))+3)								
-	if (type == "Little")
+	if (type == "Grand" & length(ClIndex) == length(x))
+ 		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location)
+	if (type == "Grand" & length(ClIndex) != length(x))
+		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=as.numeric(as.factor(t(x2[ClIndex])))+3)	
+	if (type == "Little" & length(ClIndex) == length(x))
+ 		animate_xy(x1[VarIndex],little_tour(), center=T,aps = speed_aps, axes = axes_location)
+	if (type == "Little"& length(ClIndex) != length(x))
 		animate_xy(x[VarIndex],little_tour(), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
-	if (type == "Guided(holes)")
+	if (type == "Guided(holes)" & length(ClIndex) == length(x))
 		animate_xy(x[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location)
-	if (type == "Guided(cm)")
+	if (type == "Guided(holes)" & length(ClIndex) != length(x))
+		animate_xy(x[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
+	if (type == "Guided(cm)" & length(ClIndex) == length(x))
 		animate_xy(x[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location)
-	if (type == "Guided(lda_pp)") 
+	if (type == "Guided(cm)" & length(ClIndex) != length(x))
+		animate_xy(x[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
+	if (type == "Guided(lda_pp)" & length(ClIndex) == length(x)) 
 		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location)
-        	
+	if (type == "Guided(lda_pp)" & length(ClIndex) != length(x)) 
+		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location,col=as.numeric(x2[,ClIndex])+3)       	
 }
 #===============================================
 
@@ -82,13 +91,13 @@ addHandlerChanged(Variables,handler = getVariables)
 
 
 # Control: title
-vbox[1,1,anchor=c(-1,0)] <- "Variable select"
-vbox[2,4,anchor=c(0,1)] <-"Select Class"
+vbox[1,1,anchor=c(-1,0)] <- "Variable Select"
+vbox[2,1,anchor=c(-1,0)] <-"Select Class for Color"
 
 # Control: gtable
-vbox[2,5,anchor=c(-1,1)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
+vbox[2,2,anchor=c(-1,1)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
 addHandlerChanged(Class, handler = getClass)
-size(Class) <- c(100,200)
+size(Class) <- c(60,100)
       
              
 # menu control
@@ -134,14 +143,14 @@ vbox[1,4] <- TourType
 
 
 # speed slider control
-vbox[2,1] <- "Adjust tourr speed"
-vbox[2,2, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+vbox[3,1] <- "Adjust tourr speed"
+vbox[3,2, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
 	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
 #axes countrol
-vbox[3,1] <- "Locations of axes"
+vbox[2,3] <- "Locations of axes"
 Location=c("center", "bottomleft", "off")
-vbox[3,2, anchor=c(-1,0)]<-(dl<-gradio(Location,cont=vbox,
+vbox[2,4, anchor=c(-1,0)]<-(dl<-gradio(Location,cont=vbox,
 			handler=function(h,...){axes_location <<-svalue(h$obj)}))
 
 
