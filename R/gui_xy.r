@@ -44,12 +44,30 @@ getTourType = function (h,...)
 	type <<-svalue(TourType)
 }
 
+# Handler of choose color buttion
+displayColorSelectionDialog = function(h,...)
+{
+	# control from RGTK2
+	win = gtkColorSelectionDialogNew(title=NULL,show = T)
+}
+
 # Handler of Class
 getClass = function (h,...)
 {
 	ClIndex <<-svalue(h$obj, index = T)
-	# cl <<- length(unique(as.numeric(x[ClIndex])))
+	
+	vbox[7,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[1]
+	vbox[8,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[2]
+	vbox[9,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[3]
+
+	vbox[7,2, anchor=c(-1,0)] <- (gChooseColor1 <-gbutton("Choose Color",cont=vbox))
+	addHandlerClicked(gChooseColor1, handler = displayColorSelectionDialog)
+	
+	#browser()	
 }
+
+
+
 
 #2D tour control 
 #' @param aps target angular velocity (in radians per second)
@@ -77,7 +95,11 @@ displayTour = function (h,...)
 	if (type == "Guided(lda_pp)" & length(ClIndex) == length(x)) 
 		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location)
 	if (type == "Guided(lda_pp)" & length(ClIndex) != length(x)) 
-		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location,col=as.numeric(x2[,ClIndex])+3)       	
+		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location,col=as.numeric(x2[,ClIndex])+3)   
+	if (type == "Local" & length(ClIndex) == length(x))
+ 		animate_xy(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)), center=T,aps = speed_aps, axes = axes_location)
+	if (type == "Local"& length(ClIndex) != length(x))
+		animate_xy(x[VarIndex],local_tour(basis_init(length(VarIndex), 2)), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)    	
 }
 #===============================================
 
@@ -86,86 +108,63 @@ displayTour = function (h,...)
 # Control: gcheckboxgroup 
 VarIndex <- c(1:length(x1))
 
-vbox[1,2] <- (Variables<-gcheckboxgroup(variablename1, checked=TRUE, horizontal=FALSE, cont=vbox, handler = defHandler))
+vbox[2,1] <- (Variables<-gcheckboxgroup(variablename1, checked=TRUE, horizontal=FALSE, cont=vbox, handler = defHandler))
 addHandlerChanged(Variables,handler = getVariables)
 
 
 # Control: title
-vbox[1,1,anchor=c(-1,0)] <- "Variable Select"
-vbox[2,1,anchor=c(-1,0)] <-"Select Class for Color"
+vbox[1,1,anchor=c(-1,0)] <- "Variable Selection"
+vbox[3,1,anchor=c(-1,0)] <- "Class Selection"
 
 # Control: gtable
-vbox[2,2,anchor=c(-1,1)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
+vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
 addHandlerChanged(Class, handler = getClass)
-size(Class) <- c(60,100)
-      
-             
-# menu control
-mbl = list(
-   File = list(
-#     openFile = list(handler=handler1, icon="open"),
-     close = list(handler=function(h,...) dispose(w), icon="cancel")
-     ),
-   Edit = list(
-     paste = list(handler=defHandler),
-     copy =  list(handler=defHandler)
-     )
-   )
-
-# Tab control
-tbl = list(
-   new = list(handler = defHandler, icon="new"),
-   quit = list(handler= function(h,...) dispose(w), icon="quit"),
-   save = list(handler= defHandler, icon="save"),
-   ok = list(handler=function(h,...) animate_xy(x), icon="ok")
-   )
-
-mb = gmenu(mbl, cont=cont) 
-tb = gtoolbar(tbl, cont=cont)
-
+size(Class) <- c(40,80)
 
 #====================================================================
 
-short = c("Grand","Little","Guided(holes)","Guided(cm)","Guided(lda_pp)")
+short = c("Grand","Little","Guided(holes)","Guided(cm)","Guided(lda_pp)","Local")
 
 
 
 # Gradio box control
-vbox[1,3, anchor=c(-1,0)] <- "Select Tour "
+vbox[1,3, anchor=c(-1,0)] <- "Tour Type"
 
-TourType=gradio(short, cont=vbox, handler = NULL)
+TourType = gradio(short, cont=vbox, handler = NULL)
 addHandlerChanged(TourType,handler = getTourType)
 
-vbox[1,4] <- TourType
+vbox[2,3] <- TourType
 
 
 
 
 
 # speed slider control
-vbox[3,1] <- "Adjust tourr speed"
-vbox[3,2, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+vbox[5,1, anchor=c(-1,0)] <- "Speed"
+vbox[6,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
 	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
-#axes countrol
-vbox[2,3] <- "Locations of axes"
+#axes control
+vbox[3,3, anchor=c(-1,0)] <- "Axes Locations"
 Location=c("center", "bottomleft", "off")
-vbox[2,4, anchor=c(-1,0)]<-(dl<-gradio(Location,cont=vbox,
+vbox[4,3, anchor=c(-1,0)]<-(dl<-gradio(Location,cont=vbox,
 			handler=function(h,...){axes_location <<-svalue(h$obj)}))
 
 
 
 # buttons control
-g= ggroup(horizontal = FALSE, cont=w)
-vbox[1,5, anchor=c(-1,1)] = ggroup(cont=g, expand=F, horizontal = F)
-buttonGroup = ggroup(horizontal = F, cont=g)
-   helpButton = gbutton("help", cont=buttonGroup)
-   addSpring(buttonGroup)
+
+buttonGroup = ggroup(horizontal = F, cont=vbox)
    pauseButton = gbutton("Pause",cont=buttonGroup)
-   addSpace(buttonGroup, 10)
+   addSpace(buttonGroup,10)
+
+   quitButton = gbutton("Quit",cont=buttonGroup)
+   addHandlerClicked(quitButton, handler= function(h,...) dispose(w))
+   addSpace(buttonGroup,10)
 
    okButton = gbutton("ok", cont=buttonGroup)
    addHandlerClicked(okButton, handler = displayTour)
-   addSpace(buttonGroup, 10)
-   cancelButton = gbutton("cancel", cont=buttonGroup)
+
+vbox[4,4, anchor=c(0,1)] = buttonGroup
+
 }
