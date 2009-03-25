@@ -20,6 +20,7 @@ speed_aps = 1
 ClIndex <<- c(1:length(x))
 Class = 1
 axes_location="center"
+ColType = 0
 
 #=====================split data set===================================
 idx <- sapply(1:(dim(x)[2]), 
@@ -44,26 +45,12 @@ getTourType = function (h,...)
 	type <<-svalue(TourType)
 }
 
-# Handler of choose color buttion
-displayColorSelectionDialog = function(h,...)
-{
-	# control from RGTK2
-	win = gtkColorSelectionDialogNew(title=NULL,show = T)
-}
 
 # Handler of Class
 getClass = function (h,...)
 {
 	ClIndex <<-svalue(h$obj, index = T)
-	
-	vbox[7,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[1]
-	vbox[8,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[2]
-	vbox[9,1, anchor=c(-1,0)] <- levels(x2[,ClIndex])[3]
-
-	vbox[7,2, anchor=c(-1,0)] <- (gChooseColor1 <-gbutton("Choose Color",cont=vbox))
-	addHandlerClicked(gChooseColor1, handler = displayColorSelectionDialog)
-	
-	#browser()	
+	ColType <<- rainbow_hcl(length(unique(x2[,ClIndex])))
 }
 
 
@@ -78,28 +65,28 @@ displayTour = function (h,...)
 {
 	if (type == "Grand" & length(ClIndex) == length(x))
  		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location)
-	if (type == "Grand" & length(ClIndex) != length(x))
-		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=as.numeric(as.factor(t(x2[ClIndex])))+3)	
+	if (type == "Grand" & length(ClIndex) != length(x))		
+		animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])] )
 	if (type == "Little" & length(ClIndex) == length(x))
  		animate_xy(x1[VarIndex],little_tour(), center=T,aps = speed_aps, axes = axes_location)
 	if (type == "Little"& length(ClIndex) != length(x))
-		animate_xy(x[VarIndex],little_tour(), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
+		animate_xy(x[VarIndex],little_tour(), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])] )
 	if (type == "Guided(holes)" & length(ClIndex) == length(x))
 		animate_xy(x[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location)
 	if (type == "Guided(holes)" & length(ClIndex) != length(x))
-		animate_xy(x[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
+		animate_xy(x[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])] )
 	if (type == "Guided(cm)" & length(ClIndex) == length(x))
 		animate_xy(x[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location)
 	if (type == "Guided(cm)" & length(ClIndex) != length(x))
-		animate_xy(x[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)
+		animate_xy(x[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])] )
 	if (type == "Guided(lda_pp)" & length(ClIndex) == length(x)) 
 		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location)
 	if (type == "Guided(lda_pp)" & length(ClIndex) != length(x)) 
-		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location,col=as.numeric(x2[,ClIndex])+3)   
+		animate_xy(x[VarIndex],guided_tour(lda_pp,cl=cl), aps = speed_aps, axes = axes_location,col=ColType[as.numeric(x2[,ClIndex])] )
 	if (type == "Local" & length(ClIndex) == length(x))
  		animate_xy(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)), center=T,aps = speed_aps, axes = axes_location)
 	if (type == "Local"& length(ClIndex) != length(x))
-		animate_xy(x[VarIndex],local_tour(basis_init(length(VarIndex), 2)), aps = speed_aps, axes = axes_location, col=as.numeric(x2[,ClIndex])+3)    	
+		animate_xy(x[VarIndex],local_tour(basis_init(length(VarIndex), 2)), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])] )	
 }
 #===============================================
 
@@ -126,7 +113,6 @@ size(Class) <- c(40,80)
 short = c("Grand","Little","Guided(holes)","Guided(cm)","Guided(lda_pp)","Local")
 
 
-
 # Gradio box control
 vbox[1,3, anchor=c(-1,0)] <- "Tour Type"
 
@@ -136,20 +122,17 @@ addHandlerChanged(TourType,handler = getTourType)
 vbox[2,3] <- TourType
 
 
-
-
-
 # speed slider control
 vbox[5,1, anchor=c(-1,0)] <- "Speed"
 vbox[6,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
 	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
+
 
 #axes control
 vbox[3,3, anchor=c(-1,0)] <- "Axes Locations"
 Location=c("center", "bottomleft", "off")
 vbox[4,3, anchor=c(-1,0)]<-(dl<-gradio(Location,cont=vbox,
 			handler=function(h,...){axes_location <<-svalue(h$obj)}))
-
 
 
 # buttons control
@@ -168,3 +151,5 @@ buttonGroup = ggroup(horizontal = F, cont=vbox)
 vbox[4,4, anchor=c(0,1)] = buttonGroup
 
 }
+
+
