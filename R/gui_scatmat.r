@@ -87,10 +87,10 @@ addHandlerChanged(TourType,handler = getTourType)
 vbox[2,3] <- TourType
 
 #Grid Line control
-vbox[3,1, anchor=c(-1,0)] <- "Grid Line Number"
+vbox[3,1, anchor=c(-1,0)] <- "Matrix Dimension"
 
 Matrixdim<-c(2:(length(x1)-1))
-vbox[4,1] <- (Matrixdimension<-gradio(Matrixdim, cont=vbox, multiple= F, handler = function(h,...) {matrixdim <<- svalue(h$obj)}))
+vbox[4,1] <- (Matrixdimension<-gradio(Matrixdim, cont=vbox, handler = function(h,...) {matrixdim <<- svalue(h$obj)}))
 
   
          
