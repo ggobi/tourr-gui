@@ -90,7 +90,7 @@ vbox[2,3] <- TourType
 vbox[3,1, anchor=c(-1,0)] <- "Grid Line Number"
 
 Gridnumber<-c(2:(length(x1)-1))
-vbox[4,1] <- (GridLine<-gradio(Gridnumber, cont=vbox, multiple= F, handler = function(h,...) {gridnumber <<- svalue(h$obj)}))
+vbox[4,1] <- (GridLine<-gradio(Gridnumber, cont=vbox, handler = function(h,...) {gridnumber <<- svalue(h$obj)}))
 
   
          
