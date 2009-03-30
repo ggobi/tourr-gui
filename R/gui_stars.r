@@ -15,7 +15,8 @@ vbox = glayout(cont=w)
 
 type = "Grand"
 VarIndex=c(1,2)
-gridnumber=2
+trinumber=3
+iconnumber=4
 
 
 #=====================split data set===================================
@@ -47,17 +48,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_stars(x1[VarIndex],grand_tour(as.numeric(trinumber)))
+ 		animate_stars(x1[1:iconnumber,VarIndex],grand_tour(as.numeric(trinumber)))
 	if (type == "Little")
- 		animate_stars(x1[VarIndex],little_tour(as.numeric(trinumber)))
+ 		animate_stars(x1[1:iconnumber,VarIndex],little_tour(as.numeric(trinumber)))
 	if (type == "Guided(holes)")
-		animate_stars(x1[VarIndex],guided_tour(holes))
+		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(holes))
 	if (type == "Guided(cm)") 
-		animate_stars(x1[VarIndex],guided_tour(cm))
+		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(cm))
 	if (type == "Guided(lda_pp)") 
-		animate_stars(x1[VarIndex],guided_tour(lda_pp,cl=cl))
+		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(lda_pp,cl=cl))
 	if (type == "Local") 
- 		animate_stars(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)))
+ 		animate_stars(x1[1:iconnumber,VarIndex],local_tour(basis_init(length(VarIndex), 2)))
 }
 #===============================================
 
@@ -86,11 +87,17 @@ addHandlerChanged(TourType,handler = getTourType)
 
 vbox[2,3] <- TourType
 
-#Grid Line control
+#Triangle Number control
 vbox[3,1, anchor=c(-1,0)] <- "Triangle Number"
 
-Trianglenumber<-c(2:(length(x1)-1))
+Trianglenumber<-c(2:length(x1))
 vbox[4,1] <- (TriangleNum<-gradio(Trianglenumber, cont=vbox, handler = function(h,...) {trinumber <<- svalue(h$obj)}))
+
+#Icon Number control
+vbox[3,3, anchor=c(-1,0)] <- "Icon Number"
+
+Iconnenumber<-c(4:10)
+vbox[4,3] <- (IconNum<-gradio(Iconnenumber, cont=vbox, handler = function(h,...) {iconnumber <<- svalue(h$obj)}))
 
   
          
