@@ -1,6 +1,6 @@
 #===================================================
-gui_image = function(x,...) {
-
+gui_image = function(x=ozone,...) {
+library(gWidgets)
 options("guiToolkit"="RGtk2")
 w = gwindow("2D Tour plot example")
 g = ggroup(cont = w, horizontal = FALSE)
@@ -37,7 +37,7 @@ displayTour = function (h,...)
 	if (type == "Guided(lda_pp)") 
 		animate_image(x,guided_tour(lda_pp,cl=cl),aps = speed_aps)
 	if (type == "Local") 
- 		animate_image(x,local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
+ 		animate_image(x,local_tour(basis_init(length(VarIndex), 1)),aps = speed_aps)
 }
 #===============================================
 

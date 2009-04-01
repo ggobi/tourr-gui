@@ -1,6 +1,6 @@
 #===================================================
-gui_density = function(x,...) {
-
+gui_density = function(x=flea,...) {
+library(gWidgets)
 options("guiToolkit"="RGtk2")
 w = gwindow("2D Tour plot example")
 g = ggroup(cont = w, horizontal = FALSE)
@@ -51,17 +51,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_dist(x1[VarIndex],grand_tour(), center=T,method=MethodType,aps = speed_aps)
+ 		animate_dist(x1[VarIndex],grand_tour(1), center=T,method=MethodType,aps = speed_aps)
 	if (type == "Little")
- 		animate_dist(x1[VarIndex],little_tour(),method=MethodType,aps = speed_aps)
+ 		animate_dist(x1[VarIndex],little_tour(1),method=MethodType,aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_dist(x1[VarIndex],guided_tour(holes),method=MethodType,aps = speed_aps)
+		animate_dist(x1[VarIndex],guided_tour(holes,1),method=MethodType,aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_dist(x1[VarIndex],guided_tour(cm),method=MethodType,aps = speed_aps)
+		animate_dist(x1[VarIndex],guided_tour(cm,1),method=MethodType,aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_dist(x1[VarIndex],guided_tour(lda_pp,cl=cl),method=MethodType,aps = speed_aps)
+		animate_dist(x1[VarIndex],guided_tour(lda_pp,cl=cl,1),method=MethodType,aps = speed_aps)
 	if (type == "Local") 
- 		animate_dist(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),method=MethodType,aps = speed_aps)
+ 		animate_dist(x1[VarIndex],local_tour(basis_init(length(VarIndex), 1)),method=MethodType,aps = speed_aps)
 }
 #===============================================
 

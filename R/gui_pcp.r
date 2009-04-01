@@ -1,6 +1,6 @@
 #===================================================
-gui_pcp = function(x,...) {
-
+gui_pcp = function(x=flea,...) {
+library(gWidgets)
 options("guiToolkit"="RGtk2")
 w = gwindow("2D Tour plot example")
 g = ggroup(cont = w, horizontal = FALSE)

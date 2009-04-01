@@ -1,8 +1,7 @@
-library(gWidgets)
 #===================================================
 gui_xy = function(x = flea, ...) {
   # browser()
-
+  library(gWidgets)
   options("guiToolkit"="RGtk2")
   w = gwindow("2D Tour plot example")
   g = ggroup(cont = w, horizontal = FALSE)
