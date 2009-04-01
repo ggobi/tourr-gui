@@ -16,6 +16,7 @@ vbox = glayout(cont=w)
 type = "Grand"
 VarIndex=c(1,2)
 ClIndex <<- c(1:length(x))
+speed_aps = 1
 
 
 #=====================split data set===================================
@@ -50,17 +51,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_faces(x1[1:length(VarIndex), 1: length(x1)],grand_tour(), center=T)
+ 		animate_faces(x1[VarIndex],grand_tour(), center=T,aps = speed_aps)
 	if (type == "Little")
- 		animate_faces(x1[VarIndex],little_tour())
+ 		animate_faces(x1[VarIndex],little_tour(),aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_faces(x1[VarIndex],guided_tour(holes))
+		animate_faces(x1[VarIndex],guided_tour(holes),aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_faces(x1[VarIndex],guided_tour(cm))
+		animate_faces(x1[VarIndex],guided_tour(cm),aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_faces(x1[VarIndex],guided_tour(lda_pp,cl=cl))
+		animate_faces(x1[1:length(VarIndex), 1: length(x1)],guided_tour(lda_pp,cl=cl),aps = speed_aps)
 	if (type == "Local") 
- 		animate_faces(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)))
+ 		animate_faces(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
 }
 #===============================================
 
@@ -89,6 +90,11 @@ addHandlerChanged(TourType,handler = getTourType)
 
 vbox[2,3] <- TourType
 
+
+# speed slider control
+vbox[3,1, anchor=c(-1,0)] <- "Speed"
+vbox[4,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
 # buttons control
 
