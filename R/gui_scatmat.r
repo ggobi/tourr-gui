@@ -16,6 +16,7 @@ vbox = glayout(cont=w)
 type = "Grand"
 VarIndex=c(1,2)
 matrixdim=2
+speed_aps = 1
 
 
 #=====================split data set===================================
@@ -47,17 +48,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_scatmat(x1[VarIndex],grand_tour(as.numeric(matrixdim)))
+ 		animate_scatmat(x1[VarIndex],grand_tour(as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Little")
- 		animate_pcp(x1[VarIndex],little_tour(as.numeric(matrixdim)))
+ 		animate_scatmat(x1[VarIndex],little_tour(as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_pcp(x1[VarIndex],guided_tour(holes))
+		animate_scatmat(x1[VarIndex],guided_tour(holes),aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_pcp(x1[VarIndex],guided_tour(cm))
+		animate_scatmat(x1[VarIndex],guided_tour(cm),aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_pcp(x1[VarIndex],guided_tour(lda_pp,cl=cl))
+		animate_scatmat(x1[VarIndex],guided_tour(lda_pp,cl=cl),aps = speed_aps)
 	if (type == "Local") 
- 		animate_pcp(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)))
+ 		animate_scatmat(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
 }
 #===============================================
 
@@ -86,13 +87,17 @@ addHandlerChanged(TourType,handler = getTourType)
 
 vbox[2,3] <- TourType
 
-#Grid Line control
-vbox[3,1, anchor=c(-1,0)] <- "Choose n for Matrix n*n"
+#Projection Dimension control
+vbox[3,1, anchor=c(-1,0)] <- "Choose Projection Dimension"
 
 Matrixdim<-c(2:length(x1))
 vbox[4,1] <- (Matrixdimension<-gradio(Matrixdim, cont=vbox, handler = function(h,...) {matrixdim <<- svalue(h$obj)}))
 
-  
+ 
+  # speed slider control
+  vbox[3,3, anchor=c(-1,0)] <- "Speed"
+  vbox[4,3, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)})) 
          
 # buttons control
 
