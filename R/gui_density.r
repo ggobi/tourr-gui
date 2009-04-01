@@ -17,7 +17,7 @@ type = "Grand"
 VarIndex=c(1,2)
 MethodType="density"
 ClIndex <<- c(1:length(x))
-
+speed_aps = 1
 
 #=====================split data set===================================
 idx <- sapply(1:(dim(x)[2]), 
@@ -51,17 +51,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_dist(x1[VarIndex],grand_tour(), center=T,method=MethodType)
+ 		animate_dist(x1[VarIndex],grand_tour(), center=T,method=MethodType,aps = speed_aps)
 	if (type == "Little")
- 		animate_dist(x1[VarIndex],little_tour(),method=MethodType)
+ 		animate_dist(x1[VarIndex],little_tour(),method=MethodType,aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_dist(x1[VarIndex],guided_tour(holes),method=MethodType)
+		animate_dist(x1[VarIndex],guided_tour(holes),method=MethodType,aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_dist(x1[VarIndex],guided_tour(cm),method=MethodType)
+		animate_dist(x1[VarIndex],guided_tour(cm),method=MethodType,aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_dist(x1[VarIndex],guided_tour(lda_pp,cl=cl),method=MethodType)
+		animate_dist(x1[VarIndex],guided_tour(lda_pp,cl=cl),method=MethodType,aps = speed_aps)
 	if (type == "Local") 
- 		animate_dist(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),method=MethodType)
+ 		animate_dist(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),method=MethodType,aps = speed_aps)
 }
 #===============================================
 
@@ -95,6 +95,12 @@ vbox[3,1, anchor=c(-1,0)] <- "Method Type"
 Methodtype=c("density", "hist")
 vbox[4,1, anchor=c(-1,0)]<-(dl<-gradio(Methodtype,cont=vbox,
 			handler=function(h,...){MethodType <<-svalue(h$obj)}))
+
+# speed slider control
+vbox[3,3, anchor=c(-1,0)] <- "Speed"
+vbox[4,3, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
+
 
 # buttons control
 
