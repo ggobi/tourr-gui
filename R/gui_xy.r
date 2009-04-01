@@ -1,6 +1,6 @@
 library(gWidgets)
 #===================================================
-gui_xy = function(x = mtcars, ...) {
+gui_xy = function(x = flea, ...) {
   # browser()
 
   options("guiToolkit"="RGtk2")
