@@ -15,8 +15,8 @@ vbox = glayout(cont=w)
 
 type = "Grand"
 VarIndex=c(1,2)
-trinumber=3
-iconnumber=4
+dimensionnumber=2
+speed_aps=1
 
 
 #=====================split data set===================================
@@ -48,17 +48,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_stars(x1[1:iconnumber,VarIndex],grand_tour(as.numeric(trinumber)))
+ 		animate_stars(x1[VarIndex],grand_tour(as.numeric(dimensionnumber)),aps = speed_aps)
 	if (type == "Little")
- 		animate_stars(x1[1:iconnumber,VarIndex],little_tour(as.numeric(trinumber)))
+ 		animate_stars(x1[VarIndex],little_tour(as.numeric(dimensionnumber)),aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(holes))
+		animate_stars(x1[VarIndex],guided_tour(holes,as.numeric(dimensionnumber)),aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(cm))
+		animate_stars(x1[VarIndex],guided_tour(cm,as.numeric(dimensionnumber)))
 	if (type == "Guided(lda_pp)") 
-		animate_stars(x1[1:iconnumber,VarIndex],guided_tour(lda_pp,cl=cl))
+		animate_stars(x1[VarIndex],guided_tour(lda_pp,cl=cl,as.numeric(dimensionnumber)),aps = speed_aps)
 	if (type == "Local") 
- 		animate_stars(x1[1:iconnumber,VarIndex],local_tour(basis_init(length(VarIndex), 2)))
+ 		animate_stars(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
 }
 #===============================================
 
@@ -87,17 +87,16 @@ addHandlerChanged(TourType,handler = getTourType)
 
 vbox[2,3] <- TourType
 
-#Triangle Number control
-vbox[3,1, anchor=c(-1,0)] <- "Triangle Number"
+#Dimension control
+vbox[3,1, anchor=c(-1,0)] <- "Choose Dimension"
 
 Trianglenumber<-c(2:length(x1))
-vbox[4,1] <- (TriangleNum<-gradio(Trianglenumber, cont=vbox, handler = function(h,...) {trinumber <<- svalue(h$obj)}))
+vbox[4,1] <- (TriangleNum<-gradio(Trianglenumber, cont=vbox, handler = function(h,...) {dimensionnumber <<- svalue(h$obj)}))
 
-#Icon Number control
-vbox[3,3, anchor=c(-1,0)] <- "Icon Number"
-
-Iconnenumber<-c(4:10)
-vbox[4,3] <- (IconNum<-gradio(Iconnenumber, cont=vbox, handler = function(h,...) {iconnumber <<- svalue(h$obj)}))
+# speed slider control
+vbox[3,3, anchor=c(-1,0)] <- "Speed"
+vbox[4,3, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
   
          
