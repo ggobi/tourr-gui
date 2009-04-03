@@ -16,6 +16,9 @@ vbox = glayout(cont=w)
 type = "Grand"
 VarIndex=c(1,2)
 MethodType="density"
+Type="TRUE"
+centertype=T
+center=T
 ClIndex <<- c(1:length(x))
 speed_aps = 1
 
@@ -49,11 +52,11 @@ getTourType = function (h,...)
 
 
 displayTour = function (h,...)
-{
+{       
 	if (type == "Grand")
- 		animate_dist(x1[VarIndex],grand_tour(1), center=T,method=MethodType,aps = speed_aps)
+ 		animate_dist(x1[VarIndex],grand_tour(1), center=centertype,method=MethodType,aps = speed_aps)
 	if (type == "Little")
- 		animate_dist(x1[VarIndex],little_tour(1),method=MethodType,aps = speed_aps)
+ 		animate_dist(x1[VarIndex],little_tour(2),center=centertype,method=MethodType,aps = speed_aps)
 	if (type == "Guided(holes)")
 		animate_dist(x1[VarIndex],guided_tour(holes,1),method=MethodType,aps = speed_aps)
 	if (type == "Guided(cm)") 
@@ -96,9 +99,18 @@ Methodtype=c("density", "hist")
 vbox[4,1, anchor=c(-1,0)]<-(dl<-gradio(Methodtype,cont=vbox,
 			handler=function(h,...){MethodType <<-svalue(h$obj)}))
 
+#Center Control
+vbox[3,3, anchor=c(-1,0)] <- "Center or Not"
+Centertype=c("TRUE", "FALSE")
+vbox[4,3, anchor=c(-1,0)]<-(dl<-gradio(Centertype,cont=vbox,handler=function(h,...){
+	Type <<-svalue(h$obj)
+       centertype <<-(Type!="FALSE")
+}))
+
+
 # speed slider control
-vbox[3,3, anchor=c(-1,0)] <- "Speed"
-vbox[4,3, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+vbox[5,1, anchor=c(-1,0)] <- "Speed"
+vbox[6,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
   	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
 
