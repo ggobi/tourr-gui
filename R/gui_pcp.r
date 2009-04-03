@@ -15,7 +15,7 @@ vbox = glayout(cont=w)
 
 type = "Grand"
 VarIndex=c(1,2)
-gridnumber=2
+dimen=2
 speed_aps = 1
 
 
@@ -48,17 +48,17 @@ getTourType = function (h,...)
 displayTour = function (h,...)
 {
 	if (type == "Grand")
- 		animate_pcp(x1[VarIndex],grand_tour(as.numeric(gridnumber)),aps = speed_aps)
+ 		animate_pcp(x1[VarIndex],grand_tour(as.numeric(dimen)),aps = speed_aps)
 	if (type == "Little")
- 		animate_pcp(x1[VarIndex],little_tour(as.numeric(gridnumber)),aps = speed_aps)
+ 		animate_pcp(x1[VarIndex],little_tour(as.numeric(dimen)),aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_pcp(x1[VarIndex],guided_tour(holes),aps = speed_aps)
+		animate_pcp(x1[VarIndex],guided_tour(holes,as.numeric(dimen)),aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_pcp(x1[VarIndex],guided_tour(cm),aps = speed_aps)
+		animate_pcp(x1[VarIndex],guided_tour(cm,as.numeric(dimen)),aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_pcp(x1[VarIndex],guided_tour(lda_pp,cl=cl),aps = speed_aps)
+		animate_pcp(x1[VarIndex],guided_tour(lda_pp,cl=cl,as.numeric(dimen)),aps = speed_aps)
 	if (type == "Local") 
- 		animate_pcp(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
+ 		animate_pcp(x1[VarIndex],local_tour(basis_init(length(VarIndex), as.numeric(dimen))),aps = speed_aps)
 }
 #===============================================
 
@@ -87,11 +87,11 @@ addHandlerChanged(TourType,handler = getTourType)
 
 vbox[2,3] <- TourType
 
-#Grid Line control
-vbox[3,1, anchor=c(-1,0)] <- "Grid Line Number"
+#Projection Dimension control
+vbox[3,1, anchor=c(-1,0)] <- "Choose Dimension"
 
-Gridnumber<-c(2:length(x1))
-vbox[4,1] <- (GridLine<-gradio(Gridnumber, cont=vbox, handler = function(h,...) {gridnumber <<- svalue(h$obj)}))
+dimension<-c(2:length(x1))
+vbox[4,1] <- (Dimension<-gradio(dimension, cont=vbox, handler = function(h,...) {dimen <<- svalue(h$obj)})) 
 
   # speed slider control
   vbox[3,3, anchor=c(-1,0)] <- "Speed"
