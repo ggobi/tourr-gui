@@ -52,13 +52,13 @@ displayTour = function (h,...)
 	if (type == "Little")
  		animate_scatmat(x1[VarIndex],little_tour(as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Guided(holes)")
-		animate_scatmat(x1[VarIndex],guided_tour(holes),aps = speed_aps)
+		animate_scatmat(x1[VarIndex],guided_tour(holes,as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Guided(cm)") 
-		animate_scatmat(x1[VarIndex],guided_tour(cm),aps = speed_aps)
+		animate_scatmat(x1[VarIndex],guided_tour(cm,as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Guided(lda_pp)") 
-		animate_scatmat(x1[VarIndex],guided_tour(lda_pp,cl=cl),aps = speed_aps)
+		animate_scatmat(x1[VarIndex],guided_tour(lda_pp,cl=cl,as.numeric(matrixdim)),aps = speed_aps)
 	if (type == "Local") 
- 		animate_scatmat(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
+ 		animate_scatmat(x1[VarIndex],local_tour(basis_init(length(VarIndex), as.numeric(matrixdim))),aps = speed_aps)
 }
 #===============================================
 

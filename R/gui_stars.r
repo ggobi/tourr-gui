@@ -58,7 +58,7 @@ displayTour = function (h,...)
 	if (type == "Guided(lda_pp)") 
 		animate_stars(x1[VarIndex],guided_tour(lda_pp,cl=cl,as.numeric(dimensionnumber)),aps = speed_aps)
 	if (type == "Local") 
- 		animate_stars(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
+ 		animate_stars(x1[VarIndex],local_tour(basis_init(length(VarIndex), as.numeric(dimensionnumber))),aps = speed_aps)
 }
 #===============================================
 
