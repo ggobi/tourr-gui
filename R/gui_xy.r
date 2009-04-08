@@ -139,6 +139,7 @@ gui_xy = function(x = flea, ...) {
 
   buttonGroup = ggroup(horizontal = F, cont=vbox)
   
+  pausePushed <<- FALSE
   pauseButton = gcheckbox("Pause",cont=buttonGroup, handler = function(h,...){
     pausePushed <<- svalue(h$obj)
   }) 
