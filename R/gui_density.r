@@ -37,6 +37,7 @@ defHandler = function(h,...) print(svalue(h$obj))
 getVariables = function (h,...)
 {
 	VarIndex <<-svalue(Variables, index = T)
+	if (length(VarIndex)<2) print("At least two variables is needed")
 }
 
 # Handler of Control 2
@@ -53,6 +54,7 @@ getTourType = function (h,...)
 
 displayTour = function (h,...)
 {       
+	if (length(VarIndex)<2) print("At least two variables is needed")
 	if (type == "Grand")
  		animate_dist(x1[VarIndex],grand_tour(1), center=centertype,method=MethodType,aps = speed_aps)
 	if (type == "Little")

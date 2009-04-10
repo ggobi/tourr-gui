@@ -37,6 +37,7 @@ gui_xy = function(x = flea, ...) {
   getVariables = function (h,...)
   {
     VarIndex <<-svalue(Variables, index = T)
+    if (length(VarIndex)<3) print("At least three variables is needed")
   }
 
   # Handler of Control 2
@@ -63,6 +64,7 @@ gui_xy = function(x = flea, ...) {
 
   displayTour = function (h,...)
   {
+    if (length(VarIndex)<3) print("At least three variables is needed")
     if (type == "Grand" & length(ClIndex) == length(x))
        animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location)
     if (type == "Grand" & length(ClIndex) != length(x))    
@@ -104,9 +106,8 @@ gui_xy = function(x = flea, ...) {
   vbox[3,1,anchor=c(-1,0)] <- "Class Selection"
 
   # Control: gtable
-  vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
+  vbox[4,1,anchor=c(-1,0)] <- (Class<-gcheckboxgroup(variablename2, multiple = T, cont=vbox,handler = defHandler))
   addHandlerChanged(Class, handler = getClass)
-  size(Class) <- c(40,80)
 
   #====================================================================
 
@@ -124,7 +125,7 @@ gui_xy = function(x = flea, ...) {
 
   # speed slider control
   vbox[5,1, anchor=c(-1,0)] <- "Speed"
-  vbox[6,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
+  vbox[6,1, expand=T] <- (sl <- gslider(from = 0, to= 20, by=1, value = 1, 
     cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
 
 
