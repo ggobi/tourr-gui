@@ -64,7 +64,7 @@ gui_xy = function(x = flea, ...) {
 
   displayTour = function (h,...)
   {
-    if (length(VarIndex)<3) print("At least three variables is needed")
+    if (length(VarIndex)<3) gmessage(message="At least three variables is needed",icon="warning")
     if (type == "Grand" & length(ClIndex) == length(x))
        animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location)
     if (type == "Grand" & length(ClIndex) != length(x))    
@@ -106,7 +106,7 @@ gui_xy = function(x = flea, ...) {
   vbox[3,1,anchor=c(-1,0)] <- "Class Selection"
 
   # Control: gtable
-  vbox[4,1,anchor=c(-1,0)] <- (Class<-gcheckboxgroup(variablename2, multiple = T, cont=vbox,handler = defHandler))
+  vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
   addHandlerChanged(Class, handler = getClass)
 
   #====================================================================
