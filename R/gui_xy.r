@@ -51,6 +51,7 @@ gui_xy = function(x = flea, ...) {
   getClass = function (h,...)
   {
     ClIndex <<-svalue(h$obj, index = T)
+    require(colorspace)
     ColType <<- rainbow_hcl(length(unique(x2[,ClIndex])))
   }
 
