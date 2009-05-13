@@ -1,8 +1,8 @@
-#===================================================
-gui_xy = function(x = flea, ...) {
-  # browser()
-  library(gWidgets)
-  options("guiToolkit"="RGtk2")
+library(colorspace)
+library(gWidgets)
+options("guiToolkit"="RGtk2")
+
+gui_xy = function(data = flea, ...) {
   w = gwindow("2D Tour plot example")
   g = ggroup(cont = w, horizontal = FALSE)
 
@@ -17,18 +17,15 @@ gui_xy = function(x = flea, ...) {
   type = "Grand"
   VarIndex=c(1,2)
   speed_aps = 1
-  ClIndex <<- c(1:length(x))
+  ClIndex <<- c(1:length(data))
   Class = 1
   axes_location="center"
   ColType = 0
 
   #=====================split data set===================================
-  idx <- sapply(1:(dim(x)[2]), 
-     function(i) return(is.factor(x[,i]) | is.character(x[,i])))
-  x1 <- x[,which(idx==FALSE)]
-  x2 <- x[c(idx)]
-  variablename1<<-colnames(x1)
-  variablename2<<-colnames(x2)
+  num <- sapply(data, is.numeric)
+  x1 <- data[num]
+  x2 <- data[!num]
 
   #==================Handlers=======================
   defHandler = function(h,...) print(svalue(h$obj))
@@ -43,14 +40,10 @@ gui_xy = function(x = flea, ...) {
   # Handler of Class
   getClass = function (h,...)
   {
-    ClIndex <<-svalue(h$obj, index = T)
-    require(colorspace)
+    ClIndex <<- svalue(h$obj, index = T)
     ColType <<- rainbow_hcl(length(unique(x2[,ClIndex])))
   }
 
-  #2D tour control 
-  #' @param aps target angular velocity (in radians per second)
-  #' @param fps target frames per second (defaults to 30)
 
   tour_types <- c(
     "Grand" = grand_tour(), 
@@ -69,8 +62,12 @@ gui_xy = function(x = flea, ...) {
     
     tour <- tour_types[[svalue(TourType)]]
     
-    animate_xy(x1[VarIndex], tour, center = TRUE, aps = speed_aps, 
-      axes = axes_location)
+    #2D tour control 
+    #' @param aps target angular velocity (in radians per second)
+    #' @param fps target frames per second (defaults to 30)
+    animate(x1[VarIndex], tour, 
+      display_xy(data, axes = axes_location, center = TRUE), 
+      aps = speed_aps)
       
     # if (type == "Grand" & length(ClIndex) != length(x))    
     #   animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
@@ -80,7 +77,7 @@ gui_xy = function(x = flea, ...) {
   # Control: gcheckboxgroup 
   VarIndex <- c(1:length(x1))
 
-  vbox[2,1] <- (Variables<-gcheckboxgroup(variablename1, checked=TRUE, horizontal=FALSE, cont=vbox, handler = defHandler))
+  vbox[2,1] <- (Variables<-gcheckboxgroup(names(data[num]), checked=TRUE, horizontal=FALSE, cont=vbox, handler = defHandler))
   addHandlerChanged(Variables,handler = getVariables)
 
 
@@ -89,7 +86,7 @@ gui_xy = function(x = flea, ...) {
   vbox[3,1,anchor=c(-1,0)] <- "Class Selection"
 
   # Control: gtable
-  vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(variablename2, multiple = T, cont=vbox,handler = defHandler))
+  vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(names(data)[!num], multiple = T, cont=vbox,handler = defHandler))
   addHandlerChanged(Class, handler = getClass)
 
   #====================================================================
