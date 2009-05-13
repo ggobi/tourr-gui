@@ -67,7 +67,6 @@ gui_xy = function(x = flea, ...) {
         icon = "warning")
     }
     
-    browser()
     tour <- tour_types[[svalue(TourType)]]
     
     animate_xy(x1[VarIndex], tour, center = TRUE, aps = speed_aps, 
