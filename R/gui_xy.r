@@ -40,8 +40,6 @@ gui_xy = function(data = flea, ...) {
   # Handler of Class
   getClass = function (h,...)
   {
-    ClIndex <<- svalue(h$obj, index = T)
-    ColType <<- rainbow_hcl(length(unique(x2[,ClIndex])))
   }
 
 
@@ -61,12 +59,22 @@ gui_xy = function(data = flea, ...) {
     }
     
     tour <- tour_types[[svalue(TourType)]]
+
+    cat_selected <- data[svalue(Class)]
+    if (length(cat_selected) > 0) {
+      # collapse to single variable if multiple selected
+      int <- interaction(cat_selected, drop = TRUE)
+      pal <- rainbow_hcl(length(levels(int)))
+      col <- pal[as.numeric(int)]
+    } else {
+      col <- "black"
+    }
     
     #2D tour control 
     #' @param aps target angular velocity (in radians per second)
     #' @param fps target frames per second (defaults to 30)
     animate(x1[VarIndex], tour, 
-      display_xy(data, axes = axes_location, center = TRUE), 
+      display_xy(data, axes = axes_location, center = TRUE, col = col), 
       aps = speed_aps)
       
     # if (type == "Grand" & length(ClIndex) != length(x))    
@@ -87,7 +95,6 @@ gui_xy = function(data = flea, ...) {
 
   # Control: gtable
   vbox[4,1,anchor=c(-1,0)] <- (Class<-gtable(names(data)[!num], multiple = T, cont=vbox,handler = defHandler))
-  addHandlerChanged(Class, handler = getClass)
 
   #====================================================================
 
