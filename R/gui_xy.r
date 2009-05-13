@@ -40,13 +40,6 @@ gui_xy = function(x = flea, ...) {
     if (length(VarIndex)<3) print("At least three variables is needed")
   }
 
-  # Handler of Control 2
-  getTourType = function (h,...)
-  {
-    type <<-svalue(TourType)
-  }
-
-
   # Handler of Class
   getClass = function (h,...)
   {
@@ -55,44 +48,34 @@ gui_xy = function(x = flea, ...) {
     ColType <<- rainbow_hcl(length(unique(x2[,ClIndex])))
   }
 
-
-
-
   #2D tour control 
   #' @param aps target angular velocity (in radians per second)
   #' @param fps target frames per second (defaults to 30)
 
+  tour_types <- c(
+    "Grand" = grand_tour(), 
+    "Little" = little_tour(), 
+    "Guided(holes)" = guided_tour(holes), 
+    "Guided(cm)" = guided_tour(cm), 
+    "Guided(lda_pp)" = guided_tour(), 
+    "Local" = local_tour()
+  )
 
-  displayTour = function (h,...)
-  {
-    if (length(VarIndex)<3) gmessage(message="At least three variables is needed",icon="warning")
-    if (type == "Grand" & length(ClIndex) == length(x))
-       animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location)
-    if (type == "Grand" & length(ClIndex) != length(x))    
-      animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
-    if (type == "Little" & length(ClIndex) == length(x))
-       animate_xy(x1[VarIndex],little_tour(), center=T,aps = speed_aps, axes = axes_location)
-    if (type == "Little"& length(ClIndex) != length(x))
-      animate_xy(x1[VarIndex],little_tour(), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
-    if (type == "Guided(holes)" & length(ClIndex) == length(x))
-      animate_xy(x1[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location)
-    if (type == "Guided(holes)" & length(ClIndex) != length(x))
-      animate_xy(x1[VarIndex],guided_tour(holes), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
-    if (type == "Guided(cm)" & length(ClIndex) == length(x))
-      animate_xy(x1[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location)
-    if (type == "Guided(cm)" & length(ClIndex) != length(x))
-      animate_xy(x1[VarIndex],guided_tour(cm), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
-    if (type == "Guided(lda_pp)" & length(ClIndex) == length(x)) 
-      gmessage(message="Please select class first",icon="warning")
-    if (type == "Guided(lda_pp)" & length(ClIndex) != length(x)) 
-      animate_xy(x1[VarIndex],guided_tour(lda_pp,cl=x2[,ClIndex]), aps = speed_aps, axes = axes_location,col=ColType[as.numeric(x2[,ClIndex])])
-    if (type == "Local" & length(ClIndex) == length(x))
-       animate_xy(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)), center=T,aps = speed_aps, axes = axes_location)
-    if (type == "Local"& length(ClIndex) != length(x))
-      animate_xy(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)), aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])  
+  displayTour <- function(h, ...) {
+    if (length(VarIndex) < 3) {
+      gmessage(message = "At least three variables are required", 
+        icon = "warning")
+    }
+    
+    browser()
+    tour <- tour_types[[svalue(TourType)]]
+    
+    animate_xy(x1[VarIndex], tour, center = TRUE, aps = speed_aps, 
+      axes = axes_location)
+      
+    # if (type == "Grand" & length(ClIndex) != length(x))    
+    #   animate_xy(x1[VarIndex],grand_tour(), center=T,aps = speed_aps, axes = axes_location, col=ColType[as.numeric(x2[,ClIndex])])
   }
-  #===============================================
-
   # ==================Controls==========================
 
   # Control: gcheckboxgroup 
@@ -119,7 +102,6 @@ gui_xy = function(x = flea, ...) {
   vbox[1,3, anchor=c(-1,0)] <- "Tour Type"
 
   TourType = gradio(short, cont=vbox, handler = NULL)
-  addHandlerChanged(TourType,handler = getTourType)
 
   vbox[2,3] <- TourType
 
