@@ -112,15 +112,18 @@ gui_xy <- function(data = flea, ...) {
 
   buttonGroup = ggroup(horizontal = F, cont=vbox)
   
-  pausePushed <<- FALSE
   pauseButton = gcheckbox("Pause",cont=buttonGroup, handler = function(h,...){
-    pausePushed <<- svalue(h$obj)
+    paused <- svalue(pauseButton)
+    if (paused) {
+      gtkIdleRemove(anim_id)
+    } else {
+      anim_id <<- gIdleAdd(draw_frame)
+    }
   }) 
   addSpace(buttonGroup,10)
 
   okButton = gbutton("Apply", cont=buttonGroup)
   addhandlerclicked(okButton, handler = function(h,...) {
-    svalue(pauseButton) <- FALSE  
     update_tour()
   })
   addSpace(buttonGroup,10)
