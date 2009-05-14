@@ -62,7 +62,7 @@ gui_xy <- function(data = flea, ...) {
     if (is.null(tour)) return(TRUE)  # if there's no tour, exit
     if (svalue(pauseButton)) return(TRUE) # if the tour is paused, exit
 
-    tour_step <- tour_anim$step()
+    tour_step <- tour_anim$step2(svalue(sl) / 33)
     tour$display$render_transition()
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
