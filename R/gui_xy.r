@@ -2,7 +2,9 @@ library(colorspace)
 library(RGtk2)
 library(gWidgets)
 
+
 gui_xy <- function(data = flea, ...) {
+  os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
@@ -28,7 +30,11 @@ gui_xy <- function(data = flea, ...) {
     if (is.null(tour)) return(TRUE)  
 
     tour_step <- tour_anim$step2(svalue(sl) / 33)
-    tour$display$render_transition()
+    if (os == "win") {
+      tour$display$render_frame()
+    } else {
+      tour$display$render_transition()      
+    }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
     
