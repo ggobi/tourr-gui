@@ -133,7 +133,7 @@ create_tour <- function(data, var_selected, cat_selected, axes_location, tour_ty
     "Little" = little_tour(), 
     "Guided(holes)" = guided_tour(holes), 
     "Guided(cm)" = guided_tour(cm), 
-    "Guided(lda_pp)" = guided_tour(), 
+    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected])),
     "Local" = local_tour()
   )
   
