@@ -1,117 +1,132 @@
-#===================================================
-gui_andrews = function(x=flea,...) {
+library(RGtk2)
 library(gWidgets)
-options("guiToolkit"="RGtk2")
-
-w = gwindow("2D Tour plot example")
-g = ggroup(cont = w, horizontal = FALSE)
-
-if(options("guiToolkit") == "RGtk2") {
-   cont = w
- } else {
-   cont = g
- }
-
-vbox = glayout(cont=w)
-
-type = "Grand"
-VarIndex=c(1,2)
-ClIndex <<- c(1:length(x))
-speed_aps = 1
 
 
-#=====================split data set===================================
-idx <- sapply(1:(dim(x)[2]), 
-   function(i) return(is.factor(x[,i]) | is.character(x[,i])))
-x1 <- x[,which(idx==FALSE)]
-x2 <- x[c(idx)]
-variablename1<<-colnames(x1)
-variablename2<<-colnames(x2)
+gui_andrews <- function(data = flea, ...) {
+  os <- find_platform()$os
+  num <- sapply(data, is.numeric)
+  
+  tour <- NULL
+  tour_anim <- NULL
+  update_tour <- function(...) {
+    tour <<- create_tour(data,
+      var_selected = svalue(Variables),
+      dim_selected = svalue(Dimensions), 
+      tour_type = svalue(TourType),
+      aps = svalue(sl)
+    )
+    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    
+    tour$display$init(tour$data)
+    tour$display$render_frame()
+    
+    TRUE
+  }
+  
+  draw_frame <- function(...) {
+    # if there's no tour, don't draw anything
+    if (is.null(tour)) return(TRUE)  
 
-#==================Handlers=======================
-defHandler = function(h,...) print(svalue(h$obj))
+    tour_step <- tour_anim$step2(svalue(sl) / 33)
+    if (os == "win") {
+      tour$display$render_frame()
+    } else {
+      tour$display$render_transition()      
+    }
+    with(tour_step, tour$display$render_data(tour$data, proj, target))
+    Sys.sleep(1/33)
+    
+    TRUE
+  }
+  
+  
+  # ==================Controls==========================
+  w <- gwindow("2D Tour plot example", visible = FALSE)
+  vbox <- glayout(cont = w)
 
-# Handler of Control 1
-getVariables = function (h,...)
-{
-	VarIndex <<-svalue(Variables, index = T)
-}
+  # Variable selection column
+  vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
+  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
+    checked = TRUE, horizontal = FALSE)
 
-# Handler of Control 2
-getTourType = function (h,...)
-{
-	type <<-svalue(TourType)
-}
+  # Tour selection column
+  vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
+  vbox[2, 3] <- TourType <- gradio(tour_types)
 
+  # dimension control
+  vbox[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
+  dimensions <- c(2:length(data[num]))
+  vbox[4, 1, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
 
-#2D tour control 
-#' @param aps target angular velocity (in radians per second)
-#' @param fps target frames per second (defaults to 30)
+  # speed and pause
+  vbox[3,3, anchor = c(-1, 0)] <- "Speed"
+  vbox[4,3, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  
+  vbox[4, 4] <- gcheckbox("Pause", 
+    handler = function(h, ...) pause(svalue(h$obj)))
 
+  # buttons control
+  pause <- function(paused) {
+    if (paused) {
+      gtkIdleRemove(anim_id)
+    } else {
+      anim_id <<- gIdleAdd(draw_frame)
+    }
+  }
+  buttonGroup <- ggroup(horizontal = F, cont=vbox)  
+  
+  # addSpace(buttonGroup,10)
+  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  
+  # addSpace(buttonGroup,10)
+  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+    pause(TRUE)
+    dispose(w)
+  })
 
-displayTour = function (h,...)
-{
-	if (type == "Grand")
- 		animate_andrews(x1[VarIndex],grand_tour(),aps = speed_aps)
-	if (type == "Little")
- 		animate_andrews(x1[VarIndex],little_tour(),aps = speed_aps)
-	if (type == "Guided(holes)")
-		animate_andrews(x1[VarIndex],guided_tour(holes),aps = speed_aps)
-	if (type == "Guided(cm)") 
-		animate_andrews(x1[VarIndex],guided_tour(cm),aps = speed_aps)
-	if (type == "Guided(lda_pp)") 
-		animate_andrews(x1[VarIndex],guided_tour(lda_pp,cl=cl),aps = speed_aps)
-	if (type == "Local") 
- 		animate_andrews(x1[VarIndex],local_tour(basis_init(length(VarIndex), 2)),aps = speed_aps)
-}
-#===============================================
-
-# ==================Controls==========================
-
-# Control: gcheckboxgroup 
-VarIndex <- c(1:length(x1))
-
-vbox[2,1] <- (Variables<-gcheckboxgroup(variablename1, checked=TRUE, horizontal=FALSE, cont=vbox, handler = defHandler))
-addHandlerChanged(Variables,handler = getVariables)
-
-
-# Control: title
-vbox[1,1,anchor=c(-1,0)] <- "Variable Selection"
-
-#====================================================================
-
-short = c("Grand","Little","Guided(holes)","Guided(cm)","Guided(lda_pp)","Local")
-
-
-# Gradio box control
-vbox[1,3, anchor=c(-1,0)] <- "Tour Type"
-
-TourType = gradio(short, cont=vbox, handler = NULL)
-addHandlerChanged(TourType,handler = getTourType)
-
-vbox[2,3] <- TourType
-
-# speed slider control
-vbox[3,1, anchor=c(-1,0)] <- "Speed"
-vbox[4,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
-  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
-
-
-# buttons control
-
-buttonGroup = ggroup(horizontal = F, cont=vbox)
-   pauseButton = gbutton("Pause",cont=buttonGroup)
-   addSpace(buttonGroup,10)
-
-   quitButton = gbutton("Quit",cont=buttonGroup)
-   addHandlerClicked(quitButton, handler= function(h,...) dispose(w))
-   addSpace(buttonGroup,10)
-
-   okButton = gbutton("ok", cont=buttonGroup)
-   addHandlerClicked(okButton, handler = displayTour)
-
-vbox[2,4, anchor=c(0,1)] = buttonGroup
-
+  vbox[2:3, 4, anchor = c(0, 1)] <- buttonGroup
+  
+  # If on a mac, open a Cairo device, if there's not already one open
+  # The cairo device has a much better refresh rate than Quartz
+  if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
+    require(Cairo)
+    CairoX11()
+  }
+  
+  update_tour()
+  pause(FALSE)
+  visible(w) <- TRUE
+  
+  invisible()
 }
 
 
+create_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
+  if (length(var_selected) < 3) {
+    gmessage("Please select at least three variables", icon = "warning")
+    return()
+  }
+
+
+  display <- display_andrews(data,tour_path=tour_type)
+
+
+  # Work out which type of tour to use
+  tour <- switch(tour_type,
+    "Grand" = grand_tour(as.numeric(dim_selected)), 
+    "Little" = little_tour(as.numeric(dim_selected)), 
+    "Guided(holes)" = guided_tour(holes,as.numeric(dim_selected)), 
+    "Guided(cm)" = guided_tour(cm,as.numeric(dim_selected)), 
+    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
+    "Local" = local_tour()
+  )
+  
+      
+  list(
+    data = rescale(data[var_selected]),
+    tour_path = tour,
+    display = display,
+    aps = aps
+  )
+}

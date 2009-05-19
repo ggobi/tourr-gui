@@ -1,79 +1,119 @@
-#===================================================
-gui_image = function(x=ozone,...) {
+library(RGtk2)
 library(gWidgets)
-options("guiToolkit"="RGtk2")
-w = gwindow("2D Tour plot example")
-g = ggroup(cont = w, horizontal = FALSE)
-
-if(options("guiToolkit") == "RGtk2") {
-   cont = w
- } else {
-   cont = g
- }
-
-vbox = glayout(cont=w)
-
-type = "Grand"
-speed_aps = 1
 
 
-# Handler of Control 2
-getTourType = function (h,...)
-{
-	type <<-svalue(TourType)
+gui_image <- function(data = flea, ...) {
+  os <- find_platform()$os
+  num <- sapply(data, is.numeric)
+  
+  tour <- NULL
+  tour_anim <- NULL
+  update_tour <- function(...) {
+    tour <<- create_tour(data,
+      tour_type = svalue(TourType),
+      aps = svalue(sl)
+    )
+    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    
+    tour$display$init(tour$data)
+    tour$display$render_frame()
+    
+    TRUE
+  }
+  
+  draw_frame <- function(...) {
+    # if there's no tour, don't draw anything
+    if (is.null(tour)) return(TRUE)  
+
+    tour_step <- tour_anim$step2(svalue(sl) / 33)
+    if (os == "win") {
+      tour$display$render_frame()
+    } else {
+      tour$display$render_transition()      
+    }
+    with(tour_step, tour$display$render_data(tour$data, proj, target))
+    Sys.sleep(1/33)
+    
+    TRUE
+  }
+  
+  
+  # ==================Controls==========================
+  w <- gwindow("2D Tour plot example", visible = FALSE)
+  vbox <- glayout(cont = w)
+
+  # Tour selection column
+  vbox[1, 1, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
+  vbox[2, 1] <- TourType <- gradio(tour_types)
+
+  # speed and pause
+  vbox[3,1, anchor = c(-1, 0)] <- "Speed"
+  vbox[4,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  
+  vbox[4, 2] <- gcheckbox("Pause", 
+    handler = function(h, ...) pause(svalue(h$obj)))
+
+  # buttons control
+  pause <- function(paused) {
+    if (paused) {
+      gtkIdleRemove(anim_id)
+    } else {
+      anim_id <<- gIdleAdd(draw_frame)
+    }
+  }
+  buttonGroup <- ggroup(horizontal = F, cont=vbox)  
+  
+  # addSpace(buttonGroup,10)
+  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  
+  # addSpace(buttonGroup,10)
+  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+    pause(TRUE)
+    dispose(w)
+  })
+
+  vbox[2:3, 2, anchor = c(0, 1)] <- buttonGroup
+  
+  # If on a mac, open a Cairo device, if there's not already one open
+  # The cairo device has a much better refresh rate than Quartz
+  if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
+    require(Cairo)
+    CairoX11()
+  }
+  
+  update_tour()
+  pause(FALSE)
+  visible(w) <- TRUE
+  
+  invisible()
 }
 
 
-displayTour = function (h,...)
-{
-	if (type == "Grand")
- 		animate_image(x, grand_tour(1),aps = speed_aps)
-	if (type == "Little")
- 		animate_image(x,little_tour(),aps = speed_aps)
-	if (type == "Guided(holes)")
-		animate_image(x,guided_tour(holes),aps = speed_aps)
-	if (type == "Guided(cm)") 
-		animate_image(x,guided_tour(cm),aps = speed_aps)
-	if (type == "Guided(lda_pp)") 
-		animate_image(x,guided_tour(lda_pp,cl=cl),aps = speed_aps)
-	if (type == "Local") 
- 		animate_image(x,local_tour(basis_init(length(VarIndex), 1)),aps = speed_aps)
+#create_tour <- function(data, tour_type, aps) {
+#  if (length(var_selected) < 3) {
+#    gmessage("Please select at least three variables", icon = "warning")
+#    return()
+#  }
+
+  
+  display <- display_image(data)
+
+  # Work out which type of tour to use
+  tour <- switch(tour_type,
+    "Grand" = grand_tour(), 
+    "Little" = little_tour(), 
+    "Guided(holes)" = guided_tour(holes), 
+    "Guided(cm)" = guided_tour(cm), 
+    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected])),
+    "Local" = local_tour()
+  )
+  
+      
+  list(
+    data = rescale(data),
+    tour_path = tour,
+    display = display,
+    aps = aps
+  )
 }
-#===============================================
-
-# ==================Controls==========================
-
-short = c("Grand","Little","Guided(holes)","Guided(cm)","Guided(lda_pp)","Local")
-
-
-# Gradio box control
-vbox[1,1, anchor=c(-1,0)] <- "Tour Type"
-
-TourType = gradio(short, cont=vbox, handler = NULL)
-addHandlerChanged(TourType,handler = getTourType)
-
-vbox[2,1] <- TourType
-
-# speed slider control
-vbox[3,1, anchor=c(-1,0)] <- "Speed"
-vbox[4,1, expand=T] <- (sl <- gslider(from = 0, to= 10, by=0.1, value = 1, 
-  	cont = vbox, handler = function(h,...){speed_aps <<- svalue(h$obj)}))
-
-# buttons control
-
-buttonGroup = ggroup(horizontal = F, cont=vbox)
-   pauseButton = gbutton("Pause",cont=buttonGroup)
-   addSpace(buttonGroup,10)
-
-   quitButton = gbutton("Quit",cont=buttonGroup)
-   addHandlerClicked(quitButton, handler= function(h,...) dispose(w))
-   addSpace(buttonGroup,10)
-
-   okButton = gbutton("ok", cont=buttonGroup)
-   addHandlerClicked(okButton, handler = displayTour)
-
-vbox[2,2, anchor=c(0,1)] = buttonGroup
-
-}
-
-
