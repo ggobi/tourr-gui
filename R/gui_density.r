@@ -2,6 +2,7 @@ library(RGtk2)
 library(gWidgets)
 library(ash)
 
+
 gui_dist <- function(data = flea, ...) {
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
@@ -9,7 +10,7 @@ gui_dist <- function(data = flea, ...) {
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- create_1d_tour(data,
       var_selected = svalue(Variables), 
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
@@ -29,6 +30,8 @@ gui_dist <- function(data = flea, ...) {
     if (is.null(tour)) return(FALSE)  
 
     tour_step <- tour_anim$step2(svalue(sl) / 33)
+    if (is.null(tour_step$proj)) return(FALSE)
+
     if (os == "win") {
       tour$display$render_frame()
     } else {
@@ -51,6 +54,8 @@ gui_dist <- function(data = flea, ...) {
     checked = TRUE, horizontal = FALSE)
   
 
+
+
   # Tour selection column
   vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Local")
@@ -60,7 +65,7 @@ gui_dist <- function(data = flea, ...) {
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[6, 3] <- gcheckbox("Pause", 
+  vbox[6, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # method control
@@ -74,13 +79,18 @@ gui_dist <- function(data = flea, ...) {
   vbox[4,3, anchor=c(-1,0)] <- CenterType <- gradio(center_types)
 
   # buttons control
+  anim_id <- NULL
   pause <- function(paused) {
+    svalue(chk_pause) <- paused
     if (paused) {
       gtkIdleRemove(anim_id)
+      anim_id <<- NULL
     } else {
+      if (!is.null(anim_id)) gtkIdleRemove(anim_id)
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
+
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
@@ -106,6 +116,7 @@ gui_dist <- function(data = flea, ...) {
   # Turn off display list to maximise speed
   dev.control(displaylist = "inhibit")
   
+  dev.control(displaylist = "inhibit")
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
@@ -114,7 +125,7 @@ gui_dist <- function(data = flea, ...) {
 }
 
 
-create_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
+create_1d_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
   if (length(var_selected) < 2) {
     gmessage("Please select at least two variables", icon = "warning")
     return()

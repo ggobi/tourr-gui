@@ -83,6 +83,7 @@ gui_xy <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
+  
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
