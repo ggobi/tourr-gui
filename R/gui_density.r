@@ -26,7 +26,7 @@ gui_dist <- function(data = flea, ...) {
   
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(TRUE)  
+    if (is.null(tour)) return(FALSE)  
 
     tour_step <- tour_anim$step2(svalue(sl) / 33)
     if (os == "win") {
@@ -84,7 +84,10 @@ gui_dist <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+    pause(FALSE)
+    update_tour()
+  })
   
   # addSpace(buttonGroup,10)
   gbutton("Quit",cont=buttonGroup, handler = function(...) {
@@ -100,6 +103,8 @@ gui_dist <- function(data = flea, ...) {
     require(Cairo)
     CairoX11()
   }
+  # Turn off display list to maximise speed
+  dev.control(displaylist = "inhibit")
   
   update_tour()
   pause(FALSE)
@@ -110,13 +115,12 @@ gui_dist <- function(data = flea, ...) {
 
 
 create_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
+  if (length(var_selected) < 2) {
+    gmessage("Please select at least two variables", icon = "warning")
     return()
   }
-  
    
-display <- display_dist(data, method = method_selected, center = center_selected) 
+  display <- display_dist(data, method = method_selected, center = center_selected) 
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
@@ -127,9 +131,14 @@ display <- display_dist(data, method = method_selected, center = center_selected
     "Local" = local_tour()
   )
   
+  sel <- data[var_selected]
+  # Sphere the data if we're using a guided tour
+  if (length(grep(tour_type, "Guided")) > 0) {
+    sel <- sphere(sel)
+  }
       
   list(
-    data = rescale(data[var_selected]),
+    data = rescale(sel),
     tour_path = tour,
     display = display,
     aps = aps

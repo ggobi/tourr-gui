@@ -2,7 +2,6 @@ library(colorspace)
 library(RGtk2)
 library(gWidgets)
 
-
 gui_xy <- function(data = flea, ...) {
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
