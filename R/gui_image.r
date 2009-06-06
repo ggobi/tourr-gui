@@ -90,11 +90,11 @@ gui_image <- function(data = flea, ...) {
 }
 
 
-#create_tour <- function(data, tour_type, aps) {
-#  if (length(var_selected) < 3) {
-#    gmessage("Please select at least three variables", icon = "warning")
-#    return()
-#  }
+create_tour <- function(data, tour_type, aps) {
+ if (length(var_selected) < 3) {
+   gmessage("Please select at least three variables", icon = "warning")
+   return()
+ }
 
   
   display <- display_image(data)
