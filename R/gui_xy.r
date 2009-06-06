@@ -98,6 +98,9 @@ gui_xy <- function(data = flea, ...) {
     require(Cairo)
     CairoX11()
   }
+
+  # Turn off display list to maximise speed
+  dev.control(displaylist = "inhibit")
   
   update_tour()
   pause(FALSE)
