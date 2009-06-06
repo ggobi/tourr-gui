@@ -27,9 +27,11 @@ gui_xy <- function(data = flea, ...) {
   
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(TRUE)  
+    if (is.null(tour)) return(FALSE)  
 
     tour_step <- tour_anim$step2(svalue(sl) / 33)
+    if (is.null(tour_step$proj)) return(FALSE)
+    
     if (os == "win") {
       tour$display$render_frame()
     } else {
@@ -63,7 +65,7 @@ gui_xy <- function(data = flea, ...) {
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[6, 3] <- gcheckbox("Pause", 
+  vbox[6, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # axes control
@@ -73,16 +75,22 @@ gui_xy <- function(data = flea, ...) {
 
   # buttons control
   pause <- function(paused) {
+    svalue(chk_pause) <- paused
     if (paused) {
       gtkIdleRemove(anim_id)
+      anim_id <<- NULL
     } else {
+      if (!is.null(anim_id)) gtkIdleRemove(anim_id)
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+    pause(FALSE)
+    update_tour()
+  })
   
   # addSpace(buttonGroup,10)
   gbutton("Quit",cont=buttonGroup, handler = function(...) {
