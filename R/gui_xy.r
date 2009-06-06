@@ -148,9 +148,15 @@ create_tour <- function(data, var_selected, cat_selected, axes_location, tour_ty
     "Local" = local_tour()
   )
   
-      
+  
+  sel <- data[var_selected]
+  # Sphere the data if we're using a guided tour
+  if (length(grep(tour_type, "Guided")) > 0) {
+    sel <- sphere(sel)
+  }
+  
   list(
-    data = rescale(data[var_selected]),
+    data = rescale(sel),
     tour_path = tour,
     display = display,
     aps = aps
