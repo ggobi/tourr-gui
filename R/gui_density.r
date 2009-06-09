@@ -2,12 +2,10 @@ library(RGtk2)
 library(gWidgets)
 library(ash)
 
-<<<<<<< .mine
-gui_density <- function(data = flea, ...) {
-=======
 
-gui_dist <- function(data = flea, ...) {
->>>>>>> .r6304
+gui_density <- function(data = flea, ...) {
+
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
