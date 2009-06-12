@@ -105,10 +105,12 @@ gui_xy <- function(data = flea, ...) {
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
     require(Cairo)
     CairoX11()
+  } else if (length(dev.list()) == 0) {
+    # Open new display if necessary
+    dev.new()
     # Turn off display list to maximise speed
     dev.control(displaylist = "inhibit")
   }
-
   
   update_tour()
   pause(FALSE)
