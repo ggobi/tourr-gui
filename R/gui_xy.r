@@ -73,6 +73,7 @@ gui_xy <- function(data = flea, ...) {
   vbox[4,3, anchor=c(-1,0)] <- dl <- gradio(locations)
 
   # buttons control
+  anim_id <- NULL
   pause <- function(paused) {
     svalue(chk_pause) <- paused
     if (paused) {
