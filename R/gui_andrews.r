@@ -1,6 +1,6 @@
 library(RGtk2)
 library(gWidgets)
-
+library(colorspace)
 
 gui_andrews <- function(data = flea, ...) {
   os <- find_platform()$os
@@ -11,6 +11,7 @@ gui_andrews <- function(data = flea, ...) {
   update_tour <- function(...) {
     tour <<- create_tour(data,
       var_selected = svalue(Variables),
+      cat_selected = svalue(Class), 
       dim_selected = svalue(Dimensions), 
       tour_type = svalue(TourType),
       aps = svalue(sl)
@@ -48,6 +49,9 @@ gui_andrews <- function(data = flea, ...) {
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+    multiple = TRUE)
 
   # Tour selection column
   vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
@@ -55,15 +59,15 @@ gui_andrews <- function(data = flea, ...) {
   vbox[2, 3] <- TourType <- gradio(tour_types)
 
   # dimension control
-  vbox[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
+  vbox[3, 3, anchor = c(-1, 0)] <- "Choose Dimension"
   dimensions <- c(2:length(data[num]))
-  vbox[4, 1, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
+  vbox[4, 3, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
 
   # speed and pause
-  vbox[3,3, anchor = c(-1, 0)] <- "Speed"
-  vbox[4,3, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox[5,1, anchor = c(-1, 0)] <- "Speed"
+  vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[4, 4] <- gcheckbox("Pause", 
+  vbox[6, 3] <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # buttons control
@@ -102,14 +106,24 @@ gui_andrews <- function(data = flea, ...) {
 }
 
 
-create_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
+create_tour <- function(data, var_selected, cat_selected, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
   }
 
+  # Work out point colours
+  cat <- data[cat_selected]
+  if (length(cat_selected) > 0) {
+    # collapse to single variable if multiple selected
+    int <- interaction(cat, drop = TRUE)
+    pal <- rainbow_hcl(length(levels(int)))
+    col <- pal[as.numeric(int)]
+  } else {
+    col <- "black"
+  }
 
-  display <- display_andrews(data,tour_path=tour_type)
+  display <- display_andrews(data,tour_path=tour_type, col=col)
 
 
   # Work out which type of tour to use
