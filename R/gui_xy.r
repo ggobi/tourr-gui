@@ -99,6 +99,14 @@ gui_xy <- function(data = flea, ...) {
     dispose(w)
   })
 
+  # addSpace(buttonGroup,10)
+  gbutton("Help",cont=buttonGroup, handler = function(...) {
+gmessage("GUI_xy allows user to control a dynamic plot by using a checkbox, a ratiobox, a table, a slider and some bottons. And it could easily be extended. 
+It's much more convenient for users to just click on this simple GUI instead of trying to figure out how to write the proper auguments for their desirable graphics.", 
+title="gui_help",icon="info")
+  })
+
+
   vbox[4:6, 4, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
@@ -165,3 +173,4 @@ create_tour <- function(data, var_selected, cat_selected, axes_location, tour_ty
     aps = aps
   )
 }
+
