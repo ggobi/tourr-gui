@@ -67,21 +67,28 @@ gui_andrews <- function(data = flea, ...) {
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[6, 3] <- gcheckbox("Pause", 
+  vbox[6, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # buttons control
+  anim_id <- NULL
   pause <- function(paused) {
+    svalue(chk_pause) <- paused
     if (paused) {
       gtkIdleRemove(anim_id)
+      anim_id <<- NULL
     } else {
+      if (!is.null(anim_id)) gtkIdleRemove(anim_id)
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+    pause(FALSE)
+    update_tour()
+  })
   
   # addSpace(buttonGroup,10)
   gbutton("Quit",cont=buttonGroup, handler = function(...) {
@@ -96,8 +103,12 @@ gui_andrews <- function(data = flea, ...) {
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
     require(Cairo)
     CairoX11()
+  } else if (length(dev.list()) == 0) {
+    # Open new display if necessary
+    dev.new()
+  # Turn off display list to maximise speed
+  dev.control(displaylist = "inhibit")
   }
-  
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
@@ -136,6 +147,12 @@ create_tour <- function(data, var_selected, cat_selected, dim_selected, tour_typ
     "Local" = local_tour()
   )
   
+  sel <- data[var_selected]
+  # Sphere the data if we're using a guided tour
+  if (length(grep(tour_type, "Guided")) > 0) {
+    sel <- sphere(sel)
+  }
+
       
   list(
     data = rescale(data[var_selected]),
