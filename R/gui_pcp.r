@@ -63,21 +63,28 @@ gui_pcp <- function(data = flea, ...) {
   vbox[3,3, anchor = c(-1, 0)] <- "Speed"
   vbox[4,3, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[4, 4] <- gcheckbox("Pause", 
+  vbox[4, 4] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # buttons control
+  anim_id <- NULL
   pause <- function(paused) {
+    svalue(chk_pause) <- paused
     if (paused) {
       gtkIdleRemove(anim_id)
+      anim_id <- NULL
     } else {
+      if (!is.null(anim_id)) gtkIdleRemove(anim_id)
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  gbutton("Apply", cont = buttonGroup, handler = function(...){
+    pause(FALSE)
+    update_tour()
+  })
   
   # addSpace(buttonGroup,10)
   gbutton("Quit",cont=buttonGroup, handler = function(...) {
@@ -121,10 +128,15 @@ create_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
     "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
     "Local" = local_tour()
   )
-  
+   
+  sel <- data[var_selected]
+  # Sphere the data if we're using a guided tour
+  if (length(grep(tour_type, "Guided")) > 0) {
+    sel <- sphere(sel)
+  } 
       
   list(
-    data = rescale(data[var_selected]),
+    data = rescale(sel),
     tour_path = tour,
     display = display,
     aps = aps

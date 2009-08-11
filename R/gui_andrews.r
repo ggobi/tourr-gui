@@ -96,7 +96,7 @@ gui_andrews <- function(data = flea, ...) {
     dispose(w)
   })
 
-  vbox[2:3, 4, anchor = c(0, 1)] <- buttonGroup
+  vbox[5:6, 4, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -155,7 +155,7 @@ create_tour <- function(data, var_selected, cat_selected, dim_selected, tour_typ
 
       
   list(
-    data = rescale(data[var_selected]),
+    data = rescale(sel),
     tour_path = tour,
     display = display,
     aps = aps

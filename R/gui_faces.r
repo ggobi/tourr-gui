@@ -1,5 +1,6 @@
 library(RGtk2)
 library(gWidgets)
+library(TeachingDemos)
 
 
 gui_faces <- function(data = flea, ...) {
@@ -11,6 +12,7 @@ gui_faces <- function(data = flea, ...) {
   update_tour <- function(...) {
     tour <<- create_tour(data,
       var_selected = svalue(Variables), 
+      VarIndex = svalue(Variables, index = T),
       dim_selected = svalue(Dimensions),
       tour_type = svalue(TourType),
       aps = svalue(sl)
@@ -58,7 +60,7 @@ gui_faces <- function(data = flea, ...) {
   vbox[3,3, anchor = c(-1, 0)] <- "Speed"
   vbox[4,3, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[4, 4] <- gcheckbox("Pause", 
+  vbox[4, 4] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
  
   # dimension control
@@ -67,25 +69,32 @@ gui_faces <- function(data = flea, ...) {
   vbox[4, 1, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
  
   # buttons control
+  anim_id <- NULL
   pause <- function(paused) {
+    svalue(chk_pause) <- paused
     if (paused) {
       gtkIdleRemove(anim_id)
+      anim_id <<- NULL
     } else {
+      if (!is.null(anim_id)) gtkIdleRemove(anim_id)
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
-  
+  gbutton("Apply", cont = buttonGroup, handler = function(...){
+    pause(FALSE)
+    update_tour()
+  })
+
   # addSpace(buttonGroup,10)
   gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
 
-  vbox[2:3, 4, anchor = c(0, 1)] <- buttonGroup
+  vbox[3, 4, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -102,7 +111,7 @@ gui_faces <- function(data = flea, ...) {
 }
 
 
-create_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
+create_tour <- function(data, var_selected, VarIndex, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
@@ -121,9 +130,14 @@ create_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
     "Local" = local_tour(as.numeric(dim_selected))
   )
   
-      
+  sel <- data[VarIndex,1:6]
+  # Sphere the data if we're using a guided tour
+  if (length(grep(tour_type, "Guided")) > 0) {
+    sel <- sphere(sel)
+  }
+    
   list(
-    data = rescale(data[1:6,var_selected]),
+    data = rescale(sel),
     tour_path = tour,
     display = display,
     aps = aps
