@@ -1,2 +1,4 @@
 1. gui_andrews and gui_stereo display tours too fast under Windows systerm.
 
+2. displays of animate_andrews, animate_pcp, animate_stereo are flicker.
+
