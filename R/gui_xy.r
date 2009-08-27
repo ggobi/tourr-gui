@@ -1,3 +1,15 @@
+#' A GUI controlling several features of a Scatterplot tour path animation.
+#'
+#' First, in order to run this code, we need to library some packages which include colorspace, RGTK2 and gWidgets
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and
+#'   \code{\link{display_xy}}
+#' @param tour_path tour path, defaults to the grand tour
+#' @author Di Cook \email{dicook@@iastate.edu} and Bei Huang\email{beihuang@@iastate.edu}
+#' @keywords display_xy
+#' @examples
+#' gui_xy(flea)
+
 library(colorspace)
 library(RGtk2)
 library(gWidgets)
@@ -48,29 +60,49 @@ gui_xy <- function(data = flea, ...) {
   vbox <- glayout(cont = w)
 
   # Variable selection column
+  # Divide all the variable names into two parts according to numeric variables and categorical variables.
+  # The numeric variable names go under Variable Selection column, 
+  # and the categorical variable names go under Class Selection column.
+
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables) <- "Select variables to display in the 2D Tour."
+
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
   vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
     multiple = TRUE)
+  tooltip(Class) <- "Select a class variable to color the points."
+
 
   # Tour selection column
+  # The are seven kinds of tour type which allow users to switch willingfully.
+ 
   vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
   vbox[2, 3] <- TourType <- gradio(tour_types)
+  tooltip(TourType) <- "Select a 2D Tour type."
+
+
 
   # speed and pause
+  # This slider can control the speed of the 2D tour, which ranged from 0 to 5.
+
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
-  
+  tooltip(sl) <- "Drag to set the speed of the 2D Tour."
+ 
+  # Pause box allow users to pause the dynamic 2D tour and have a close examination on the details.
   vbox[6, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
+  tooltip(chk_pause) <- "Click here to pause or continue the 2D Tour."
 
   # axes control
+  # There are three kinds of axes locations which allow users to switch willingfully.
   vbox[3,3, anchor=c(-1,0)] <- "Axes Locations"
   locations <- c("center", "bottomleft", "off")
   vbox[4,3, anchor=c(-1,0)] <- dl <- gradio(locations)
+  tooltip(dl) <- "Select a location for the 2D Tour axes."
 
   # buttons control
   anim_id <- NULL
@@ -88,23 +120,32 @@ gui_xy <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = F, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
-  
+  tooltip(button1) <- "Click here to update the options."
+ 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<-gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."
+ 
 
   # addSpace(buttonGroup,10)
-  gbutton("Help",cont=buttonGroup, handler = function(...) {
-gmessage("GUI_xy allows user to control a dynamic plot by using a checkbox, a ratiobox, a table, a slider and some bottons. And it could easily be extended. 
-It's much more convenient for users to just click on this simple GUI instead of trying to figure out how to write the proper auguments for their desirable graphics.", 
+  message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They areused to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
+
+When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
+
+There are several different types of tours: grand, guided, little, and local. The grand tour generates a random path, while the guided uses an index on interest such as holes, central mass, lda or pda to guide the choice of projections to particular structure. The little tourmoves between existing variables, only covering a subset of all the space. The local tour contrains the choice of projection to be those near the current view.
+
+The GUI allows user to control the tour by checkboxes for the variable selection, slider for the speed, and toggle boxes for pause.",
 title="gui_help",icon="info")
   })
+tooltip(message1) <- "Click here for help."
 
 
   vbox[4:6, 4, anchor = c(0, 1)] <- buttonGroup
