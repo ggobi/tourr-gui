@@ -178,7 +178,7 @@ vbox_scatmat <- glayout(cont = g8)
   }
 # ==================Controls==========================
 vbox_stars <- glayout(cont = g4)
-# ============================ End of Gui_stars================
+
   # Variable selection column
   vbox_stars[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_stars[2, 1] <- Variables_stars <- gcheckboxgroup(names(data[num]), 
@@ -218,6 +218,7 @@ vbox_stars <- glayout(cont = g4)
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_stars, handler = function(...){
     print("apply from gui_stars")
+    opar <- par(mfrow = c(1,1))
     pause_stars(FALSE)
     update_tour_stars()
   })
@@ -282,6 +283,7 @@ vbox_stereo <- glayout(cont = g6)
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_stereo, handler = function(...) {
     print("apply from gui_stereo")
+    opar <- par(mfrow = c(1,1))
     pause_stereo(FALSE)
     update_tour_stereo()
   })
@@ -353,6 +355,7 @@ vbox_pcp <- glayout(cont = g7)
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_pcp, handler = function(...){
     print("apply from gui_pcp")
+    opar <- par(mfrow = c(1,1))
     pause_pcp(FALSE)
     update_tour_pcp()
   })
@@ -427,6 +430,7 @@ anim_id <- NULL
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_andrews, handler = function(...) {
     print("apply from gui_andrews")
+    opar <- par(mfrow = c(1,1))
     pause_andrews(FALSE)
     update_tour_andrews()
   })
@@ -505,6 +509,7 @@ anim_id <- NULL
   # addSpace(buttonGroup_density,10)
   gbutton("Apply", cont = buttonGroup_density, handler = function(...) {
     print("apply from gui_density")
+    opar <- par(mfrow = c(1,1))
     pause_density(FALSE)
     update_tour_density()
   })
@@ -606,7 +611,9 @@ anim_id <- NULL
   gbutton("Apply", cont = buttonGroup_xy, handler = function(...) {
     print("apply from gui_xy")
     pause_xy(FALSE)
+    opar <- par(mfrow = c(1,1))
     update_tour_xy()
+#   par(opar)
   })
   
   # addSpace(buttonGroup,10)
@@ -904,7 +911,7 @@ create_tour_faces <- function(data, var_selected, VarIndex, dim_selected, tour_t
     return()
   }
 
-  display <- display_faces(data, axes = axes_location)
+  display <- display_faces(data, tour_path=tour_type)
     
 
   # Work out which type of tour to use
