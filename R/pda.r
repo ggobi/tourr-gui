@@ -1,5 +1,3 @@
-
-
 PPindex.PDA1<-function(data,class,lambda)
 {
   if(is.null(lambda)) 
@@ -175,54 +173,3 @@ ludcomp <- function(a, n, pivot)
   return(det)
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-#Testing Part=============================================================
-
-PPindex.PDA1(flea[,1:6],flea[,7],0.1)
-PPindex.PDA1(flea[,1:6],flea[,7],0.2)
-PPindex.PDA1(flea[,1:6],flea[,7],0.3)
-PPindex.PDA1(flea[,1:6],flea[,7],0)
-
-
-
-require(classPP)
-PPindex.class("PDA",flea[,1:6],flea[,7],lambda=0.1)
-PPindex.class("PDA",flea[,1:6],flea[,7],lambda=0.2)
-PPindex.class("PDA",flea[,1:6],flea[,7],lambda=0.3)
-PPindex.class("PDA",flea[,1:6],flea[,7],lambda=0)
-PPindex.class("LDA",flea[,1:6],flea[,7])
-
-
-
-
-pda_pp <- function(cl, lambda) {
-if (length(unique(cl)) < 2) stop("PDA index needs at least two classes")
-     function(mat){
-     PPindex.PDA1(mat,cl,lambda)
-     }
-}
-
-animate_xy(flea[,1:6],guided_tour(pda_pp(flea[,7],0.1)))
-
-
-
-
-
-
-
-
-
-
-
-
