@@ -3,3 +3,5 @@
 
 2. gui_tour are too long---solved
 
+3. local tour still has some unsolved problems.
+
