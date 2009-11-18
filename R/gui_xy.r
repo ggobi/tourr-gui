@@ -1,20 +1,18 @@
-#' A GUI controlling several features of a Scatterplot tour path animation.
+#' A graphical user interface enabling interactive control of scatterplot tour.
 #'
-#' First, in order to run this code, we need to library some packages which include colorspace, RGTK2 and gWidgets
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and
-#'   \code{\link{display_xy}}
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
 #' @param tour_path tour path, defaults to the grand tour
 #' @author Di Cook \email{dicook@@iastate.edu} and Bei Huang\email{beihuang@@iastate.edu}
 #' @keywords display_xy
 #' @examples
-#' gui_xy(flea)
-
-library(colorspace)
-library(RGtk2)
-library(gWidgets)
+#' gui_xy()
 
 gui_xy <- function(data = flea, ...) {
+  require("colorspace")
+  require("RGtk2")
+  require("gWidgets")
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
@@ -26,6 +24,8 @@ gui_xy <- function(data = flea, ...) {
       cat_selected = svalue(Class), 
       axes_location = svalue(dl),
       tour_type = svalue(TourType),
+      guided_type = svalue(GuidedType),
+      lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
@@ -78,12 +78,25 @@ gui_xy <- function(data = flea, ...) {
   # Tour selection column
   # The are seven kinds of tour type which allow users to switch willingfully.
  
-  vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-  vbox[2, 3] <- TourType <- gradio(tour_types)
+  vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Local", "Guided")
+  vbox[2, 2] <- TourType <- gradio(tour_types)
   tooltip(TourType) <- "Select a 2D Tour type."
 
+  # Guided Tour index selection column
+  # Indices including "holes", "cm", "lda", "pda".
 
+  vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
+  tooltip(GuidedType) <- "Select an index type for guided tour."
+  
+  # Lambda selection column
+  # Lambda's range is from 0 to 1.
+
+  vbox[3, 3, anchor=c(-1, 0)] <-"Lambda"
+  vbox[4, 3] <- LambdaValue <- gspinbutton(from=0, to = 1, by = 0.01)
+  tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
 
   # speed and pause
   # This slider can control the speed of the 2D tour, which ranged from 0 to 5.
@@ -93,15 +106,15 @@ gui_xy <- function(data = flea, ...) {
   tooltip(sl) <- "Drag to set the speed of the 2D Tour."
  
   # Pause box allow users to pause the dynamic 2D tour and have a close examination on the details.
-  vbox[6, 3] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 2D Tour."
 
   # axes control
   # There are three kinds of axes locations which allow users to switch willingfully.
-  vbox[3,3, anchor=c(-1,0)] <- "Axes Locations"
+  vbox[1,3, anchor=c(-1,0)] <- "Axes Locations"
   locations <- c("center", "bottomleft", "off")
-  vbox[4,3, anchor=c(-1,0)] <- dl <- gradio(locations)
+  vbox[2,3, anchor=c(-1,0)] <- dl <- gradio(locations)
   tooltip(dl) <- "Select a location for the 2D Tour axes."
 
   # buttons control
@@ -148,7 +161,7 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
 
-  vbox[4:6, 4, anchor = c(0, 1)] <- buttonGroup
+  vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -170,7 +183,7 @@ tooltip(message1) <- "Click here for help."
 }
 
 
-create_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, aps) {
+create_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
@@ -194,9 +207,10 @@ create_tour <- function(data, var_selected, cat_selected, axes_location, tour_ty
   tour <- switch(tour_type,
     "Grand" = grand_tour(), 
     "Little" = little_tour(), 
-    "Guided(holes)" = guided_tour(holes), 
-    "Guided(cm)" = guided_tour(cm), 
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected])),
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
+				"cm"=guided_tour(cm),
+				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
+				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     "Local" = local_tour()
   )
   
