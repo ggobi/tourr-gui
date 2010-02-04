@@ -1,15 +1,27 @@
-library(RGtk2)
-library(gWidgets)
-library(colorspace)
-
+#' Andrews Tour GUI                                   (TITLE)
+#' Displays an Andrews Tour GUI                       (ONE LINE DESCRIPTION)
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data Data set being used
+#' @param ... Other variables sent to create the tour.
+#' @author Bei Huang \email{beihuang@@iastate.edu}
+#' @keywords hplot
+#' @examples
+#'  gui_andrews(flea)
 gui_andrews <- function(data = flea, ...) {
+  
+  library(RGtk2)
+  library(gWidgets)
+  library(colorspace)
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_andrews_tour(data,
       var_selected = svalue(Variables),
       cat_selected = svalue(Class), 
       dim_selected = svalue(Dimensions), 
@@ -117,7 +129,14 @@ gui_andrews <- function(data = flea, ...) {
 }
 
 
-create_tour <- function(data, var_selected, cat_selected, dim_selected, tour_type, aps) {
+
+
+#' Andrews Tour Plotting
+#' Plots the Andrews Tour
+#'
+#' @keywords internal
+#' @author Bei Huang \email{beihuang@@iastate.edu}
+.create_andrews_tour <- function(data, var_selected, cat_selected, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
