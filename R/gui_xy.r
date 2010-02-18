@@ -1,17 +1,40 @@
-#' A graphical user interface enabling interactive control of scatterplot tour.
+#' Scatterplot Tour GUI
+#' A graphical user interface enabling interactive control of a scatterplot tour.
 #'
+#' (Paragraph Description: Explain what it does)
+#'This GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
+#'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+#'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
+#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
+#'is black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
+#'categorical variable, and the scatterplot tour will have different rainbow colors.
+#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
+#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+#'For higher dimensional data a value closer to 1 would be advised.
+#'The Axes Locations column contains three types. Users can specify where tour axes will be displayed. The choices are center, bottomleft and off.
+#'The Speed slider can control the speed of the 2D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+#'The Pause check box allow users to pause the dynamic 2D tour and have a close examination on the details.
+#'The Apply button allows users to update the 2D tour, when it doesn't automatically update.
+#'The Quit button allows users to close thie GUI window.
+#'The Help button provides information about the tour and also what this GUI can do.
+#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
+
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @param tour_path tour path, defaults to the grand tour
-#' @author Di Cook \email{dicook@@iastate.edu} and Bei Huang\email{beihuang@@iastate.edu}
-#' @keywords display_xy
+#' @param ... other arguments passed on to \code{animate} and \code{display_xy}
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
+#' @keywords hplot
 #' @examples
-#' gui_xy()
+#' gui_xy(flea)
 
 gui_xy <- function(data = flea, ...) {
+  # require(tourr)
   require("colorspace")
-  require("RGtk2")
   require("gWidgets")
+  require("RGtk2")
+  options("guiToolkit"="RGtk2")
+ 
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
@@ -19,7 +42,7 @@ gui_xy <- function(data = flea, ...) {
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_xy_tour(data,
       var_selected = svalue(Variables), 
       cat_selected = svalue(Class), 
       axes_location = svalue(dl),
@@ -28,8 +51,8 @@ gui_xy <- function(data = flea, ...) {
       lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
-    
+    # tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path, velocity = aps / 33))
     tour$display$init(tour$data)
     tour$display$render_frame()
     
@@ -95,7 +118,9 @@ gui_xy <- function(data = flea, ...) {
   # Lambda's range is from 0 to 1.
 
   vbox[3, 3, anchor=c(-1, 0)] <-"Lambda"
+  
   vbox[4, 3] <- LambdaValue <- gspinbutton(from=0, to = 1, by = 0.01)
+  svalue(LambdaValue) <- 0.02
   tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
 
   # speed and pause
@@ -149,7 +174,7 @@ gui_xy <- function(data = flea, ...) {
 
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
-gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They areused to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
+gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
 
 When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
 
@@ -183,7 +208,13 @@ tooltip(message1) <- "Click here for help."
 }
 
 
-create_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
+
+#' Scatterplot Tour Plotting
+#' Plots the scatterplot Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+.create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
