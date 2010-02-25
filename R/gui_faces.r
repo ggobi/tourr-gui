@@ -1,16 +1,28 @@
-library(RGtk2)
-library(gWidgets)
-library(TeachingDemos)
-
+#' Face Tour GUI                                   
+#' Displays an Face Tour GUI                       
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @keywords display_faces
+#' @examples
+#'  gui_faces(flea)
 
 gui_faces <- function(data = flea, ...) {
+  require(RGtk2)
+  require(gWidgets)
+  require(TeachingDemos)  
+
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_face_tour(data,
       var_selected = svalue(Variables), 
       VarIndex = svalue(Variables, index = T),
       dim_selected = svalue(Dimensions),
@@ -110,8 +122,13 @@ gui_faces <- function(data = flea, ...) {
   invisible()
 }
 
+#' Faces Tour Plotting
+#' Plots the Faces Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 
-create_tour <- function(data, var_selected, VarIndex, dim_selected, tour_type, aps) {
+.create_face_tour <- function(data, var_selected, VarIndex, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()

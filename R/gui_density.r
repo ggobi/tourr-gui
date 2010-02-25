@@ -1,9 +1,19 @@
-library(RGtk2)
-library(gWidgets)
-library(ash)
-
+#' Density Tour GUI                                   
+#' Displays a Density Tour GUI                       
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @keywords display_density
+#' @examples
+#'  gui_density(flea)
 
 gui_density <- function(data = flea, ...) {
+  require(RGtk2)
+  require(gWidgets)
+  require(ash)
 
 
   os <- find_platform()$os
@@ -12,7 +22,7 @@ gui_density <- function(data = flea, ...) {
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_1d_tour(data,
+    tour <<- .create_1d_tour(data,
       var_selected = svalue(Variables), 
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
@@ -128,8 +138,13 @@ gui_density <- function(data = flea, ...) {
   invisible()
 }
 
+#' Density Tour Plotting
+#' Plots the Density Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 
-create_1d_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
+.create_1d_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
   if (length(var_selected) < 2) {
     gmessage("Please select at least two variables", icon = "warning")
     return()

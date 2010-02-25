@@ -1,15 +1,27 @@
-library(RGtk2)
-library(gWidgets)
-
+#' Scatmat Tour GUI                                   
+#' Displays an Scatmat Tour GUI                       
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @keywords display_scatmat
+#' @examples
+#'  gui_scatmat(flea)
 
 gui_scatmat <- function(data = flea, ...) {
+  require(RGtk2)
+  require(gWidgets)
+
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_mat_tour(data,
       var_selected = svalue(Variables),
       projdim_selected = svalue(Projections), 
       tour_type = svalue(TourType),
@@ -108,8 +120,13 @@ gui_scatmat <- function(data = flea, ...) {
   invisible()
 }
 
+#' Scatmat Tour Plotting
+#' Plots the Scatmat Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 
-create_tour <- function(data, var_selected, projdim_selected, tour_type, aps) {
+.create_mat_tour <- function(data, var_selected, projdim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()

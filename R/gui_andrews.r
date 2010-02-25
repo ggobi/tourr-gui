@@ -1,19 +1,22 @@
-#' Andrews Tour GUI                                   (TITLE)
-#' Displays an Andrews Tour GUI                       (ONE LINE DESCRIPTION)
+#' Andrews Tour GUI                                  
+#' Displays an Andrews Tour GUI                       
 #'
 #' (Paragraph Description: Explain what it does)
 #' 
-#' @param data Data set being used
-#' @param ... Other variables sent to create the tour.
-#' @author Bei Huang \email{beihuang@@iastate.edu}
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{animate} and \code{display_xy}
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 #' @keywords hplot
 #' @examples
-#'  gui_andrews(flea)
+#' gui_andrews(flea)
+
 gui_andrews <- function(data = flea, ...) {
-  
-  library(RGtk2)
-  library(gWidgets)
-  library(colorspace)
+  #require(tourr)
+  require(colorspace) 
+  require(gWidgets)
+  require(RGtk2)
+  options("guiToolkit"="RGtk2")
+
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
@@ -135,7 +138,7 @@ gui_andrews <- function(data = flea, ...) {
 #' Plots the Andrews Tour
 #'
 #' @keywords internal
-#' @author Bei Huang \email{beihuang@@iastate.edu}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 .create_andrews_tour <- function(data, var_selected, cat_selected, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")

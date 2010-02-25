@@ -1,7 +1,6 @@
 #' Scatterplot Tour GUI
 #' A graphical user interface enabling interactive control of a scatterplot tour.
 #'
-#' (Paragraph Description: Explain what it does)
 #'This GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
 #'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
@@ -29,7 +28,7 @@
 #' gui_xy(flea)
 
 gui_xy <- function(data = flea, ...) {
-  # require(tourr)
+  require(tourr)
   require("colorspace")
   require("gWidgets")
   require("RGtk2")
@@ -52,10 +51,9 @@ gui_xy <- function(data = flea, ...) {
       aps = svalue(sl)
     )
     # tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
-    tour_anim <<- with(tour, new_tour(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
     tour$display$init(tour$data)
-    tour$display$render_frame()
-    
+    tour$display$render_frame()    
     TRUE
   }
   
@@ -63,7 +61,8 @@ gui_xy <- function(data = flea, ...) {
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)  
 
-    tour_step <- tour_anim$step2(svalue(sl) / 33)
+   # tour_step <- tour_anim$step2(svalue(sl) / 33)
+    tour_step <- tour_anim(svalue(sl) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
     
     if (os == "win") {
@@ -242,7 +241,8 @@ tooltip(message1) <- "Click here for help."
 				"cm"=guided_tour(cm),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
-    "Local" = local_tour()
+    # "Local" = local_tour()
+    "Local" = local_tour(basis_init(length(var_selected), 2))
   )
   
   

@@ -1,15 +1,27 @@
-library(RGtk2)
-library(gWidgets)
-
+#' Image Tour GUI                                   
+#' Displays an Image Tour GUI                       
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @keywords display_image
+#' @examples
+#'  gui_image(flea)
 
 gui_image <- function(data = ozone, ...) {
+  require(RGtk2)
+  require(gWidgets)
+
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_image_tour(data,
       tour_type = svalue(TourType),
       aps = svalue(sl)
     )
@@ -93,8 +105,14 @@ gui_image <- function(data = ozone, ...) {
   invisible()
 }
 
+#' Image Tour Plotting
+#' Plots the Image Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 
-create_tour <- function(data, tour_type, aps) {
+
+.create_image_tour <- function(data, tour_type, aps) {
  if (aps > 9999) {
    gmessage("Please quit", icon = "warning")
    return()

@@ -1,15 +1,27 @@
-library(RGtk2)
-library(gWidgets)
-
+#' Stereo Tour GUI                                   
+#' Displays an Stereo Tour GUI                       
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @keywords display_stereo
+#' @examples
+#'  gui_stereo(flea)
 
 gui_stereo <- function(data = flea, ...) {
+  require(RGtk2)
+  require(gWidgets)
+
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
-    tour <<- create_tour(data,
+    tour <<- .create_stereo_tour(data,
       var_selected = svalue(Variables),
       tour_type = svalue(TourType),
       aps = svalue(sl)
@@ -103,8 +115,13 @@ gui_stereo <- function(data = flea, ...) {
   invisible()
 }
 
+#' Stereo Tour Plotting
+#' Plots the Stereo Tour
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 
-create_tour <- function(data, var_selected, tour_type, aps) {
+.create_stereo_tour <- function(data, var_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
