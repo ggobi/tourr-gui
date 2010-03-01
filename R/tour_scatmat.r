@@ -3,13 +3,13 @@ interface_scatmat = function(g8,data, w){
 
   # =============== Function: update_tour_scatmat ==================
   update_tour_scatmat <- function(...) {
-    tour <<- create_tour_scatmat(data,
+    tour <<- .create_mat_tour(data,
       var_selected = svalue(Variables_scatmat),
       projdim_selected = svalue(Projections_scatmat),
       tour_type = svalue(TourType_scatmat),
       aps = svalue(sl_scatmat)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
   # tour$display$render_frame()
@@ -23,7 +23,7 @@ interface_scatmat = function(g8,data, w){
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_scatmat) / 33)
+    tour_step <- tour_anim(svalue(sl_scatmat) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (find_platform()$os == "win") {
@@ -75,7 +75,7 @@ interface_scatmat = function(g8,data, w){
         anim_id <<- gIdleAdd(draw_frame_scatmat)
       }
     }
-    buttonGroup_scatmat <- ggroup(horizontal = F, cont=vbox_scatmat)
+    buttonGroup_scatmat <- ggroup(horizontal = FALSE, cont=vbox_scatmat)
 
     # addSpace(buttonGroup,10)
     gbutton("Apply", cont = buttonGroup_scatmat, handler = function(...){
@@ -94,41 +94,3 @@ interface_scatmat = function(g8,data, w){
 
 }
 # ============================ End of Gui_scatmat ==============
-
-
-# ============================ create_tour_scatmat =======================
-create_tour_scatmat <- function(data, var_selected, projdim_selected, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
-    return()
-  }
-
-
-  display <- display_scatmat(data,tour_path=tour_type)
-
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(as.numeric(projdim_selected)),
-    "Little" = little_tour(as.numeric(projdim_selected)),
-    "Guided(holes)" = guided_tour(holes,as.numeric(projdim_selected)),
-    "Guided(cm)" = guided_tour(cm,as.numeric(projdim_selected)),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(projdim_selected)),
-    "Local" = local_tour()
-  )
-
-  sel <- data[var_selected]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-}
-
-# --------------------- End of create_tour_scatmat ----------------------------

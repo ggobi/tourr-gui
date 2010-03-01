@@ -3,12 +3,12 @@ interface_stereo = function(g6, data, w){
 
   # ================= Function: update_tour_stereo ==================
   update_tour_stereo <- function(...) {
-    tour <<- create_tour_stereo(data,
+    tour <<- .create_stereo_tour(data,
       var_selected = svalue(Variables_stereo),
       tour_type = svalue(TourType_stereo),
       aps = svalue(sl_stereo)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -22,7 +22,7 @@ interface_stereo = function(g6, data, w){
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_stereo) / 33)
+    tour_step <- tour_anim(svalue(sl_stereo) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (find_platform()$os == "win") {
@@ -70,7 +70,7 @@ vbox_stereo <- glayout(cont = g6)
       anim_id <<- gIdleAdd(draw_frame_stereo)
     }
   }
-  buttonGroup_stereo <- ggroup(horizontal = F, cont=vbox_stereo)
+  buttonGroup_stereo <- ggroup(horizontal = FALSE, cont=vbox_stereo)
 
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_stereo, handler = function(...) {
@@ -90,41 +90,3 @@ vbox_stereo <- glayout(cont = g6)
   vbox_stereo[2:3, 4, anchor = c(0, -1)] <- buttonGroup_stereo
 }
 # ----------------------------- End of Gui_stereo ------------------------------
-
-# ============================= create_tour_stereo ============================
-create_tour_stereo <- function(data, var_selected, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
-    return()
-  }
-
-  blue = rgb(0, 0.91, 0.89)
-  red = rgb(0.98, 0.052, 0)
-  display <- display_stereo(data,tour_path=tour_type,blue,red)
-
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(3),
-    "Little" = little_tour(3),
-    "Guided(holes)" = guided_tour(holes,3),
-    "Guided(cm)" = guided_tour(cm,3),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),3),
-    "Local" = local_tour(3)
-  )
-
-  sel <- data[var_selected]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-}
-
-# ----------------------------- End of create_tour_stereo ---------------------

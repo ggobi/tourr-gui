@@ -1,20 +1,20 @@
 gui_tour<- function(data = flea, ...) {
+  require(tourr)
   require(colorspace)
-  require(RGtk2)
   require(gWidgets)
+  require(RGtk2)
   options("guiToolkit"="RGtk2")
   require(ash)
   require(TeachingDemos)  
   
-
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   tour <- NULL
   tour_anim <- NULL
 
-  w <- gwindow("2D Tour plot example", visible = T)
-  mw = gnotebook(cont=w, closebuttons = T)  
+  w <- gwindow("2D Tour plot example", visible = TRUE)
+  mw = gnotebook(cont=w, closebuttons = TRUE)  
   g8 = ggroup(cont = mw, horizontal = FALSE,label="gui_scatmat") 
   g7 = ggroup(cont = mw, horizontal = FALSE,label="gui_pcp")
   g6 = ggroup(cont = mw, horizontal = FALSE,label="gui_stereo")

@@ -3,14 +3,14 @@ interface_xy = function (g1,data,w) {
 
   # ================= Function: update_tour_xy =======================
   update_tour_xy <- function(...) {
-    tour <<- create_tour_xy(data,
+    tour <<- .create_xy_tour(data,
     var_selected = svalue(Variables_xy),
     cat_selected = svalue(Class_xy),
     axes_location = svalue(dl_xy),
     tour_type = svalue(TourType_xy),
     aps = svalue(sl_xy)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -24,7 +24,7 @@ interface_xy = function (g1,data,w) {
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_xy) / 33)
+    tour_step <- tour_anim(svalue(sl_xy) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (os == "win") {
@@ -81,7 +81,7 @@ interface_xy = function (g1,data,w) {
     }
   }
 
-  buttonGroup_xy <- ggroup(horizontal = F, cont=vbox_xy1)
+  buttonGroup_xy <- ggroup(horizontal = FALSE, cont=vbox_xy1)
 
   # Apply button & handler
   gbutton("Apply", cont = buttonGroup_xy, handler = function(...) {
@@ -108,50 +108,3 @@ title="gui_help",icon="info")
   vbox_xy1[4:6, 4, anchor = c(0, 1)] <- buttonGroup_xy
 
 }
-
-# ========================== Function: create_tour_xy ==========================
-create_tour_xy <- function(data, var_selected, cat_selected, axes_location, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
-    return()
-  }
-
-  # Work out point colours
-  cat <- data[cat_selected]
-  if (length(cat_selected) > 0) {
-    # collapse to single variable if multiple selected
-    int <- interaction(cat, drop = TRUE)
-    pal <- rainbow_hcl(length(levels(int)))
-    col <- pal[as.numeric(int)]
-  } else {
-    col <- "black"
-  }
-
-  display <- display_xy(data, axes = axes_location, center = TRUE,
-    col = col)
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(),
-    "Little" = little_tour(),
-    "Guided(holes)" = guided_tour(holes),
-    "Guided(cm)" = guided_tour(cm),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected])),
-    "Local" = local_tour()
-  )
-
-
-  sel <- data[var_selected]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-}
-# --------------------End of create_tour_xy-------------------------------------

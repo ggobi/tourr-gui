@@ -3,14 +3,14 @@ interface_density = function(g2,data, w){
 
   # =============== Function: update_tour_density ===============
   update_tour_density <- function(...) {
-    tour <<- create_1d_tour(data,
+    tour <<- .create_1d_tour(data,
       var_selected = svalue(Variables_density),
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
       tour_type = svalue(TourType_density),
       aps = svalue(sl_density)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -25,7 +25,7 @@ interface_density = function(g2,data, w){
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_density) / 33)
+    tour_step <- tour_anim(svalue(sl_density) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (find_platform()$os == "win") {
@@ -85,7 +85,7 @@ interface_density = function(g2,data, w){
     }
   }
 
-  buttonGroup_density <- ggroup(horizontal = F, cont=vbox_density)
+  buttonGroup_density <- ggroup(horizontal = FALSE, cont=vbox_density)
 
   # addSpace(buttonGroup_density,10)
   gbutton("Apply", cont = buttonGroup_density, handler = function(...) {
@@ -105,37 +105,3 @@ interface_density = function(g2,data, w){
 
 }
 # --------------------------- End of Gui_density -----------------------------------
-
-# ======================= Function: create_1d_tour ========================
-
-create_1d_tour <- function(data, var_selected, method_selected, center_selected, tour_type, aps) {
-  if (length(var_selected) < 2) {
-    gmessage("Please select at least two variables", icon = "warning")
-    return()
-  }
-
-  display <- display_dist(data, method = method_selected, center = center_selected)
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(),
-    "Little" = little_tour(),
-    "Guided(holes)" = guided_tour(holes),
-    "Guided(cm)" = guided_tour(cm),
-    "Local" = local_tour()
-  )
-
-  sel <- data[var_selected]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-}
-# ------------------- End of create_1d_tour ----------------------------

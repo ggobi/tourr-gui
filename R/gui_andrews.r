@@ -11,7 +11,7 @@
 #' gui_andrews(flea)
 
 gui_andrews <- function(data = flea, ...) {
-  #require(tourr)
+  require(tourr)
   require(colorspace) 
   require(gWidgets)
   require(RGtk2)
@@ -31,7 +31,7 @@ gui_andrews <- function(data = flea, ...) {
       tour_type = svalue(TourType),
       aps = svalue(sl)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
     
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -43,7 +43,7 @@ gui_andrews <- function(data = flea, ...) {
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(TRUE)  
 
-    tour_step <- tour_anim$step2(svalue(sl) / 33)
+    tour_step <- tour_anim(svalue(sl) / 33)
     if (os == "win") {
       tour$display$render_frame()
     } else {
@@ -97,7 +97,7 @@ gui_andrews <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  buttonGroup <- ggroup(horizontal = F, cont=vbox)  
+  buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup, handler = function(...) {

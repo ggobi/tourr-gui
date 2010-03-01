@@ -4,14 +4,14 @@ interface_faces = function(g3, data, w){
 
   # =============== Function: update_tour_faces ==================
   update_tour_faces <- function(...) {
-    tour <<- create_tour_faces(data,
+    tour <<- .create_faces_tour(data,
       var_selected = svalue(Variables_faces),
-      VarIndex = svalue(Variables_faces, index = T),
+      VarIndex = svalue(Variables_faces, index = TRUE),
       dim_selected = svalue(Dimensions_faces),
       tour_type = svalue(TourType_faces),
       aps = svalue(sl_faces)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -25,7 +25,7 @@ interface_faces = function(g3, data, w){
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_faces) / 33)
+    tour_step <- tour_anim(svalue(sl_faces) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (find_platform()$os == "win") {
@@ -77,7 +77,7 @@ interface_faces = function(g3, data, w){
         anim_id <<- gIdleAdd(draw_frame_faces)
       }
     }
-    buttonGroup_faces <- ggroup(horizontal = F, cont=vbox_faces)
+    buttonGroup_faces <- ggroup(horizontal = FALSE, cont=vbox_faces)
 
     # addSpace(buttonGroup,10)
     gbutton("Apply", cont = buttonGroup_faces, handler = function(...){
@@ -95,39 +95,3 @@ interface_faces = function(g3, data, w){
     vbox_faces[3, 4, anchor = c(0, 1)] <- buttonGroup_faces
 }
 # -------------------------- End of Gui_faces ----------------------------------
-  
-
-# ================= Function: create_tour_faces ===================
-create_tour_faces <- function(data, var_selected, VarIndex, dim_selected, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
-    return()
-  }
-
-  display <- display_faces(data, tour_path=tour_type)
-
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(as.numeric(dim_selected)),
-    "Little" = little_tour(as.numeric(dim_selected)),
-    "Guided(holes)" = guided_tour(holes,as.numeric(dim_selected)),
-    "Guided(cm)" = guided_tour(cm,as.numeric(dim_selected)),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
-    "Local" = local_tour(as.numeric(dim_selected))
-  )
-
-  sel <- data[VarIndex,1:6]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-}
-# --------------------- End of create_tour_faces ----------------------------

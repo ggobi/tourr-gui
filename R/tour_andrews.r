@@ -4,14 +4,14 @@ interface_andrews = function(g5, data,w){
 
   # =============== Function: update_tour_andrews ==============
   update_tour_andrews <- function(...) {
-    tour <<- create_tour_andrews(data,
+    tour <<- .create_andrews_tour(data,
       var_selected = svalue(Variables_andrews),
       cat_selected = svalue(Class_andrews),
       dim_selected = svalue(Dimensions_andrews),
       tour_type = svalue(TourType_andrews),
       aps = svalue(sl_andrews)
     )
-    tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+    tour_anim <<- with(tour, new_tour(data, tour_path))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -26,7 +26,7 @@ interface_andrews = function(g5, data,w){
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)
 
-    tour_step <- tour_anim$step2(svalue(sl_andrews) / 33)
+    tour_step <- tour_anim(svalue(sl_andrews) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
 
     if (find_platform()$os == "win") {
@@ -83,7 +83,7 @@ anim_id <- NULL
       anim_id <<- gIdleAdd(draw_frame_andrews)
     }
   }
-  buttonGroup_andrews <- ggroup(horizontal = F, cont=vbox_andrews)
+  buttonGroup_andrews <- ggroup(horizontal = FALSE, cont=vbox_andrews)
 
   # addSpace(buttonGroup,10)
   gbutton("Apply", cont = buttonGroup_andrews, handler = function(...) {
@@ -103,41 +103,3 @@ anim_id <- NULL
 
 }
 # ----------------------------- End of Gui_andrews ----------------------------------
-
-# ====================== Function: create_tour_andrews  ==================
-
-create_tour_andrews <- function(data, var_selected, cat_selected, dim_selected, tour_type, aps) {
-  if (length(var_selected) < 3) {
-    gmessage("Please select at least three variables", icon = "warning")
-    return()
-  }
-
-  display <- display_andrews(data,tour_path=tour_type, col=col)
-
-
-  # Work out which type of tour to use
-  tour <- switch(tour_type,
-    "Grand" = grand_tour(as.numeric(dim_selected)),
-    "Little" = little_tour(as.numeric(dim_selected)),
-    "Guided(holes)" = guided_tour(holes,as.numeric(dim_selected)),
-    "Guided(cm)" = guided_tour(cm,as.numeric(dim_selected)),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
-    "Local" = local_tour()
-  )
-
-  sel <- data[var_selected]
-  # Sphere the data if we're using a guided tour
-  if (length(grep(tour_type, "Guided")) > 0) {
-    sel <- sphere(sel)
-  }
-
-  list(
-    data = rescale(sel),
-    tour_path = tour,
-    display = display,
-    aps = aps
-  )
-
-}
-
-# -------------------- End of create_tour_andrews ------------------------

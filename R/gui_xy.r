@@ -50,10 +50,12 @@ gui_xy <- function(data = flea, ...) {
       lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
-    # tour_anim <<- with(tour, tourer(data, tour_path, velocity = aps / 33))
+
     tour_anim <<- with(tour, new_tour(data, tour_path))
+
     tour$display$init(tour$data)
     tour$display$render_frame()    
+
     TRUE
   }
   
@@ -61,7 +63,6 @@ gui_xy <- function(data = flea, ...) {
     # if there's no tour, don't draw anything
     if (is.null(tour)) return(FALSE)  
 
-   # tour_step <- tour_anim$step2(svalue(sl) / 33)
     tour_step <- tour_anim(svalue(sl) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
     
@@ -154,7 +155,7 @@ gui_xy <- function(data = flea, ...) {
     }
   }
   
-  buttonGroup <- ggroup(horizontal = F, cont=vbox)  
+  buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
@@ -210,6 +211,8 @@ tooltip(message1) <- "Click here for help."
 
 #' Scatterplot Tour Plotting
 #' Plots the scatterplot Tour
+#'
+#' Creates tour for gui_xy
 #'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
