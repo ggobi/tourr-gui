@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 #' @keywords hplot
 #' @examples
-#' gui_andrews(flea)
-
+#' \dontrun{gui_andrews(flea)}
 gui_andrews <- function(data = flea, ...) {
   require(tourr)
   require(colorspace) 

@@ -25,8 +25,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 #' @keywords hplot
 #' @examples
-#' gui_xy(flea)
-
+#' \dontrun{gui_xy(flea)}
 gui_xy <- function(data = flea, ...) {
   require(tourr)
   require("colorspace")

@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_faces
 #' @examples
-#'  gui_faces(flea)
-
+#' \dontrun{gui_faces(flea)}
 gui_faces <- function(data = flea, ...) {
   require(tourr)  
   require(gWidgets)

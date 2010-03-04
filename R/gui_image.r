@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_image
 #' @examples
-#'  gui_image(ozone)
-
+#' \dontrun{gui_image(ozone)}
 gui_image <- function(data = ozone, ...) {
   require(tourr)
   require(gWidgets)

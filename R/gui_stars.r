@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_stars
 #' @examples
-#'  gui_stars(flea)
-
+#' \dontrun{gui_stars(flea)}
 gui_stars <- function(data = flea, ...) {
   require(tourr)
   require(gWidgets)
@@ -70,7 +69,7 @@ gui_stars <- function(data = flea, ...) {
 
   # dimension control
   vbox[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
-  dimensions <- c(2:length(data[num]))
+  dimensions <- c(3:length(data[num]))
   vbox[4, 1, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
 
   # speed and pause

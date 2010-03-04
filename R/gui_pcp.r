@@ -8,7 +8,8 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_pcp
 #' @examples
-#'  gui_pcp(flea)
+#' \dontrun{gui_pcp(flea)}
+
 
 gui_pcp <- function(data = flea, ...) {
   require(tourr)

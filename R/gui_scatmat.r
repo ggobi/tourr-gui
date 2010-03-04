@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_scatmat
 #' @examples
-#'  gui_scatmat(flea)
-
+#' \dontrun{gui_scatmat(flea)}
 gui_scatmat <- function(data = flea, ...) {
   require(tourr)
   require(gWidgets)
@@ -69,8 +68,9 @@ gui_scatmat <- function(data = flea, ...) {
 
   # dimension control
   vbox[3, 1, anchor = c(-1, 0)] <- "Choose Projection Dimension"
-  projections <- c(2:length(data[num]))
+  projections <- c(3:length(data[num]))
   vbox[4, 1, anchor = c(-1, 0)] <- Projections <- gradio(projections)
+	
 
   # speed and pause
   vbox[3,3, anchor = c(-1, 0)] <- "Speed"
@@ -147,7 +147,8 @@ gui_scatmat <- function(data = flea, ...) {
     "Local" = local_tour()
   )
     
-  sel <- data[var_selected]
+  sel <- data[,var_selected]
+  #browser()
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)

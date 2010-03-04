@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_density
 #' @examples
-#'  gui_density(flea)
-
+#' \dontrun{gui_density(flea)}
 gui_density <- function(data = flea, ...) {
   require(tourr)
   require(gWidgets)

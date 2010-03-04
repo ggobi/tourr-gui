@@ -8,8 +8,7 @@
 #' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 #' @keywords display_stereo
 #' @examples
-#'  gui_stereo(flea)
-
+#' \dontrun{gui_stereo(flea)}
 gui_stereo <- function(data = flea, ...) {
   require(tourr) 
   require(gWidgets)
