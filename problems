@@ -1,8 +1,6 @@
 1. displays of animate_andrews, animate_pcp, animate_stereo are flickering.
    So are corresponding gui's.
-
 2. gui_tour are too long---solved
-
 3. local tour still has some unsolved problems.
 
 #********************Feb 2010**********************
@@ -10,11 +8,12 @@
 2. displays of animate_andrews, animate_stereo are flickering, so are corresponding gui's.
 3. tourer changed to new_tour, 
 4. changed tour_animate$step2(aps/33) to tour_animate(aps/33)
-
-#***************************************************
 5. local tour still has some unsolved problems---currently changed to  
-"Local" = local_tour(basis_init(length(var_selected), 2))
-6. gui_image, gui_star, gui_stereo doesn't work
-7, add an angle option for local_tour
-8. why does density plot have more than 6 variables
+"Local" = local_tour(basis_init(length(var_selected), 2),angle) 
+7, add an angle option for local_tour --- added angle
+6. gui_stereo, and gui_image work now (changed color specification problem, updated a function)
+8. why does density plot have more than 6 variables---grand_tour(1)
+	guided tour only work for 2d.---delete?
+#*********************March_2010*********************
+6. gui_star doesn't work
 9. gui_scatmat diagonal display has a problem.
