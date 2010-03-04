@@ -135,7 +135,7 @@ gui_scatmat <- function(data = flea, ...) {
 
 
   display <- display_scatmat(data,tour_path=tour_type)
-
+  
 
   # Work out which type of tour to use
   tour <- switch(tour_type,

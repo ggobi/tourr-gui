@@ -130,7 +130,7 @@ gui_stereo <- function(data = flea, ...) {
 
   blue = rgb(0, 0.91, 0.89)
   red = rgb(0.98, 0.052, 0)
-  display <- display_stereo(data,tour_path=tour_type,blue,red)
+  display <- display_stereo(data,tour_path=tour_type,blue = rgb(0, 0.91, 0.89), red = rgb(0.98, 0.052, 0))
 
 
   # Work out which type of tour to use

@@ -156,7 +156,7 @@ gui_density <- function(data = flea, ...) {
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(), 
+    "Grand" = grand_tour(1), 
     "Little" = little_tour(), 
     "Guided(holes)" = guided_tour(holes), 
     "Guided(cm)" = guided_tour(cm), 

@@ -124,7 +124,7 @@ gui_image <- function(data = ozone, ...) {
   zs <- dim(data)[3]
   dim(data) <- c(xs * ys, zs)
 
-  display <- display_image(data, xs, ys)
+  display <- display_image(xs, ys)
   # Work out which type of tour to use
   tour <- switch(tour_type,
     "Grand" = grand_tour(1), 
