@@ -48,6 +48,7 @@ gui_xy <- function(data = flea, ...) {
       tour_type = svalue(TourType),
       guided_type = svalue(GuidedType),
       lambda = svalue(LambdaValue),
+      angle = svalue(AngleValue),
       aps = svalue(sl)
     )
 
@@ -117,11 +118,19 @@ gui_xy <- function(data = flea, ...) {
   # Lambda selection column
   # Lambda's range is from 0 to 1.
 
-  vbox[3, 3, anchor=c(-1, 0)] <-"Lambda"
+  vbox[5, 2, anchor=c(-1, 0)] <-"Lambda"
   
-  vbox[4, 3] <- LambdaValue <- gspinbutton(from=0, to = 1, by = 0.01)
-  svalue(LambdaValue) <- 0.02
+  vbox[6, 2] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  #svalue(LambdaValue) <- 0.02
   tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
+
+  # Angle selection column
+  # Angle's range is from 0 to pi/2
+  
+  vbox[3, 3, anchor=c(-1,0)] <- "Angle"
+  vbox[4, 3] <- AngleValue <- gspinbutton(from=0, to=pi/2, by =0.01)
+  svalue(AngleValue) <- pi/4
+  tooltip(AngleValue) <- "Select angle's value to indicate the distance in local tour."
 
   # speed and pause
   # This slider can control the speed of the 2D tour, which ranged from 0 to 5.
@@ -131,7 +140,7 @@ gui_xy <- function(data = flea, ...) {
   tooltip(sl) <- "Drag to set the speed of the 2D Tour."
  
   # Pause box allow users to pause the dynamic 2D tour and have a close examination on the details.
-  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
+  vbox[7, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 2D Tour."
 
@@ -186,7 +195,7 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
 
-  vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
+  vbox[5:7, 3, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -216,7 +225,7 @@ tooltip(message1) <- "Click here for help."
 #'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-.create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
+.create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, angle, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
@@ -245,7 +254,7 @@ tooltip(message1) <- "Click here for help."
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     # "Local" = local_tour()
-    "Local" = local_tour(basis_init(length(var_selected), 2))
+    "Local" = local_tour(basis_init(length(var_selected), 2), angle)
   )
   
   
