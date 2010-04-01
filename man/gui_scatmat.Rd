@@ -9,4 +9,4 @@ Displays an Scatmat Tour GUI}
 \keyword{display_scatmat}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
 \item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{gui_scatmat(flea)}
+\examples{\dontrun{gui_scatmat(flea)}}

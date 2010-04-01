@@ -9,4 +9,4 @@ Displays an Andrews Tour GUI}
 \keyword{hplot}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
 \item{...}{other arguments passed on to \code{animate} and \code{display_xy}}}
-\examples{gui_andrews(flea)}
+\examples{\dontrun{gui_andrews(flea)}}

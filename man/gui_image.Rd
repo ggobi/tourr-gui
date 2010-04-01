@@ -9,4 +9,4 @@ Displays an Image Tour GUI}
 \keyword{display_image}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
 \item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{gui_image(flea)}
+\examples{\dontrun{gui_image(ozone)}}

@@ -9,4 +9,4 @@ Displays an PCP Tour GUI}
 \keyword{display_pcp}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
 \item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{gui_pcp(flea)}
+\examples{\dontrun{gui_pcp(flea)}}

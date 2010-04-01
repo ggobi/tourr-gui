@@ -9,4 +9,4 @@ Displays an Stereo Tour GUI}
 \keyword{display_stereo}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
 \item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{gui_stereo(flea)}
+\examples{\dontrun{gui_stereo(flea)}}
