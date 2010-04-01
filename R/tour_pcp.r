@@ -1,5 +1,10 @@
+#' PCP Tour Plotting
+#' Plots the PCP Tour in tab g7
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 # =============================== Gui_pcp ====================================
-interface_pcp = function(g7,data, w){
+.interface_pcp = function(g7,data, w){
 
   # ================= Function: update_tour_pcp ==================
   update_tour_pcp <- function(...) {

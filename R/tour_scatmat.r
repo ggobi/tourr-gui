@@ -1,5 +1,10 @@
+#' Scatmat Tour Plotting
+#' Plots the Scatmat Tour in tab g8
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 # =============================== Gui_scatmat ================================
-interface_scatmat = function(g8,data, w){
+.interface_scatmat = function(g8,data, w){
 
   # =============== Function: update_tour_scatmat ==================
   update_tour_scatmat <- function(...) {

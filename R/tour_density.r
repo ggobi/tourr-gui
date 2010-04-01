@@ -1,5 +1,10 @@
+#' Density Tour Plotting
+#' Plots the Density Tour in tab g2
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu}
 # =============================== Gui_density ==========================================
-interface_density = function(g2,data, w){
+.interface_density = function(g2,data, w){
 
   # =============== Function: update_tour_density ===============
   update_tour_density <- function(...) {

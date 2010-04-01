@@ -1,5 +1,10 @@
+#' Stereo Tour Plotting
+#' Plots the Stereo Tour in tab g6
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 # =============================== Gui_stereo ================================
-interface_stereo = function(g6, data, w){
+.interface_stereo = function(g6, data, w){
 
   # ================= Function: update_tour_stereo ==================
   update_tour_stereo <- function(...) {

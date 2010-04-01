@@ -47,7 +47,6 @@ gui_xy <- function(data = flea, ...) {
       tour_type = svalue(TourType),
       guided_type = svalue(GuidedType),
       lambda = svalue(LambdaValue),
-      angle = svalue(AngleValue),
       aps = svalue(sl)
     )
 
@@ -117,19 +116,11 @@ gui_xy <- function(data = flea, ...) {
   # Lambda selection column
   # Lambda's range is from 0 to 1.
 
-  vbox[5, 2, anchor=c(-1, 0)] <-"Lambda"
+  vbox[3,3, anchor=c(-1, 0)] <-"Lambda"
   
-  vbox[6, 2] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  vbox[4,3] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
   #svalue(LambdaValue) <- 0.02
   tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
-
-  # Angle selection column
-  # Angle's range is from 0 to pi/2
-  
-  vbox[3, 3, anchor=c(-1,0)] <- "Angle"
-  vbox[4, 3] <- AngleValue <- gspinbutton(from=0, to=pi/2, by =0.01)
-  svalue(AngleValue) <- pi/4
-  tooltip(AngleValue) <- "Select angle's value to indicate the distance in local tour."
 
   # speed and pause
   # This slider can control the speed of the 2D tour, which ranged from 0 to 5.
@@ -139,7 +130,7 @@ gui_xy <- function(data = flea, ...) {
   tooltip(sl) <- "Drag to set the speed of the 2D Tour."
  
   # Pause box allow users to pause the dynamic 2D tour and have a close examination on the details.
-  vbox[7, 2] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 2D Tour."
 
@@ -253,7 +244,7 @@ tooltip(message1) <- "Click here for help."
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     # "Local" = local_tour()
-    "Local" = local_tour(basis_init(length(var_selected), 2), angle)
+    "Local" = local_tour(basis_init(length(var_selected), 2))
   )
   
   

@@ -1,5 +1,10 @@
+#' Andrews Tour Plotting
+#' Plots the Andrews Tour in tab g5
+#'
+#' @keywords internal
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
 # =============================== Gui_andrews ===============================
-interface_andrews = function(g5, data,w){
+.interface_andrews = function(g5, data,w){
 
 
   # =============== Function: update_tour_andrews ==============

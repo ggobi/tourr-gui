@@ -134,7 +134,8 @@ gui_scatmat <- function(data = flea, ...) {
   }
 
 
-  display <- display_scatmat(data,tour_path=tour_type)
+  # display <- display_scatmat(data,tour_path=tour_type)
+  display <- display_scatmat(data)
   
 
   # Work out which type of tour to use
@@ -148,7 +149,7 @@ gui_scatmat <- function(data = flea, ...) {
   )
     
   sel <- data[,var_selected]
-  #browser()
+  # browser()
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)

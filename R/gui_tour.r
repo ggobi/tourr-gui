@@ -1,3 +1,14 @@
+#' Tour GUI                                   
+#' Displays all types of Tour GUI in different tabs                     
+#'
+#' (Paragraph Description: Explain what it does)
+#' 
+#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+#' @keywords display
+#' @examples
+#' \dontrun{gui_tour(flea)}
 gui_tour<- function(data = flea, ...) {
   require(tourr)
   require(colorspace)
@@ -25,14 +36,14 @@ gui_tour<- function(data = flea, ...) {
   g1 = ggroup(cont = mw, horizontal = FALSE,label="gui_xy") 
     
   
-  interface_xy(g1,data,w)
-  interface_density(g2,data,w)
-  interface_faces(g3,data,w)
-  interface_stars(g4,data,w)
-  interface_andrews(g5,data,w)
-  interface_stereo(g6,data,w)
-  interface_pcp(g7,data,w)
-  interface_scatmat(g8,data,w)
+  .interface_xy(g1,data,w)
+  .interface_density(g2,data,w)
+  .interface_faces(g3,data,w)
+  .interface_stars(g4,data,w)
+  .interface_andrews(g5,data,w)
+  .interface_stereo(g6,data,w)
+  .interface_pcp(g7,data,w)
+  .interface_scatmat(g8,data,w)
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz

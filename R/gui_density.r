@@ -5,7 +5,7 @@
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 #' @keywords display_density
 #' @examples
 #' \dontrun{gui_density(flea)}
