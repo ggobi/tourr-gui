@@ -1,9 +1,0 @@
-1. gui_tour are too long---solved
-2. displays of animate_andrews, animate_pcp, animate_stereo are flickering, so are corresponding gui's.
-
-3. tourer changed to new_tour, 
-4. changed tour_animate$step2(aps/33) to tour_animate(aps/33)
-
-5. local tour still has some unsolved problems---currently changed to  
-"Local" = local_tour(basis_init(length(var_selected), 2))
-
