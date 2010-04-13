@@ -1,11 +1,11 @@
 #' Stars Tour GUI                                   
 #' Displays an Stars Tour GUI                       
 #'
-#' (Paragraph Description: Explain what it does)
+#'This GUI allows users to control the stars tour by simply moving and clicking their mouses.
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 #' @keywords display_stars
 #' @examples
 #' \dontrun{gui_stars(flea)}
@@ -125,7 +125,7 @@ gui_stars <- function(data = flea, ...) {
 #' Plots the Stars Tour
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 
 .create_stars_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
   if (length(var_selected) < 3) {
@@ -134,7 +134,8 @@ gui_stars <- function(data = flea, ...) {
   }
 
 
-  display <- display_stars(data,tour_path=tour_type)
+  # display <- display_stars(data,tour_path=tour_type)
+  display <- display_stars(data)
 
 
   # Work out which type of tour to use

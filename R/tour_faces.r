@@ -2,7 +2,7 @@
 #' Plots the Faces Tour in tab g3
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_faces ====================================
 .interface_faces = function(g3, data, w){
 

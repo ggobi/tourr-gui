@@ -2,7 +2,7 @@
 #' Plots the PCP Tour in tab g7
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_pcp ====================================
 .interface_pcp = function(g7,data, w){
 

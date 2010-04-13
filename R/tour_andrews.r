@@ -2,7 +2,7 @@
 #' Plots the Andrews Tour in tab g5
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_andrews ===============================
 .interface_andrews = function(g5, data,w){
 

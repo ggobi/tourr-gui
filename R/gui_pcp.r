@@ -1,11 +1,28 @@
 #' PCP Tour GUI                                   
 #' Displays an PCP Tour GUI                       
 #'
-#' (Paragraph Description: Explain what it does)
+#'This GUI allows users to control the pcp tour by simply moving and clicking their mouses.(PCP tour is the animation of nD tour path with a parallel coordinates plot)
+#'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+#'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
+#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
+#'is black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
+#'categorical variable.
+#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
+#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+#'The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD pcp tour. 
+#'Dimension number of pcp tour is the axes number of the parallel coordinates.
+#'The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+#'The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
+#'The Apply button allows users to update the nD tour, when it doesn't automatically update.
+#'The Quit button allows users to close thie GUI window.
+#'The Help button provides information about the tour and also what this GUI can do.
+#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 #' @keywords display_pcp
 #' @examples
 #' \dontrun{gui_pcp(flea)}
@@ -26,8 +43,11 @@ gui_pcp <- function(data = flea, ...) {
   update_tour <- function(...) {
     tour <<- .create_pcp_tour(data,
       var_selected = svalue(Variables),
+      cat_selected = svalue(Class), 
       dim_selected = svalue(Dimensions), 
       tour_type = svalue(TourType),
+      guided_type = svalue(GuidedType),
+      lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -64,21 +84,39 @@ gui_pcp <- function(data = flea, ...) {
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
 
+  vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+    multiple = TRUE)
+  tooltip(Class) <- "Select a class variable to color the points."
+
   # Tour selection column
-  vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-  vbox[2, 3] <- TourType <- gradio(tour_types)
+  vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Local", "Guided")
+  vbox[2, 2] <- TourType <- gradio(tour_types)
+  tooltip(TourType) <- "Select a 2D Tour type."
+
+  #Guided indices selection
+  vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
+  tooltip(GuidedType) <- "Select an index type for guided tour."
+
+  # Lambda selection
+  vbox[3, 3, anchor=c(-1, 0)] <-"Lambda"
+  vbox[4, 3] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  #svalue(LambdaValue) <- 0.02
+  tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
 
   # dimension control
-  vbox[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
+  vbox[1, 3, anchor = c(-1, 0)] <- "Choose Dimension"
   dimensions <- c(2:length(data[num]))
-  vbox[4, 1, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
+  vbox[2, 3, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
 
   # speed and pause
-  vbox[3,3, anchor = c(-1, 0)] <- "Speed"
-  vbox[4,3, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox[5,1, anchor = c(-1, 0)] <- "Speed"
+  vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[4, 4] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # buttons control
@@ -107,7 +145,21 @@ gui_pcp <- function(data = flea, ...) {
     dispose(w)
   })
 
-  vbox[2:3, 4, anchor = c(0, 1)] <- buttonGroup
+  
+  # addSpace(buttonGroup,10)
+  message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
+
+When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
+
+There are several different types of tours: grand, guided, little, and local. The grand tour generates a random path, while the guided uses an index on interest such as holes, central mass, lda or pda to guide the choice of projections to particular structure. The little tour moves between existing variables, only covering a subset of all the space. The local tour contrains the choice of projection to be those near the current view.
+
+The GUI allows user to control the tour by checkboxes for the variable selection, slider for the speed, and toggle boxes for pause.",
+title="gui_help",icon="info")
+  })
+tooltip(message1) <- "Click here for help."
+
+  vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -127,26 +179,26 @@ gui_pcp <- function(data = flea, ...) {
 #' Plots the PCP Tour
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 
-.create_pcp_tour <- function(data, var_selected, dim_selected, tour_type, aps) {
+.create_pcp_tour <- function(data, var_selected, cat_selected, dim_selected, tour_type,  guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
   }
 
-
   display <- display_pcp(data,tour_path=tour_type)
-
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
     "Grand" = grand_tour(as.numeric(dim_selected)), 
     "Little" = little_tour(as.numeric(dim_selected)), 
-    "Guided(holes)" = guided_tour(holes,as.numeric(dim_selected)), 
-    "Guided(cm)" = guided_tour(cm,as.numeric(dim_selected)), 
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
-    "Local" = local_tour()
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(dim_selected)), 
+				"cm"=guided_tour(cm,as.numeric(dim_selected)),
+				"lda_pp" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
+				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda),as.numeric(dim_selected))),
+    # "Local" = local_tour()
+    "Local" = local_tour(basis_init(length(var_selected), 2))
   )
    
   sel <- data[var_selected]

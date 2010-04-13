@@ -1,11 +1,23 @@
 #' Stereo Tour GUI                                   
 #' Displays an Stereo Tour GUI                       
 #'
-#' (Paragraph Description: Explain what it does)
+#'This GUI allows users to control the Stereo tour by simply moving and clicking their mouses.
+#'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
+#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+#'For higher dimensional data a value closer to 1 would be advised.
+#'The Speed slider can control the speed of the 3D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+#'The Pause check box allow users to pause the dynamic 3D tour and have a close examination on the details.
+#'The Apply button allows users to update the 3D tour, when it doesn't automatically update.
+#'The Quit button allows users to close thie GUI window.
+#'The Help button provides information about the tour and also what this GUI can do.
+#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 #' @keywords display_stereo
 #' @examples
 #' \dontrun{gui_stereo(flea)}
@@ -61,16 +73,16 @@ gui_stereo <- function(data = flea, ...) {
     checked = TRUE, horizontal = FALSE)
 
   # Tour selection column
-  vbox[1, 3, anchor=c(-1, 0)] <- "Tour Type"
+  vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-  vbox[2, 3] <- TourType <- gradio(tour_types)
+  vbox[2, 2] <- TourType <- gradio(tour_types)
 
 
   # speed and pause
   vbox[3,1, anchor = c(-1, 0)] <- "Speed"
   vbox[4,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   
-  vbox[4, 3] <- chk_pause <- gcheckbox("Pause", 
+  vbox[4, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
 
   # buttons control
@@ -99,7 +111,20 @@ gui_stereo <- function(data = flea, ...) {
     dispose(w)
   })
 
-  vbox[2:3, 4, anchor = c(0, -1)] <- buttonGroup
+  # addSpace(buttonGroup,10)
+  message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
+
+When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
+
+There are several different types of tours: grand, guided, little, and local. The grand tour generates a random path, while the guided uses an index on interest such as holes, central mass, lda or pda to guide the choice of projections to particular structure. The little tour moves between existing variables, only covering a subset of all the space. The local tour contrains the choice of projection to be those near the current view.
+
+The GUI allows user to control the tour by checkboxes for the variable selection, slider for the speed, and toggle boxes for pause.",
+title="gui_help",icon="info")
+  })
+tooltip(message1) <- "Click here for help."
+
+  vbox[3:4, 3, anchor = c(0, -1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -119,7 +144,7 @@ gui_stereo <- function(data = flea, ...) {
 #' Plots the Stereo Tour
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 
 .create_stereo_tour <- function(data, var_selected, tour_type, aps) {
   if (length(var_selected) < 3) {

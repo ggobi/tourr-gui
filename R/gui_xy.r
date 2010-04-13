@@ -19,9 +19,9 @@
 #'The Quit button allows users to close thie GUI window.
 #'The Help button provides information about the tour and also what this GUI can do.
 #'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-
+#'
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{animate} and \code{display_xy}
+#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 #' @keywords hplot
 #' @examples
@@ -117,7 +117,6 @@ gui_xy <- function(data = flea, ...) {
   # Lambda's range is from 0 to 1.
 
   vbox[3,3, anchor=c(-1, 0)] <-"Lambda"
-  
   vbox[4,3] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
   #svalue(LambdaValue) <- 0.02
   tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
@@ -185,7 +184,7 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
 
-  vbox[5:7, 3, anchor = c(0, 1)] <- buttonGroup
+  vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -215,7 +214,7 @@ tooltip(message1) <- "Click here for help."
 #'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-.create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, angle, aps) {
+.create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()

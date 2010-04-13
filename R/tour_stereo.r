@@ -2,7 +2,7 @@
 #' Plots the Stereo Tour in tab g6
 #'
 #' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_stereo ================================
 .interface_stereo = function(g6, data, w){
 

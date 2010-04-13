@@ -5,7 +5,7 @@
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu} and Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 #' @keywords display
 #' @examples
 #' \dontrun{gui_tour(flea)}
@@ -63,5 +63,3 @@ gui_tour<- function(data = flea, ...) {
   visible(w) <- TRUE
   invisible()
 }
-
-#gui_tour(flea)
