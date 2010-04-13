@@ -12,8 +12,10 @@
 #'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
 #'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
 #'For higher dimensional data a value closer to 1 would be advised.
-#'The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot
-#'The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, FALSE means the tour will move along the x-axes.
+#'The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot. 
+#'The distribution of data projected into 1d can be displayed correspondingly as a histogram, kernel density estimate and average shifted histogram.
+#'The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, 
+#'FALSE means the tour will wander to the left and right. The default value is TRUE.
 #'The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 #'The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
 #'The Apply button allows users to update the 1D tour, when it doesn't automatically update.
@@ -86,18 +88,19 @@ gui_density <- function(data = flea, ...) {
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables) <- "Select variables to display in the 1D Tour."
   
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
   vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
     multiple = TRUE)
-  tooltip(Class) <- "Select a class variable to color the points."
+  tooltip(Class) <- "Select a class variable to classify the data."
 
 
   # Tour selection column
   vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Local", "Guided")
   vbox[2, 2] <- TourType <- gradio(tour_types)
-  tooltip(TourType) <- "Select a 2D Tour type."
+  tooltip(TourType) <- "Select a 1D Tour type."
 
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
   IntIndex <-c("holes","cm","lda_pp","pda_pp")
@@ -112,19 +115,23 @@ gui_density <- function(data = flea, ...) {
   # speed and pause
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl) <- "Drag to set the speed of the 1D Tour."
   
   vbox[5, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
+  tooltip(chk_pause) <- "Click here to pause or continue the 1D Tour."
 
   # method control
   vbox[1, 3, anchor = c(-1, 0)] <- "Method Type"
   method_types <- c("density","hist","ash")
   vbox[2, 3, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
+  tooltip(MethodType) <- "Select a display method for the 1D tour."
     
   # center control
   vbox[5,2, anchor=c(-1,0)] <- "Axes Locations"
   center_types <- c("TRUE", "FALSE")
   vbox[6,2, anchor=c(-1,0)] <- CenterType <- gradio(center_types)
+  tooltip(CenterType) <- "Choose to center the display or let it wander."
 
   # buttons control
   anim_id <- NULL
@@ -142,16 +149,18 @@ gui_density <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
+  tooltip(button1) <- "Click here to update the options."
   
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."
 
   # addSpace(buttonGroup,10)
   message1_den<-gbutton("Help",cont=buttonGroup, handler = function(...) {

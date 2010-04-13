@@ -13,7 +13,7 @@
 #'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
 #'The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD tour path with Andrews' curves. Dimension n ranges from 2 to the
 #'total number of the numeric variables of this dataset. The maximum dimension is 18. 
-#'The Choose Face Nuber slider allows users to specify how many faces to display. Face number ranges from 2 to the observation number of this dataset. 
+#'The Choose Face Number slider allows users to specify how many faces to display. Face number ranges from 2 to the observation number of this dataset. 
 #'Default face number is 4.
 #'The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 #'The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
@@ -86,17 +86,18 @@ gui_faces <- function(data = flea, ...) {
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables) <- "Select variables to display in the nD Tour."
 
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
   vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
     multiple = TRUE)
-  tooltip(Class) <- "Select a class variable to color the points."
+  tooltip(Class) <- "Select a class variable to classify the data."
 
   # Tour selection column
   vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Local", "Guided")
   vbox[2, 2] <- TourType <- gradio(tour_types)
-  tooltip(TourType) <- "Select a 2D Tour type."
+  tooltip(TourType) <- "Select a nD Tour type."
 
   #Guided indices selection
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
@@ -114,17 +115,21 @@ gui_faces <- function(data = flea, ...) {
   vbox[1, 3, anchor = c(-1, 0)] <- "Choose Dimension"
   dimensions <- c(2:length(data[num]))
   vbox[2, 3, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
+  tooltip(Dimensions) <- "Select dimension number n for displaying the nD Tour."
 
   # speed and pause
   vbox[5, 1, anchor = c(-1, 0)] <- "Speed"
   vbox[6, 1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
-  
+  tooltip(sl) <- "Drag to set the speed of the nD Tour."
+
   vbox[5, 2, anchor = c(-1, 0)] <- "Choose Face Number"
   vbox[6, 2, expand = TRUE] <- Faces <- gslider(from = 2, to = nrow(data), by = 1, value = 4 )
+  tooltip(Faces) <- "Drag to choose the face number."
   
   vbox[5, 3] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
- 
+  tooltip(chk_pause) <- "Click here to pause or continue the nD Tour."
+
   # buttons control
   anim_id <- NULL
   pause <- function(paused) {
@@ -140,16 +145,18 @@ gui_faces <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = function(...){
+  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...){
     pause(FALSE)
     update_tour()
   })
+  tooltip(button1) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+    button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
  # addSpace(buttonGroup,10)
   message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {

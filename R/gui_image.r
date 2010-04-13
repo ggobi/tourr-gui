@@ -1,12 +1,10 @@
 #' Image Tour GUI                                   
 #' Displays an Image Tour GUI                       
 #'
-#' This GUI allows users to control a 1d image tour plot by simply moving and clicking their mouses. 
+#' This GUI allows users to control an image tour plot by simply moving and clicking their mouses. 
 #'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 #'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-#'For higher dimensional data a value closer to 1 would be advised.
+#'The default index would be holes. 
 #'The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 #'The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
 #'The Apply button allows users to update the 1D tour, when it doesn't automatically update.
@@ -34,6 +32,7 @@ gui_image <- function(data = ozone, ...) {
   update_tour <- function(...) {
     tour <<- .create_image_tour(data,
       tour_type = svalue(TourType),
+      guided_type = svalue(GuidedType),
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -67,15 +66,23 @@ gui_image <- function(data = ozone, ...) {
 
   # Tour selection column
   vbox[1, 1, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little","Local")
+  tour_types <- c("Grand", "Little","Local","Guided")
   vbox[2, 1] <- TourType <- gradio(tour_types)
+  tooltip(TourType) <- "Select a 1D Tour type."
+
+  vbox[1, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm")
+  vbox[2, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
+  tooltip(GuidedType) <- "Select an index type for guided tour."
 
   # speed and pause
   vbox[3,1, anchor = c(-1, 0)] <- "Speed"
   vbox[4,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl) <- "Drag to set the speed of the 1D Tour."
   
   vbox[3,2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
+  tooltip(chk_pause) <- "Click here to pause or continue the 1D Tour."
 
   # buttons control
   anim_id <- NULL
@@ -92,13 +99,15 @@ gui_image <- function(data = ozone, ...) {
   buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  button1<- gbutton("Apply", cont = buttonGroup, handler = update_tour)
+  tooltip(button1) <- "Click here to update the options."
   
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."
 
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
@@ -136,7 +145,7 @@ tooltip(message1) <- "Click here for help."
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 
 
-.create_image_tour <- function(data, tour_type, aps) {
+.create_image_tour <- function(data, tour_type, guided_type, aps) {
  if (aps > 9999) {
    gmessage("Please quit", icon = "warning")
    return()
@@ -152,7 +161,9 @@ tooltip(message1) <- "Click here for help."
   tour <- switch(tour_type,
     "Grand" = grand_tour(1), 
     "Little" = little_tour(), 
-    "Local" = local_tour()
+    "Local" = local_tour(),
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
+				"cm"=guided_tour(cm))
   )
       
   list(

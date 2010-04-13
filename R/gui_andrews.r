@@ -83,23 +83,25 @@ gui_andrews <- function(data = flea, ...) {
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables) <- "Select variables to display in the nD Tour."
 
 
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
   vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
     multiple = TRUE)
-  tooltip(Class) <- "Select a class variable to color the points."
+  tooltip(Class) <- "Select a class variable to classify the points."
 
   # Tour selection column
   vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Local", "Guided")
   vbox[2, 2] <- TourType <- gradio(tour_types)
-  tooltip(TourType) <- "Select a 2D Tour type."
+  tooltip(TourType) <- "Select a nD Tour type."
 
   # dimension control
   vbox[1, 3, anchor = c(-1, 0)] <- "Choose Dimension"
   dimensions <- c(2:length(data[num]))
   vbox[2, 3, anchor = c(-1, 0)] <- Dimensions <- gradio(dimensions)
+  tooltip(Dimensions) <- "Select dimension number n for displaying the nD Tour."
   
   #Guided indices selection
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
@@ -116,9 +118,11 @@ gui_andrews <- function(data = flea, ...) {
   # speed and pause
   vbox[5, 1, anchor = c(-1, 0)] <- "Speed"
   vbox[6, 1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl) <- "Drag to set the speed of the nD Tour."
   
   vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
+  tooltip(chk_pause) <- "Click here to pause or continue the nD Tour."
 
   # buttons control
   anim_id <- NULL
@@ -135,16 +139,18 @@ gui_andrews <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
+  tooltip(button1) <- "Click here to update the options."
   
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {

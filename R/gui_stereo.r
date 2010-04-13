@@ -3,6 +3,10 @@
 #'
 #'This GUI allows users to control the Stereo tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+#'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
+#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
+#'is black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
+#'categorical variable.
 #'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 #'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 #'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
@@ -35,7 +39,10 @@ gui_stereo <- function(data = flea, ...) {
   update_tour <- function(...) {
     tour <<- .create_stereo_tour(data,
       var_selected = svalue(Variables),
+      cat_selected = svalue(Class), 
       tour_type = svalue(TourType),
+      guided_type = svalue(GuidedType),
+      lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -71,19 +78,37 @@ gui_stereo <- function(data = flea, ...) {
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables) <- "Select variables to display in the 3D Tour."
+
+  vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+    multiple = TRUE)
+  tooltip(Class) <- "Select a class variable to classify the points."
 
   # Tour selection column
   vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
+  tour_types <- c("Grand", "Little", "Local","Guided")
   vbox[2, 2] <- TourType <- gradio(tour_types)
+  tooltip(TourType) <- "Select a 3D Tour type."
 
+  vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
+  tooltip(GuidedType) <- "Select an index type for guided tour."
+
+  vbox[3,3, anchor=c(-1, 0)] <-"Lambda"
+  vbox[4,3] <- LambdaValue <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  #svalue(LambdaValue) <- 0.02
+  tooltip(LambdaValue) <- "Select lambda's value to calculate pda index."
 
   # speed and pause
-  vbox[3,1, anchor = c(-1, 0)] <- "Speed"
-  vbox[4,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox[5,1, anchor = c(-1, 0)] <- "Speed"
+  vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl) <- "Drag to set the speed of the 3D Tour."
   
-  vbox[4, 2] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
     handler = function(h, ...) pause(svalue(h$obj)))
+  tooltip(chk_pause) <- "Click here to pause or continue the 3D Tour."
 
   # buttons control
   anim_id <- NULL
@@ -100,16 +125,18 @@ gui_stereo <- function(data = flea, ...) {
   buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
   
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
+  tooltip(button1) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
+  tooltip(button2) <- "Click here to close this window."
 
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
@@ -124,7 +151,7 @@ title="gui_help",icon="info")
   })
 tooltip(message1) <- "Click here for help."
 
-  vbox[3:4, 3, anchor = c(0, -1)] <- buttonGroup
+  vbox[5:6, 3, anchor = c(0, -1)] <- buttonGroup
   
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
@@ -146,7 +173,7 @@ tooltip(message1) <- "Click here for help."
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 
-.create_stereo_tour <- function(data, var_selected, tour_type, aps) {
+.create_stereo_tour <- function(data, var_selected,cat_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
@@ -161,9 +188,10 @@ tooltip(message1) <- "Click here for help."
   tour <- switch(tour_type,
     "Grand" = grand_tour(3),
     "Little" = little_tour(3),
-    "Guided(holes)" = guided_tour(holes,3), 
-    "Guided(cm)" = guided_tour(cm,3),
-    "Guided(lda_pp)" = guided_tour(lda_pp(data[,cat_selected]),3),
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
+				"cm"=guided_tour(cm),
+				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
+				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     "Local" = local_tour(3)
   )
   
