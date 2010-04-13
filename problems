@@ -2,6 +2,12 @@
    So are corresponding gui's.
 2. gui_tour are too long---solved
 3. local tour still has some unsolved problems.
+4. Color doesn't work for all the other Guis except gui_xy and gui_stereo.
+5. Potential problems with animate_image and animate_stereo
+    animate_image(ozone,guided_tour(holes)),  animate_image(ozone,guided_tour(cm)), 
+    and animate_image(ozone,little_tour()) don't work, only animate_image(ozone,grand_tour(1)) works
+    animate_stereo(flea[,1:6],grand_tour(4)) or animate_stereo(flea[,1:6],grand_tour(6)) shouldn't work, 
+    and animate_stereo(flea[,1:6],guided_tour(holes)) should work. 
 
 #********************Feb 2010**********************
 1. gui_pcp works now
@@ -18,3 +24,5 @@
 #*********************March 2010 - April 2010*********************
 10. gui_star doesn't work---stars() argument problem
 11. gui_scatmat diagonal display has a problem.---varible name passing problem
+#*********************March 2010 - April 2010*********************
+12. updated gui_faces allows users to choose face number.
