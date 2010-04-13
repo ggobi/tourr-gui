@@ -2,7 +2,7 @@
 \alias{.create_xy_tour}
 \title{Scatterplot Tour Plotting...}
 \usage{.create_xy_tour(data, var_selected, cat_selected, axes_location,
-    tour_type, guided_type, lambda, angle, aps)}
+    tour_type, guided_type, lambda, aps)}
 \description{Scatterplot Tour Plotting
 Plots the scatterplot Tour}
 \details{Creates tour for gui_xy}

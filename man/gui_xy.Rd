@@ -25,5 +25,5 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{hplot}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
-\item{...}{other arguments passed on to \code{animate} and \code{display_xy}}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
 \examples{\dontrun{gui_xy(flea)}}
