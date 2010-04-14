@@ -8,11 +8,15 @@
 
   # =============== Function: update_tour_faces ==================
   update_tour_faces <- function(...) {
-    tour <<- .create_faces_tour(data,
+    tour <<- .create_face_tour(data,
       var_selected = svalue(Variables_faces),
-      VarIndex = svalue(Variables_faces, index = TRUE),
+      # VarIndex = svalue(Variables_faces, index = TRUE),
+      cat_selected = svalue(Class_faces), 
       dim_selected = svalue(Dimensions_faces),
+      nface_selected = svalue(Faces_faces),
       tour_type = svalue(TourType_faces),
+      guided_type = svalue(GuidedType_faces),
+      lambda = svalue(LambdaValue_faces),
       aps = svalue(sl_faces)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -51,23 +55,48 @@
     vbox_faces[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
     vbox_faces[2, 1] <- Variables_faces <- gcheckboxgroup(names(data[num]),
       checked = TRUE, horizontal = FALSE)
+    tooltip(Variables_faces ) <- "Select variables to display in the nD Tour."
+
+    vbox_faces[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+    vbox_faces[4, 1, anchor = c(-1, 0)] <- Class_faces <- gtable(names(data)[!num], 
+    multiple = TRUE)
+    tooltip(Class_faces) <- "Select a class variable to classify the data."
 
     # Tour selection column
-    vbox_faces[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-    tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-    vbox_faces[2, 3] <- TourType_faces <- gradio(tour_types)
+    vbox_faces[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+    tour_types <- c("Grand", "Little", "Local", "Guided")
+    vbox_faces[2, 2] <- TourType_faces <- gradio(tour_types)
+    tooltip(TourType_faces) <- "Select a nD Tour type."
 
+  #Guided indices selection
+    vbox_faces[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+    IntIndex <-c("holes","cm","lda_pp","pda_pp")
+    vbox_faces[4, 2, anchor=c(-1,-1)] <-  GuidedType_faces <- gdroplist(IntIndex)
+    tooltip(GuidedType_faces) <- "Select an index type for guided tour."
+
+  # Lambda selection
+    vbox_faces[3, 3, anchor=c(-1, 0)] <-"Lambda"
+    vbox_faces[4, 3] <- LambdaValue_faces <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+    tooltip(LambdaValue_faces) <- "Select lambda's value to calculate pda index."
+   
     # speed and pause
-    vbox_faces[3,3, anchor = c(-1, 0)] <- "Speed"
-    vbox_faces[4,3, expand = TRUE] <- sl_faces <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+    vbox_faces[5,1, anchor = c(-1, 0)] <- "Speed"
+    vbox_faces[6,1, expand = TRUE] <- sl_faces <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+    tooltip(sl_faces) <- "Drag to set the speed of the nD Tour."
 
-    vbox_faces[4, 4] <- chk_pause_faces <- gcheckbox("Pause",
+    vbox_faces[5, 3] <- chk_pause_faces <- gcheckbox("Pause",
       handler = function(h, ...) pause_faces(svalue(h$obj)))
+    tooltip(chk_pause_faces) <- "Click here to pause or continue the nD Tour."
+
+    vbox_faces[5, 2, anchor = c(-1, 0)] <- "Choose Face Number"
+    vbox_faces[6, 2, expand = TRUE] <- Faces_faces <- gslider(from = 2, to = nrow(data), by = 1, value = 4 )
+    tooltip(Faces_faces) <- "Drag to choose the face number."
 
     # dimension control
-    vbox_faces[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
+    vbox_faces[1, 3, anchor = c(-1, 0)] <- "Choose Dimension"
     dimensions <- c(2:length(data[num]))
-    vbox_faces[4, 1, anchor = c(-1, 0)] <- Dimensions_faces <- gradio(dimensions)
+    vbox_faces[2, 3, anchor = c(-1, 0)] <- Dimensions_faces <- gradio(dimensions)
+    tooltip(Dimensions_faces) <- "Select dimension number n for displaying the nD Tour."
 
     # buttons control
     anim_id <- NULL
@@ -84,18 +113,20 @@
     buttonGroup_faces <- ggroup(horizontal = FALSE, cont=vbox_faces)
 
     # addSpace(buttonGroup,10)
-    gbutton("Apply", cont = buttonGroup_faces, handler = function(...){
+    button1_faces<- gbutton("Apply", cont = buttonGroup_faces, handler = function(...){
       print("apply from gui_faces")
       pause_faces(FALSE)
       update_tour_faces()
     })
+    tooltip(button1_faces) <- "Click here to update the options."
 
     # addSpace(buttonGroup,10)
-    gbutton("Quit",cont=buttonGroup_faces, handler = function(...) {
+    button2_faces<- gbutton("Quit",cont=buttonGroup_faces, handler = function(...) {
       pause_faces(TRUE)
       dispose(w)
     })
+    tooltip(button2_faces) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
-    vbox_faces[3, 4, anchor = c(0, 1)] <- buttonGroup_faces
+    vbox_faces[6, 3, anchor = c(0, 1)] <- buttonGroup_faces
 }
 # -------------------------- End of Gui_faces ----------------------------------

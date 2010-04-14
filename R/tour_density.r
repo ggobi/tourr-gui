@@ -10,9 +10,12 @@
   update_tour_density <- function(...) {
     tour <<- .create_1d_tour(data,
       var_selected = svalue(Variables_density),
+      cat_selected = svalue(Class_density), 
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
       tour_type = svalue(TourType_density),
+      guided_type = svalue(GuidedType_density),
+      lambda = svalue(LambdaValue_density),
       aps = svalue(sl_density)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -54,28 +57,48 @@
   vbox_density[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_density[2, 1] <- Variables_density <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables_density) <- "Select variables to display in the 1D Tour."
+
+  vbox_density[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox_density[4, 1, anchor = c(-1, 0)] <- Class_density <- gtable(names(data)[!num], 
+    multiple = TRUE)
+  tooltip(Class_density) <- "Select a class variable to classify the data."
 
   # Tour selection column
-  vbox_density[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Local")
-  vbox_density[2, 3] <- TourType_density <- gradio(tour_types)
+  vbox_density[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Local", "Guided")
+  vbox_density[2, 2] <- TourType_density <- gradio(tour_types)
+  tooltip(TourType_density) <- "Select a 1D Tour type."
+
+  vbox_density[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox_density[4, 2, anchor=c(-1,-1)] <-  GuidedType_density <- gdroplist(IntIndex)
+  tooltip(GuidedType_density) <- "Select an index type for guided tour."
+
+  vbox_density[3,3, anchor=c(-1, 0)] <-"Lambda"
+  vbox_density[4,3] <- LambdaValue_density <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  tooltip(LambdaValue_density) <- "Select lambda's value to calculate pda index."
 
   # speed and pause
   vbox_density[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox_density[6,1, expand = TRUE] <- sl_density <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl_density) <- "Drag to set the speed of the 1D Tour."
 
-  vbox_density[6, 3] <- chk_pause_density <- gcheckbox("Pause",
+  vbox_density[5, 3] <- chk_pause_density <- gcheckbox("Pause",
     handler = function(h, ...) pause_density(svalue(h$obj)))
+  tooltip(chk_pause_density) <- "Click here to pause or continue the 1D Tour."
 
   # method control
-  vbox_density[3, 1, anchor = c(-1, 0)] <- "Method Type"
+  vbox_density[1, 3, anchor = c(-1, 0)] <- "Method Type"
   method_types <- c("density","hist","ash")
-  vbox_density[4, 1, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
+  vbox_density[2, 3, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
+  tooltip(MethodType) <- "Select a display method for the 1D tour."
 
   # center control
-  vbox_density[3,3, anchor=c(-1,0)] <- "Center or Not"
+  vbox_density[5,2, anchor=c(-1,0)] <- "Center or Not"
   center_types <- c("TRUE", "FALSE")
-  vbox_density[4,3, anchor=c(-1,0)] <- CenterType <- gradio(center_types)
+  vbox_density[6,2, anchor=c(-1,0)] <- CenterType <- gradio(center_types)
+  tooltip(CenterType) <- "Choose to center the display or let it wander."
 
   # buttons control
   anim_id <- NULL
@@ -93,20 +116,22 @@
   buttonGroup_density <- ggroup(horizontal = FALSE, cont=vbox_density)
 
   # addSpace(buttonGroup_density,10)
-  gbutton("Apply", cont = buttonGroup_density, handler = function(...) {
+  button1_density <-gbutton("Apply", cont = buttonGroup_density, handler = function(...) {
     print("apply from gui_density")
     opar <- par(mfrow = c(1,1))
     pause_density(FALSE)
     update_tour_density()
   })
+  tooltip(button1_density ) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup_density, handler = function(...) {
+  button2_density <-gbutton("Quit",cont=buttonGroup_density, handler = function(...) {
     pause_density(TRUE)
     dispose(w)
   })
+  tooltip(button2_density ) <- "Click here to close this window."
 
-  vbox_density[4:6, 4, anchor = c(0, 1)] <- buttonGroup_density
+  vbox_density[6, 3, anchor = c(0, 1)] <- buttonGroup_density
 
 }
 # --------------------------- End of Gui_density -----------------------------------
