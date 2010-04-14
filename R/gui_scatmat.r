@@ -134,11 +134,9 @@ gui_scatmat <- function(data = flea, ...) {
   }
 
 
-  # display <- display_scatmat(data,tour_path=tour_type)
   # cat("names:\n");print(names(data))
   # cat("\n\ndimnames:\n");print(dimnames(data))
-  # display <- display_scatmat(data, labels = var_selected[1:as.numeric(projdim_selected)])
-  display <- display_scatmat(data)  
+  display <- display_scatmat()  
 
   # Work out which type of tour to use
   tour <- switch(tour_type,

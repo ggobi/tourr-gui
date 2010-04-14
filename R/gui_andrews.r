@@ -210,7 +210,7 @@ tooltip(message1) <- "Click here for help."
     col <- "black"
   }
 
-  display <- display_andrews(data,tour_path=tour_type, col=col)
+  display <- display_andrews(col=col)
 
 
   # Work out which type of tour to use

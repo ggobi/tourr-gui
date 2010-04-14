@@ -199,7 +199,7 @@ tooltip(message1) <- "Click here for help."
     return()
   }
 
-  display <- display_faces(data, axes = axes_location, col=col)
+  display <- display_faces(axes = axes_location, col=col)
     
 
   # Work out which type of tour to use

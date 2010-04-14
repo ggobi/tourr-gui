@@ -231,8 +231,7 @@ tooltip(message1) <- "Click here for help."
     col <- "black"
   }
   
-  display <- display_xy(data, axes = axes_location, center = TRUE, 
-    col = col)
+  display <- display_xy(axes = axes_location, center = TRUE, col = col)
 
   # Work out which type of tour to use
   tour <- switch(tour_type,

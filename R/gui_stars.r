@@ -134,8 +134,7 @@ gui_stars <- function(data = flea, ...) {
   }
 
 
-  # display <- display_stars(data,tour_path=tour_type)
-  display <- display_stars(data)
+  display <- display_stars()
 
 
   # Work out which type of tour to use

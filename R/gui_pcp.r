@@ -192,7 +192,7 @@ tooltip(message1) <- "Click here for help."
     return()
   }
 
-  display <- display_pcp(data,tour_path=tour_type)
+  display <- display_pcp()
 
   # Work out which type of tour to use
   tour <- switch(tour_type,

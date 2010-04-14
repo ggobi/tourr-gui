@@ -208,7 +208,7 @@ tooltip(message1_den) <- "Click here for help."
     return()
   }
    
-  display <- display_dist(data, method = method_selected, center = center_selected ,col=col) 
+  display <- display_dist(method = method_selected, center = center_selected ,col=col) 
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
