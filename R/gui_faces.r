@@ -4,16 +4,14 @@
 #'This GUI allows users to control the faces tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
 #'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
-#'is black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
-#'categorical variable.
+#'Color isn't implemented with the faces tour yet. 
 #'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 #'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 #'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
 #'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
 #'The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD tour path with Andrews' curves. Dimension n ranges from 2 to the
-#'total number of the numeric variables of this dataset. The maximum dimension is 18. 
-#'The Choose Face Number slider allows users to specify how many faces to display. Face number ranges from 2 to the observation number of this dataset. 
+#'total number of the numeric variables of this dataset. The maximum dimension is 18 because that is the limit of facial features to map to variables. 
+#'The Choose Face Number slider allows users to specify how many faces to display. Face number ranges from 2 to the number of observations in this dataset. 
 #'Default face number is 4.
 #'The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 #'The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
