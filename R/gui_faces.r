@@ -1,7 +1,7 @@
 #' Face Tour GUI                                   
 #' Displays a Chernoff's Face Tour GUI                       
 #'
-#'This GUI allows users to control the faces tour tour by simply moving and clicking their mouses.
+#'This GUI allows users to control the faces tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
 #'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
 #'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
@@ -118,12 +118,12 @@ gui_faces <- function(data = flea, ...) {
   tooltip(Dimensions) <- "Select dimension number n for displaying the nD Tour."
 
   # speed and pause
-  vbox[5, 1, anchor = c(-1, 0)] <- "Speed"
-  vbox[6, 1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox[5, 2, anchor = c(-1, 0)] <- "Speed"
+  vbox[6, 2, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   tooltip(sl) <- "Drag to set the speed of the nD Tour."
 
-  vbox[5, 2, anchor = c(-1, 0)] <- "Choose Face Number"
-  vbox[6, 2, expand = TRUE] <- Faces <- gslider(from = 2, to = nrow(data), by = 1, value = 4 )
+  vbox[5, 1, anchor = c(-1, 0)] <- "Choose Face Number"
+  vbox[6, 1, expand = TRUE] <- Faces <- gslider(from = 2, to = nrow(data), by = 1, value = 4 )
   tooltip(Faces) <- "Drag to choose the face number."
   
   vbox[5, 3] <- chk_pause <- gcheckbox("Pause", 

@@ -9,8 +9,12 @@
   update_tour_stars <- function(...) {
     tour <<- .create_stars_tour(data,
       var_selected = svalue(Variables_stars),
+      cat_selected = svalue(Class_stars), 
       dim_selected = svalue(Dimensions_stars),
+      nstar_selected = svalue(Star_stars),
       tour_type = svalue(TourType_stars),
+      guided_type = svalue(GuidedType_stars),
+      lambda = svalue(LambdaValue_stars),
       aps = svalue(sl_stars)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -50,23 +54,48 @@
   vbox_stars[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_stars[2, 1] <- Variables_stars <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables_stars) <- "Select variables to display in the nD Tour."
+
+  vbox_stars[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox_stars[4, 1, anchor = c(-1, 0)] <- Class_stars <- gtable(names(data)[!num], 
+    multiple = TRUE)
+  tooltip(Class_stars) <- "Select a class variable to classify the data."
 
   # Tour selection column
-  vbox_stars[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-  vbox_stars[2, 3] <- TourType_stars <- gradio(tour_types)
+  vbox_stars[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little","Local", "Guided")
+  vbox_stars[2, 2] <- TourType_stars <- gradio(tour_types)
+  tooltip(TourType_stars) <- "Select a nD Tour type."
+
+  #Guided indices selection
+  vbox_stars[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox_stars[4, 2, anchor=c(-1,-1)] <-  GuidedType_stars <- gdroplist(IntIndex)
+  tooltip(GuidedType_stars) <- "Select an index type for guided tour."
+
+  # Lambda selection
+  vbox_stars[3, 3, anchor=c(-1, 0)] <-"Lambda"
+  vbox_stars[4, 3] <- LambdaValue_stars <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  tooltip(LambdaValue_stars) <- "Select lambda's value to calculate pda index."
 
   # dimension control
-  vbox_stars[3, 1, anchor = c(-1, 0)] <- "Choose Dimension"
-  dimensions <- c(2:length(data[num]))
-  vbox_stars[4, 1, anchor = c(-1, 0)] <- Dimensions_stars <- gradio(dimensions)
+  vbox_stars[1, 3, anchor = c(-1, 0)] <- "Choose Dimension"
+  dimensions <- c(3:length(data[num]))
+  vbox_stars[2, 3, anchor = c(-1, 0)] <- Dimensions_stars <- gradio(dimensions)
+  tooltip(Dimensions_stars) <- "Select dimension number for displaying the nD Tour."
+
+  vbox_stars[5, 1, anchor = c(-1, 0)] <- "Choose Star Number"
+  vbox_stars[6, 1, expand = TRUE] <- Star_stars <- gslider(from = 3, to = nrow(data), by = 1, value = 4 )
+  tooltip(Star_stars) <- "Drag to choose the face number."
 
   # speed and pause
-  vbox_stars[3,3, anchor = c(-1, 0)] <- "Speed"
-  vbox_stars[4,3, expand = TRUE] <- sl_stars <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox_stars[5,2, anchor = c(-1, 0)] <- "Speed"
+  vbox_stars[6,2, expand = TRUE] <- sl_stars <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl_stars) <- "Drag to set the speed of the nD Tour."
 
-  vbox_stars[4, 4] <- chk_pause_stars <- gcheckbox("Pause",
+  vbox_stars[5, 3] <- chk_pause_stars <- gcheckbox("Pause",
     handler = function(h, ...) pause_stars(svalue(h$obj)))
+  tooltip(chk_pause_stars) <- "Click here to pause or continue the nD Tour."
 
   # buttons control
   anim_id <- NULL
@@ -83,20 +112,22 @@
   buttonGroup_stars <- ggroup(horizontal = FALSE, cont=vbox_stars)
 
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup_stars, handler = function(...){
+  button1_stars<- gbutton("Apply", cont = buttonGroup_stars, handler = function(...){
     print("apply from gui_stars")
     opar <- par(mfrow = c(1,1))
     pause_stars(FALSE)
     update_tour_stars()
   })
+  tooltip(button1_stars) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup_stars, handler = function(...) {
+  button2_stars<- gbutton("Quit",cont=buttonGroup_stars, handler = function(...) {
     pause_stars(TRUE)
     dispose(w)
   })
+  tooltip(button2_stars) <- "Click here to update the options."
 
-  vbox_stars[2:3, 4, anchor = c(0, 1)] <- buttonGroup_stars
+  vbox_stars[6,3, anchor = c(0, 1)] <- buttonGroup_stars
   
 }
 # ------------------------- End of Gui_stars ----------------------------

@@ -10,7 +10,10 @@
   update_tour_stereo <- function(...) {
     tour <<- .create_stereo_tour(data,
       var_selected = svalue(Variables_stereo),
+      cat_selected = svalue(Class_stereo),
       tour_type = svalue(TourType_stereo),
+      guided_type = svalue(GuidedType_stereo),
+      lambda = svalue(LambdaValue_stereo),
       aps = svalue(sl_stereo)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
@@ -49,19 +52,36 @@ vbox_stereo <- glayout(cont = g6)
   vbox_stereo[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_stereo[2, 1] <- Variables_stereo <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
+  tooltip(Variables_stereo) <- "Select variables to display in the 3D Tour."
+
+  vbox_stereo[3, 1, anchor = c(-1, 0)] <- "Class Selection"
+  vbox_stereo[4, 1, anchor = c(-1, 0)] <- Class_stereo <- gtable(names(data)[!num], 
+    multiple = TRUE)
+  tooltip(Class_stereo) <- "Select a class variable to classify the points."
 
   # Tour selection column
-  vbox_stereo[1, 3, anchor=c(-1, 0)] <- "Tour Type"
-  tour_types <- c("Grand", "Little", "Guided(holes)", "Guided(cm)", "Guided(lda_pp)", "Local")
-  vbox_stereo[2, 3] <- TourType_stereo <- gradio(tour_types)
+  vbox_stereo[1, 2, anchor=c(-1, 0)] <- "Tour Type"
+  tour_types <- c("Grand", "Little", "Local","Guided")
+  vbox_stereo[2, 2] <- TourType_stereo <- gradio(tour_types)
+  tooltip(TourType_stereo) <- "Select a 3D Tour type."
 
+  vbox_stereo[3, 2, anchor=c(-1, 0)] <- "Guided indices"
+  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  vbox_stereo[4, 2, anchor=c(-1,-1)] <-  GuidedType_stereo <- gdroplist(IntIndex)
+  tooltip(GuidedType_stereo) <- "Select an index type for guided tour."
+
+  vbox_stereo[3,3, anchor=c(-1, 0)] <-"Lambda"
+  vbox_stereo[4,3] <- LambdaValue_stereo <- gslider(from=0, to = 1, by = 0.01,value=0.02)
+  tooltip(LambdaValue_stereo) <- "Select lambda's value to calculate pda index."
 
   # speed and pause
-  vbox_stereo[3,1, anchor = c(-1, 0)] <- "Speed"
-  vbox_stereo[4,1, expand = TRUE] <- sl_stereo <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  vbox_stereo[5,1, anchor = c(-1, 0)] <- "Speed"
+  vbox_stereo[6,1, expand = TRUE] <- sl_stereo <- gslider(from = 0, to = 5, by = 0.1, value = 1)
+  tooltip(sl_stereo) <- "Drag to set the speed of the 3D Tour."
 
-  vbox_stereo[4, 3] <- chk_pause_stereo <- gcheckbox("Pause",
+  vbox_stereo[6, 2] <- chk_pause_stereo <- gcheckbox("Pause",
     handler = function(h, ...) pause_stereo(svalue(h$obj)))
+  tooltip(chk_pause_stereo) <- "Click here to pause or continue the 3D Tour."
 
   # buttons control
   anim_id <- NULL
@@ -78,20 +98,21 @@ vbox_stereo <- glayout(cont = g6)
   buttonGroup_stereo <- ggroup(horizontal = FALSE, cont=vbox_stereo)
 
   # addSpace(buttonGroup,10)
-  gbutton("Apply", cont = buttonGroup_stereo, handler = function(...) {
+  button1_stereo<- gbutton("Apply", cont = buttonGroup_stereo, handler = function(...) {
     print("apply from gui_stereo")
     opar <- par(mfrow = c(1,1))
     pause_stereo(FALSE)
     update_tour_stereo()
   })
-
+  tooltip(button1_stereo) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  gbutton("Quit",cont=buttonGroup_stereo, handler = function(...) {
+  button2_stereo<- gbutton("Quit",cont=buttonGroup_stereo, handler = function(...) {
     pause_stereo(TRUE)
     dispose(w)
   })
+  tooltip(button2_stereo) <- "Click here to close this window."
 
-  vbox_stereo[2:3, 4, anchor = c(0, -1)] <- buttonGroup_stereo
+  vbox_stereo[5:6, 3, anchor = c(0, -1)] <- buttonGroup_stereo
 }
 # ----------------------------- End of Gui_stereo ------------------------------
