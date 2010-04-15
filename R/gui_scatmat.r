@@ -4,14 +4,12 @@
 #'This GUI allows users to control the scatter matrix tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
 #'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
-#'is black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
-#'categorical variable.
+#'Color isn't implemented with the scatmat tour yet. 
 #'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 #'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 #'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
 #'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-#'The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour." 
+#'The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour. 
 #'The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 #'The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
 #'The Apply button allows users to update the nD tour, when it doesn't automatically update.
