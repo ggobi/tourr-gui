@@ -1,7 +1,7 @@
 #' Tour GUI                                   
 #' Displays all types of Tour GUI in different tabs                     
 #'
-#' (Paragraph Description: Explain what it does)
+#' Combines all of the tour gui's into one, putting a separate tab for each.
 #' 
 #' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 #' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
