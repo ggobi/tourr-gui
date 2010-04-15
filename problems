@@ -1,6 +1,5 @@
 1. displays of animate_andrews, animate_pcp, animate_stereo are flickering.
    So are corresponding gui's.
-2. gui_tour are too long---solved
 3. local tour still has some unsolved problems.
 4. Color doesn't work for all the other Guis except gui_xy and gui_stereo.
 5. Potential problems with animate_image and animate_stereo
@@ -10,6 +9,7 @@
     and animate_stereo(flea[,1:6],guided_tour(holes)) should work. 
 
 #********************Feb 2010**********************
+0. gui_tour are too long---solved
 1. gui_pcp works now
 2. displays of animate_andrews, animate_stereo are flickering, so are corresponding gui's.
 3. tourer changed to new_tour, 
@@ -22,7 +22,9 @@
 9. delete angle option for local tour --- to keep tour_gui clean(easy to manipulate)
 
 #*********************March 2010 - April 2010*********************
-10. gui_star doesn't work---stars() argument problem
-11. gui_scatmat diagonal display has a problem.---varible name passing problem
+10. gui_star doesn't work---stars() argument problem---Solved
+11. gui_scatmat diagonal display has a problem.---varible name passing problem---Solved
+---Haven't change format for gui_scatmat, gui_star, tour_scatmat, and tour_star---Solved
 #*********************March 2010 - April 2010*********************
 12. updated gui_faces allows users to choose face number.
+13. updated gui_stars allows users to choose star number.
