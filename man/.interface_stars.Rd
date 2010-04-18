@@ -1,9 +1,8 @@
-\name{.create_stars_tour}
-\alias{.create_stars_tour}
+\name{.interface_stars}
+\alias{.interface_stars}
 \title{Stars Tour Plotting...}
-\usage{.create_stars_tour(data, var_selected, nstar_selected, cat_selected,
-    dim_selected, tour_type, guided_type, lambda, aps)}
+\usage{.interface_stars(g4, data, w)}
 \description{Stars Tour Plotting
-Plots the Stars Tour}
+Plots the Stars Tour in tab g4}
 \keyword{internal}
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}

@@ -1,9 +1,8 @@
-\name{.create_stereo_tour}
-\alias{.create_stereo_tour}
+\name{.interface_stereo}
+\alias{.interface_stereo}
 \title{Stereo Tour Plotting...}
-\usage{.create_stereo_tour(data, var_selected, cat_selected, tour_type,
-    guided_type, lambda, aps)}
+\usage{.interface_stereo(g6, data, w)}
 \description{Stereo Tour Plotting
-Plots the Stereo Tour}
+Plots the Stereo Tour in tab g6}
 \keyword{internal}
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}

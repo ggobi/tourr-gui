@@ -4,12 +4,9 @@
 \usage{gui_andrews(data=flea, ...)}
 \description{Andrews Tour GUI                                  
 Displays an Andrews Tour GUI}
-\details{GUI allows users to control the andrews tour by simply moving and clicking their mouses.
+\details{GUI allows users to control the andrews tour by simply moving and clicking their mouses. 
 Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
-black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
-variable.
+the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
 Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 

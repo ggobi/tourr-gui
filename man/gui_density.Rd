@@ -5,18 +5,18 @@
 \description{Density Tour GUI                                   
 Displays a Density Tour GUI}
 \details{GUI allows users to control the density tour by simply moving and clicking their mouses.
-Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
-black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
-variable.
+Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
+the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
+isn't implemented with the density tour yet. 
 Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
 also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-higher dimensional data a value closer to 1 would be advised.
-Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot
-Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, FALSE means the tour will move along the x-axes.
+high-dimensional data a value closer to 1 would be advised.
+Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot. 
+distribution of data projected into 1d can be displayed correspondingly as a histogram, kernel density estimate and average shifted histogram.
+Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, 
+means the tour will wander to the left and right. The default value is TRUE.
 Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
 Apply button allows users to update the 1D tour, when it doesn't automatically update.

@@ -4,12 +4,10 @@
 \usage{gui_pcp(data=flea, ...)}
 \description{PCP Tour GUI                                   
 Displays an PCP Tour GUI}
-\details{GUI allows users to control the pcp tour by simply moving and clicking their mouses.(PCP tour is the animation of nD tour path with a parallel coordinates plot)
+\details{GUI allows users to control the pcp tour by simply moving and clicking their mouses. The PCP tour is the animation of nD tour path with a parallel coordinates plot.
 Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
 the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-users don't specify the class variable, the selected numeric variables will be considered as one class, and the default displaying color 
-black. After users specify the class variable, the selected numeric variables will be considered as different classes according to this 
-variable.
+isn't implemented with the pcp tour yet. 
 Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
