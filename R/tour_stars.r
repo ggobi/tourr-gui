@@ -6,6 +6,8 @@
 # =============================== Gui_stars==============================
 .interface_stars = function(g4,data, w){
   # =============== Function: update_tour_stars ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_stars <- function(...) {
     tour <<- .create_stars_tour(data,
       var_selected = svalue(Variables_stars),

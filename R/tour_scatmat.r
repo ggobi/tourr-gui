@@ -7,6 +7,8 @@
 .interface_scatmat = function(g8,data, w){
 
   # =============== Function: update_tour_scatmat ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_scatmat <- function(...) {
     tour <<- .create_mat_tour(data,
       var_selected = svalue(Variables_scatmat),

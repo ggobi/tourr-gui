@@ -8,6 +8,8 @@
 
 
   # =============== Function: update_tour_andrews ==============
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_andrews <- function(...) {
     tour <<- .create_andrews_tour(data,
       var_selected = svalue(Variables_andrews),

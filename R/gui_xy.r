@@ -1,31 +1,32 @@
-#' Scatterplot Tour GUI
-#' A graphical user interface enabling interactive control of a scatterplot tour.
-#'
-#'This GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
-#'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-#'All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
-#'If users don't specify the class variable, the selected numeric variables will be considered as one class, and all points will be black.
-#'After users specify the class variable, the points will be considered as different classes according to this 
-#'categorical variable, and these will appear as rainbow colors in the scatterplot tour.
-#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-#'The default index is holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first. The Guided(pda_pp) 
-#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-#'For very high-dimensional data a value closer to 1 would be advised.
-#'The Axes Locations column contains three types. Users can specify where tour axes will be displayed. The choices are center, bottomleft and off.
-#'The Speed slider can control the speed of the 2D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
-#'The Pause check box allow users to pause the dynamic 2D tour and have a close examination on the details.
-#'The Apply button allows users to update the 2D tour, when it doesn't automatically update.
-#'The Quit button allows users to close thie GUI window.
-#'The Help button provides information about the tour and also what this GUI can do.
-#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-#'
-#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
-#' @keywords hplot
-#' @examples
-#' \dontrun{gui_xy(flea)}
+##' Scatterplot Tour GUI
+##' A graphical user interface enabling interactive control of a scatterplot tour.
+##'
+##' This GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
+##' The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
+##' If users don't specify the class variable, the selected numeric variables will be considered as one class, and all points will be black.
+##' After users specify the class variable, the points will be considered as different classes according to this 
+##' categorical variable, and these will appear as rainbow colors in the scatterplot tour.
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+##' The default index is holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first. The Guided(pda_pp) 
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' For very high-dimensional data a value closer to 1 would be advised.
+##' The Axes Locations column contains three types. Users can specify where tour axes will be displayed. The choices are center, bottomleft and off.
+##' The Speed slider can control the speed of the 2D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+##' The Pause check box allow users to pause the dynamic 2D tour and have a close examination on the details.
+##' The Apply button allows users to update the 2D tour, when it doesn't automatically update.
+##' The Quit button allows users to close thie GUI window.
+##' The Help button provides information about the tour and also what this GUI can do.
+##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
+##'
+##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
+##' @keywords display_xy
+##' @export
+##' @examples
+##' \dontrun{gui_xy(flea)}
 gui_xy <- function(data = flea, ...) {
   require(tourr)
   require("colorspace")
@@ -205,15 +206,13 @@ tooltip(message1) <- "Click here for help."
   invisible()
 }
 
-
-
-#' Scatterplot Tour Plotting
-#' Plots the scatterplot Tour
-#'
-#' Creates tour for gui_xy
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' Scatterplot Tour Plotting
+##' Plots the scatterplot Tour
+##'
+##' Creates tour for gui_xy
+##'
+##' @keywords internal
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 .create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")

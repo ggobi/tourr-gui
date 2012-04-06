@@ -7,6 +7,8 @@
 .interface_stereo = function(g6, data, w){
 
   # ================= Function: update_tour_stereo ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_stereo <- function(...) {
     tour <<- .create_stereo_tour(data,
       var_selected = svalue(Variables_stereo),

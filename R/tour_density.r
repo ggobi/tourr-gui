@@ -7,6 +7,8 @@
 .interface_density = function(g2,data, w){
 
   # =============== Function: update_tour_density ===============
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_density <- function(...) {
     tour <<- .create_1d_tour(data,
       var_selected = svalue(Variables_density),

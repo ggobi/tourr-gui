@@ -7,6 +7,8 @@
 .interface_xy = function (g1,data,w) {
 
   # ================= Function: update_tour_xy =======================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_xy <- function(...) {
     tour <<- .create_xy_tour(data,
     var_selected = svalue(Variables_xy),

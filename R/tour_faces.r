@@ -1,5 +1,5 @@
 #' Faces Tour Plotting
-#' Plots the Faces Tour in tab g3
+#' Plots the Faces Tour in tab g3, internal function used by gui_tour()
 #'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
@@ -7,6 +7,8 @@
 .interface_faces = function(g3, data, w){
 
   # =============== Function: update_tour_faces ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_faces <- function(...) {
     tour <<- .create_face_tour(data,
       var_selected = svalue(Variables_faces),

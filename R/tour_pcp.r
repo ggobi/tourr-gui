@@ -7,6 +7,8 @@
 .interface_pcp = function(g7,data, w){
 
   # ================= Function: update_tour_pcp ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_pcp <- function(...) {
     tour <<- .create_pcp_tour(data,
       var_selected = svalue(Variables_pcp),

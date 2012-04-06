@@ -1,14 +1,15 @@
-#' Tour GUI                                   
-#' Displays all types of Tour GUI in different tabs                     
-#'
-#' Combines all of the tour gui's into one, putting a separate tab for each.
-#' 
-#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-#' @keywords display
-#' @examples
-#' \dontrun{gui_tour(flea)}
+##' Tour GUI                                   
+##' Displays all types of Tour GUI in different tabs                     
+##'
+##' Combines all of the tour gui's into one, putting a separate tab for each.
+##' 
+##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @keywords display
+##' @export
+##' @examples
+##' \dontrun{gui_tour(flea)}
 gui_tour<- function(data = flea, ...) {
   require(tourr)
   require(colorspace)
