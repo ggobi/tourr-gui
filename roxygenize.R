@@ -1,5 +1,5 @@
 ## requires Rd2roxygen 
-library("Rd2roxygen"))
+library("Rd2roxygen")
 
 ## remove the man directory first
 unlink("man", recursive = TRUE)

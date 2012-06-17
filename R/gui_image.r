@@ -16,6 +16,10 @@
 ##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
 ##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 ##' @keywords display_image
+##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
+##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
+##'   Data Using Low-Dimensional Projections. Journal of Statistical
+##'   Software, 49(6), 1-12. \url{http://www.jstatsoft.org/v49/i06/}.
 ##' @export
 ##' @examples
 ##' \dontrun{gui_image(ozone)}

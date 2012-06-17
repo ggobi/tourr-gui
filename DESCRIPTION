@@ -1,8 +1,8 @@
 Package: tourrGui
 Type: Package
 Title: A Tour GUI using gWidgets
-Version: 0.3
-Date: 2012-04-5
+Version: 0.4
+Date: 2012-06-17
 Author: Bei <beihuang@iastate.edu>, Dianne Cook
     <dicook@iastate.edu>, Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Dianne Cook <dicook@iastate.edu>
@@ -18,7 +18,7 @@ Depends:
     Cairo
 Suggests:
     rggobi,TeachingDemos,ggplot2,ash
-License: MIT
+License: MIT | GPL-2
 LazyData: true
 Collate:
     'gui_andrews.r'
