@@ -1,0 +1,20 @@
+citHeader("To cite tourrGui in publications use:")
+
+citEntry(entry = "Article",
+  title = "{tourrGui}: A gWidgets GUI for the Tour to Explore High-Dimensional Data Using Low-Dimensional Projections} ",
+  author = personList(as.person("Bei Huang"),
+                   as.person("Dianne Cook"),
+                   as.person("Hadley Wickham")),
+  journal = "Journal of Statistical Software",
+  year = "2012",
+  volume = "49",
+  number = "6",
+  pages = "1--12",
+  url = "http://www.jstatsoft.org/v49/i06/",
+
+  textVersion =
+  paste("Bei Huang, Dianne Cook, Hadley Wickham  (2012).",
+        "tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional Data Using Low-Dimensional Projections.",
+        "Journal of Statistical Software, 49(6), 1-12.",
+        "URL http://www.jstatsoft.org/v49/i06/.")
+)
