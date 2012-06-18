@@ -1,6 +1,8 @@
 #' Scatterplot Tour Plotting
 #' Plots the scatterplot Tour in tab g1
 #'
+#' Sets up the interface for the xy tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_xy ================================
@@ -19,7 +21,7 @@
     lambda = svalue(LambdaValue_xy),
     aps = svalue(sl_xy)
     )
-    tour_anim <<- with(tour, new_tour(data, tour_path))
+    tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 2)))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -51,7 +53,7 @@
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
   # ================== Controls for tour_xy ==========================
-  vbox_xy1 <- glayout(cont = g1)
+  vbox_xy1 <- glayout(container = g1)
   # Variable selection column
   vbox_xy1[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_xy1[2, 1] <- Variables_xy <- gcheckboxgroup(names(data[num]),
@@ -70,7 +72,7 @@
   tooltip(TourType_xy) <- "Select a 2D Tour type."
 
   vbox_xy1[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_xy1[4, 2, anchor=c(-1,-1)] <-  GuidedType_xy <- gdroplist(IntIndex)
   tooltip(GuidedType_xy) <- "Select an index type for guided tour."
 
@@ -109,10 +111,10 @@
     }
   }
 
-  buttonGroup_xy <- ggroup(horizontal = FALSE, cont=vbox_xy1)
+  buttonGroup_xy <- ggroup(horizontal = FALSE, container = vbox_xy1)
 
   # Apply button & handler
-  button1_xy<- gbutton("Apply", cont = buttonGroup_xy, handler = function(...) {
+  button1_xy<- gbutton("Apply", container = buttonGroup_xy, handler = function(...) {
 
     print("apply from gui_xy")
     if(is.null(anim_id))
@@ -122,13 +124,13 @@
   })
   tooltip(button1_xy) <- "Click here to update the options."
 
-  button2_xy<- gbutton("Quit",cont=buttonGroup_xy, handler = function(...) {
+  button2_xy<- gbutton("Quit",container = buttonGroup_xy, handler = function(...) {
     pause_xy(TRUE)
     dispose(w)
   })
   tooltip(button2_xy) <- "Click here to update the options."
 
-  message1 <- gbutton("Help",cont=buttonGroup_xy, handler = function(...) {
+  message1 <- gbutton("Help",container = buttonGroup_xy, handler = function(...) {
 gmessage("GUI_xy allows user to control a dynamic plot by using a checkbox, a ratiobox, a table, a slider and some bottons. And it could easily be extended.
 It's much more convenient for users to just click on this simple GUI instead of trying to figure out how to write the proper auguments for their desirable graphics.",
 title="gui_help",icon="info")

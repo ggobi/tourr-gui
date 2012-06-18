@@ -1,10 +1,12 @@
 #' Stars Tour Plotting
 #' Plots the Stars Tour in tab g4
 #'
+#' Sets up the interface for the stars tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_stars==============================
-.interface_stars = function(g4,data, w){
+.interface_stars = function(g4, data, w){
   # =============== Function: update_tour_stars ==================
   tour <- NULL
   tour_anim <- NULL
@@ -50,7 +52,7 @@
   
   num <- sapply(data, is.numeric)
   # ================== Controls ==========================
-  vbox_stars <- glayout(cont = g4)
+  vbox_stars <- glayout(container = g4)
 
   # Variable selection column
   vbox_stars[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -71,7 +73,7 @@
 
   #Guided indices selection
   vbox_stars[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_stars[4, 2, anchor=c(-1,-1)] <-  GuidedType_stars <- gdroplist(IntIndex)
   tooltip(GuidedType_stars) <- "Select an index type for guided tour."
 
@@ -111,10 +113,10 @@
       anim_id <<- gIdleAdd(draw_frame_stars)
     }
   }
-  buttonGroup_stars <- ggroup(horizontal = FALSE, cont=vbox_stars)
+  buttonGroup_stars <- ggroup(horizontal = FALSE, container = vbox_stars)
 
   # addSpace(buttonGroup,10)
-  button1_stars<- gbutton("Apply", cont = buttonGroup_stars, handler = function(...){
+  button1_stars<- gbutton("Apply", container = buttonGroup_stars, handler = function(...){
     print("apply from gui_stars")
     opar <- par(mfrow = c(1,1))
     pause_stars(FALSE)
@@ -123,7 +125,7 @@
   tooltip(button1_stars) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2_stars<- gbutton("Quit",cont=buttonGroup_stars, handler = function(...) {
+  button2_stars<- gbutton("Quit",container = buttonGroup_stars, handler = function(...) {
     pause_stars(TRUE)
     dispose(w)
   })

@@ -1,6 +1,8 @@
 #' Andrews Tour Plotting
 #' Plots the Andrews Tour in tab g5
 #'
+#' Sets up the interface for the Andrews tour gui
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_andrews ===============================
@@ -53,7 +55,7 @@
   num <- sapply(data, is.numeric)
 
 # ==================Controls==========================
-  vbox_andrews <- glayout(cont = g5)
+  vbox_andrews <- glayout(container = g5)
 
   # Variable selection column
   vbox_andrews[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -74,7 +76,7 @@
 
   #Guided indices selection
   vbox_andrews[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_andrews[4, 2, anchor=c(-1,-1)] <-  GuidedType_andrews <- gdroplist(IntIndex)
   tooltip(GuidedType_andrews) <- "Select an index type for guided tour."
 
@@ -111,10 +113,10 @@ anim_id <- NULL
       anim_id <<- gIdleAdd(draw_frame_andrews)
     }
   }
-  buttonGroup_andrews <- ggroup(horizontal = FALSE, cont=vbox_andrews)
+  buttonGroup_andrews <- ggroup(horizontal = FALSE, container = vbox_andrews)
 
   # addSpace(buttonGroup,10)
-  button1_andrews <- gbutton("Apply", cont = buttonGroup_andrews, handler = function(...) {
+  button1_andrews <- gbutton("Apply", container = buttonGroup_andrews, handler = function(...) {
     print("apply from gui_andrews")
     opar <- par(mfrow = c(1,1))
     pause_andrews(FALSE)
@@ -123,7 +125,7 @@ anim_id <- NULL
   tooltip(button1_andrews ) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2_andrews <- gbutton("Quit",cont=buttonGroup_andrews, handler = function(...) {
+  button2_andrews <- gbutton("Quit",container = buttonGroup_andrews, handler = function(...) {
     pause_andrews(TRUE)
     dispose(w)
   })

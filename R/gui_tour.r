@@ -30,15 +30,15 @@ gui_tour<- function(data = flea, ...) {
   tour_anim <- NULL
 
   w <- gwindow("2D Tour plot example", visible = TRUE)
-  mw = gnotebook(cont=w, closebuttons = TRUE)  
-  g8 = ggroup(cont = mw, horizontal = FALSE,label="gui_scatmat") 
-  g7 = ggroup(cont = mw, horizontal = FALSE,label="gui_pcp")
-  g6 = ggroup(cont = mw, horizontal = FALSE,label="gui_stereo")
-  g5 = ggroup(cont = mw, horizontal = FALSE,label="gui_andrews")
-  g4 = ggroup(cont = mw, horizontal = FALSE,label="gui_stars")
-  g3 = ggroup(cont = mw, horizontal = FALSE,label="gui_faces")
-  g2 = ggroup(cont = mw, horizontal = FALSE,label="gui_density")
-  g1 = ggroup(cont = mw, horizontal = FALSE,label="gui_xy") 
+  mw = gnotebook(container = w, closebuttons = TRUE)  
+  g8 = ggroup(container = mw, horizontal = FALSE,label="gui_scatmat") 
+  g7 = ggroup(container = mw, horizontal = FALSE,label="gui_pcp")
+  g6 = ggroup(container = mw, horizontal = FALSE,label="gui_stereo")
+  g5 = ggroup(container = mw, horizontal = FALSE,label="gui_andrews")
+  g4 = ggroup(container = mw, horizontal = FALSE,label="gui_stars")
+  g3 = ggroup(container = mw, horizontal = FALSE,label="gui_faces")
+  g2 = ggroup(container = mw, horizontal = FALSE,label="gui_density")
+  g1 = ggroup(container = mw, horizontal = FALSE,label="gui_xy") 
     
   
   .interface_xy(g1,data,w)

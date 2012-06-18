@@ -55,7 +55,7 @@ gui_xy <- function(data = flea, ...) {
       aps = svalue(sl)
     )
 
-    tour_anim <<- with(tour, new_tour(data, tour_path))
+    tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 2)))
 
     tour$display$init(tour$data)
     tour$display$render_frame()    
@@ -84,7 +84,7 @@ gui_xy <- function(data = flea, ...) {
   
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
-  vbox <- glayout(cont = w)
+  vbox <- glayout(container = w)
 
   # Variable selection column
   # Divide all the variable names into two parts according to numeric variables and categorical variables.
@@ -111,11 +111,11 @@ gui_xy <- function(data = flea, ...) {
   tooltip(TourType) <- "Select a 2D Tour type."
 
   # Guided Tour index selection column
-  # Indices including "holes", "cm", "lda", "pda".
+  # Indices including "holes", "cmass", "lda", "pda".
 
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
-  vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
+  IntIndex <- c("holes", "cmass", "lda_pp", "pda_pp")
+  vbox[4, 2, anchor=c(-1,-1)] <- GuidedType <- gdroplist(IntIndex)
   tooltip(GuidedType) <- "Select an index type for guided tour."
   
   # Lambda selection column
@@ -158,17 +158,17 @@ gui_xy <- function(data = flea, ...) {
     }
   }
   
-  buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
   
   # addSpace(buttonGroup,10)
-  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", container = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
   tooltip(button1) <- "Click here to update the options."
  
   # addSpace(buttonGroup,10)
-  button2<-gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<-gbutton("Quit", container = buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
@@ -176,7 +176,7 @@ gui_xy <- function(data = flea, ...) {
  
 
   # addSpace(buttonGroup,10)
-  message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+  message1<-gbutton("Help", container = buttonGroup, handler = function(...) {
 gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
 
 When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
@@ -240,8 +240,8 @@ tooltip(message1) <- "Click here for help."
   tour <- switch(tour_type,
     "Grand" = grand_tour(), 
     "Little" = little_tour(), 
-    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
-				"cm"=guided_tour(cm),
+    "Guided" = switch(guided_type, "holes" = guided_tour(holes), 
+				"cmass" = guided_tour(cmass),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     # "Local" = local_tour()

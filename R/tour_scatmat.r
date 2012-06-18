@@ -1,6 +1,8 @@
 #' Scatmat Tour Plotting
 #' Plots the Scatmat Tour in tab g8
 #'
+#' Sets up the interface for the scatterplot matrix tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 # =============================== Gui_scatmat ================================
@@ -50,7 +52,7 @@
   
   num <- sapply(data, is.numeric)
   # ==================Controls==========================
-  vbox_scatmat <- glayout(cont = g8)
+  vbox_scatmat <- glayout(container = g8)
     # Variable selection column
     vbox_scatmat[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
     vbox_scatmat[2, 1] <- Variables_scatmat <- gcheckboxgroup(names(data[num]),
@@ -71,7 +73,7 @@
 
   #Guided indices selection
   vbox_scatmat[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_scatmat [4, 2, anchor=c(-1,-1)] <-  GuidedType_scatmat <- gdroplist(IntIndex)
   tooltip(GuidedType_scatmat) <- "Select an index type for guided tour."
 
@@ -108,10 +110,10 @@
         anim_id <<- gIdleAdd(draw_frame_scatmat)
       }
     }
-    buttonGroup_scatmat <- ggroup(horizontal = FALSE, cont=vbox_scatmat)
+    buttonGroup_scatmat <- ggroup(horizontal = FALSE, container = vbox_scatmat)
 
     # addSpace(buttonGroup,10)
-    button1_scatmat<- gbutton("Apply", cont = buttonGroup_scatmat, handler = function(...){
+    button1_scatmat<- gbutton("Apply", container = buttonGroup_scatmat, handler = function(...){
       print("apply from gui_scatmat")
       pause_scatmat(FALSE)
       update_tour_scatmat()
@@ -119,7 +121,7 @@
     tooltip(button1_scatmat) <- "Click here to update the options."
 
     # addSpace(buttonGroup,10)
-    button2_scatmat<- gbutton("Quit",cont=buttonGroup_scatmat, handler = function(...) {
+    button2_scatmat<- gbutton("Quit",container = buttonGroup_scatmat, handler = function(...) {
       pause_scatmat(TRUE)
       dispose(w)
     })

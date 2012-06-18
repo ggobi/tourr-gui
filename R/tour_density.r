@@ -1,6 +1,8 @@
 #' Density Tour Plotting
 #' Plots the Density Tour in tab g2
 #'
+#' Sets up the interface for the density tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 # =============================== Gui_density ==========================================
@@ -20,7 +22,7 @@
       lambda = svalue(LambdaValue_density),
       aps = svalue(sl_density)
     )
-    tour_anim <<- with(tour, new_tour(data, tour_path))
+    tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 1)))
 
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -53,7 +55,7 @@
   num <- sapply(data, is.numeric)
 
   # ==================Controls==========================
-  vbox_density <- glayout(cont = g2)
+  vbox_density <- glayout(container = g2)
 
   # Variable selection column
   vbox_density[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -73,7 +75,7 @@
   tooltip(TourType_density) <- "Select a 1D Tour type."
 
   vbox_density[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_density[4, 2, anchor=c(-1,-1)] <-  GuidedType_density <- gdroplist(IntIndex)
   tooltip(GuidedType_density) <- "Select an index type for guided tour."
 
@@ -115,10 +117,10 @@
     }
   }
 
-  buttonGroup_density <- ggroup(horizontal = FALSE, cont=vbox_density)
+  buttonGroup_density <- ggroup(horizontal = FALSE, container = vbox_density)
 
   # addSpace(buttonGroup_density,10)
-  button1_density <-gbutton("Apply", cont = buttonGroup_density, handler = function(...) {
+  button1_density <-gbutton("Apply", container = buttonGroup_density, handler = function(...) {
     print("apply from gui_density")
     opar <- par(mfrow = c(1,1))
     pause_density(FALSE)
@@ -127,7 +129,7 @@
   tooltip(button1_density ) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2_density <-gbutton("Quit",cont=buttonGroup_density, handler = function(...) {
+  button2_density <-gbutton("Quit",container = buttonGroup_density, handler = function(...) {
     pause_density(TRUE)
     dispose(w)
   })

@@ -1,6 +1,8 @@
 #' Stereo Tour Plotting
 #' Plots the Stereo Tour in tab g6
 #'
+#' Sets up the interface for the stereo tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_stereo ================================
@@ -49,7 +51,7 @@
 
   num <- sapply(data, is.numeric)
 # ==================Controls==========================
-vbox_stereo <- glayout(cont = g6)
+vbox_stereo <- glayout(container = g6)
   # Variable selection column
   vbox_stereo[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
   vbox_stereo[2, 1] <- Variables_stereo <- gcheckboxgroup(names(data[num]),
@@ -68,7 +70,7 @@ vbox_stereo <- glayout(cont = g6)
   tooltip(TourType_stereo) <- "Select a 3D Tour type."
 
   vbox_stereo[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_stereo[4, 2, anchor=c(-1,-1)] <-  GuidedType_stereo <- gdroplist(IntIndex)
   tooltip(GuidedType_stereo) <- "Select an index type for guided tour."
 
@@ -97,10 +99,10 @@ vbox_stereo <- glayout(cont = g6)
       anim_id <<- gIdleAdd(draw_frame_stereo)
     }
   }
-  buttonGroup_stereo <- ggroup(horizontal = FALSE, cont=vbox_stereo)
+  buttonGroup_stereo <- ggroup(horizontal = FALSE, container = vbox_stereo)
 
   # addSpace(buttonGroup,10)
-  button1_stereo<- gbutton("Apply", cont = buttonGroup_stereo, handler = function(...) {
+  button1_stereo<- gbutton("Apply", container = buttonGroup_stereo, handler = function(...) {
     print("apply from gui_stereo")
     opar <- par(mfrow = c(1,1))
     pause_stereo(FALSE)
@@ -109,7 +111,7 @@ vbox_stereo <- glayout(cont = g6)
   tooltip(button1_stereo) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2_stereo<- gbutton("Quit",cont=buttonGroup_stereo, handler = function(...) {
+  button2_stereo<- gbutton("Quit",container = buttonGroup_stereo, handler = function(...) {
     pause_stereo(TRUE)
     dispose(w)
   })

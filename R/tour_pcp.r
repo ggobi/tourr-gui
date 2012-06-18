@@ -1,6 +1,8 @@
 #' PCP Tour Plotting
 #' Plots the PCP Tour in tab g7
 #'
+#' Sets up the interface for the PCP tour
+#'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 # =============================== Gui_pcp ====================================
@@ -51,7 +53,7 @@
 
   num <- sapply(data, is.numeric)
   # ================== Controls ==========================
-  vbox_pcp <- glayout(cont = g7)
+  vbox_pcp <- glayout(container = g7)
 
   # Variable selection column
   vbox_pcp[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -73,7 +75,7 @@
 
   #Guided indices selection
   vbox_pcp[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox_pcp[4, 2, anchor=c(-1,-1)] <-  GuidedType_pcp <- gdroplist(IntIndex)
   tooltip(GuidedType_pcp) <- "Select an index type for guided tour."
 
@@ -110,10 +112,10 @@
       anim_id <<- gIdleAdd(draw_frame_pcp)
     }
   }
-  buttonGroup_pcp <- ggroup(horizontal = FALSE, cont=vbox_pcp)
+  buttonGroup_pcp <- ggroup(horizontal = FALSE, container = vbox_pcp)
 
   # addSpace(buttonGroup,10)
-  button1_pcp<-gbutton("Apply", cont = buttonGroup_pcp, handler = function(...){
+  button1_pcp<-gbutton("Apply", container = buttonGroup_pcp, handler = function(...){
     print("apply from gui_pcp")
     opar <- par(mfrow = c(1,1))
     pause_pcp(FALSE)
@@ -122,7 +124,7 @@
   tooltip(button1_pcp) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2_pcp<- gbutton("Quit",cont=buttonGroup_pcp, handler = function(...) {
+  button2_pcp<- gbutton("Quit",container = buttonGroup_pcp, handler = function(...) {
     pause_pcp(TRUE)
     dispose(w)
   })
