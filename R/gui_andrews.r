@@ -30,10 +30,10 @@
 ##' @examples
 ##' \dontrun{gui_andrews(flea)}
 gui_andrews <- function(data = flea, ...) {
-  require(tourr)
-  require(colorspace) 
-  require(gWidgets)
-  require(RGtk2)
+  #require(tourr)
+  #require(colorspace) 
+  #require(gWidgets)
+  #require(RGtk2)
   options("guiToolkit"="RGtk2")
 
 
@@ -172,7 +172,7 @@ tooltip(message1) <- "Click here for help."
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
-    require(Cairo)
+    #require(Cairo)
     CairoX11()
   } else if (length(dev.list()) == 0) {
     # Open new display if necessary

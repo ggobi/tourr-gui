@@ -31,11 +31,14 @@
 ##'   Software, 49(6), 1-12. \url{http://www.jstatsoft.org/v49/i06/}.
 ##' @export
 ##' @examples
-##' \dontrun{gui_density(flea)}
+##' \dontrun{
+##' # When using RStudio it may be necessary to use CairoX11() 
+##' gui_density(flea)
+##' }
 gui_density <- function(data = flea, ...) {
-  require(tourr)
-  require(gWidgets)
-  require(RGtk2)
+  #require(tourr)
+  #require(gWidgets)
+  #require(RGtk2)
   options("guiToolkit"="RGtk2")
   require(ash)
 
@@ -183,7 +186,7 @@ tooltip(message1_den) <- "Click here for help."
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
-    require(Cairo)
+    #require(Cairo)
     CairoX11()
 } else if (length(dev.list()) == 0) {
     # Open new display if necessary

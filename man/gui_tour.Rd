@@ -13,17 +13,23 @@ gui_tour(data = flea, ...)
   \code{\link{animate}} and \code{\link{display_xy}}}
 }
 \description{
-  Combines all of the tour gui's into one, putting a
-  separate tab for each.
+Combines all of the tour gui's into one, putting a separate
+tab for each.
 }
 \examples{
-\dontrun{
-gui_tour(flea)
-}
+\dontrun{gui_tour(flea)}
 }
 \author{
-  Bei Huang\email{beihuang@iastate.edu}, Di Cook
-  \email{dicook@iastate.edu}, and Hadley Wickham
-  \email{hadley@rice.edu}
+Bei Huang\email{beihuang@iastate.edu}, Di Cook
+\email{dicook@iastate.edu}, and Hadley Wickham
+\email{hadley@rice.edu}
+}
+\references{
+Bei Huang, Dianne Cook, Hadley Wickham (2012).  tourrGui: A
+gWidgets GUI for the Tour to Explore High-Dimensional Data
+Using Low-Dimensional Projections. Journal of Statistical
+Software, 49(6), 1-12.
+\url{http://www.jstatsoft.org/v49/i06/}.
 }
 \keyword{display}
+

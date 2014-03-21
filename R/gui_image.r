@@ -24,9 +24,9 @@
 ##' @examples
 ##' \dontrun{gui_image(ozone)}
 gui_image <- function(data = ozone, ...) {
-  require(tourr)
-  require(gWidgets)
-  require(RGtk2)
+  #require(tourr)
+  #require(gWidgets)
+  #require(RGtk2)
   options("guiToolkit"="RGtk2")
 
   os <- find_platform()$os
@@ -132,7 +132,7 @@ tooltip(message1) <- "Click here for help."
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
-    require(Cairo)
+    #require(Cairo)
     CairoX11()
   }
   
