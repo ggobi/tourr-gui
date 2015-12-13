@@ -20,3 +20,4 @@ Suggests:
     TeachingDemos,ggplot2,ash
 License: MIT + file LICENSE
 LazyData: true
+RoxygenNote: 5.0.0
