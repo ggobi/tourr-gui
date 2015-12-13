@@ -5,7 +5,7 @@
 \title{Face Tour GUI
 Displays a Chernoff's Face Tour GUI}
 \usage{
-gui_faces(data = flea, ...)
+gui_faces(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

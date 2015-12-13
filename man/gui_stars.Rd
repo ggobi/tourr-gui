@@ -5,7 +5,7 @@
 \title{Stars Tour GUI
 Displays an Stars Tour GUI}
 \usage{
-gui_stars(data = flea, ...)
+gui_stars(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

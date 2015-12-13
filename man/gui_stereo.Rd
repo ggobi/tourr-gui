@@ -5,7 +5,7 @@
 \title{Stereo Tour GUI
 Displays an Stereo Tour GUI}
 \usage{
-gui_stereo(data = flea, ...)
+gui_stereo(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

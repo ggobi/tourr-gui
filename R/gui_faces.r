@@ -31,13 +31,8 @@
 ##' @export
 ##' @examples
 ##' \dontrun{gui_faces(flea)}
-gui_faces <- function(data = flea, ...) {
-  #require(tourr)
-  #require(gWidgets)
-  #require(RGtk2)
+gui_faces <- function(data = tourr::flea, ...) {
   options("guiToolkit"="RGtk2")
-  require(TeachingDemos)
-
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
@@ -179,7 +174,6 @@ tooltip(message1) <- "Click here for help."
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
-    #require(Cairo)
     CairoX11()
   }
 

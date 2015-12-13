@@ -5,7 +5,7 @@
 \title{PCP Tour GUI
 Displays an PCP Tour GUI}
 \usage{
-gui_pcp(data = flea, ...)
+gui_pcp(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

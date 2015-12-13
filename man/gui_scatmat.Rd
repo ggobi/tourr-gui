@@ -5,7 +5,7 @@
 \title{Scatmat Tour GUI
 Displays an Scatmat Tour GUI}
 \usage{
-gui_scatmat(data = flea, ...)
+gui_scatmat(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

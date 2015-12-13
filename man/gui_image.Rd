@@ -5,7 +5,7 @@
 \title{Image Tour GUI
 Displays an Image Tour GUI}
 \usage{
-gui_image(data = ozone, ...)
+gui_image(data = tourr::ozone, ...)
 }
 \arguments{
 \item{data}{a 3d array, the first two dimensions are locations on a grid, and the 3rd dimension gives the observations to be mixed with the tour.defaults to ozone dataset}

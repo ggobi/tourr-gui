@@ -5,7 +5,7 @@
 \title{Density Tour GUI
 Displays a Density Tour GUI}
 \usage{
-gui_density(data = flea, ...)
+gui_density(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

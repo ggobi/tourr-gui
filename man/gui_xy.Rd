@@ -5,7 +5,7 @@
 \title{Scatterplot Tour GUI
 A graphical user interface enabling interactive control of a scatterplot tour.}
 \usage{
-gui_xy(data = flea, ...)
+gui_xy(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

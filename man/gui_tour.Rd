@@ -2,10 +2,10 @@
 % Please edit documentation in R/gui_tour.r
 \name{gui_tour}
 \alias{gui_tour}
-\title{Tour GUI                                   
+\title{Tour GUI
 Displays all types of Tour GUI in different tabs}
 \usage{
-gui_tour(data = flea, ...)
+gui_tour(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}

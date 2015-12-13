@@ -5,7 +5,7 @@
 \title{Andrews Tour GUI
 Displays an Andrews Tour GUI}
 \usage{
-gui_andrews(data = flea, ...)
+gui_andrews(data = tourr::flea, ...)
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
