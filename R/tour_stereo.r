@@ -1,11 +1,3 @@
-#' Stereo Tour Plotting
-#' Plots the Stereo Tour in tab g6
-#'
-#' Sets up the interface for the stereo tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_stereo ================================
 .interface_stereo = function(g6, data, w){
 
   # ================= Function: update_tour_stereo ==================
@@ -28,7 +20,7 @@
     TRUE
   }
   # -------------------- End of update_tour_stereo -----------------
-  
+
   # ================= Function: draw_frame_stereo ==================
   draw_frame_stereo <- function(...) {
     # if there's no tour, don't draw anything
@@ -59,7 +51,7 @@ vbox_stereo <- glayout(container = g6)
   tooltip(Variables_stereo) <- "Select variables to display in the 3D Tour."
 
   vbox_stereo[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox_stereo[4, 1, anchor = c(-1, 0)] <- Class_stereo <- gtable(names(data)[!num], 
+  vbox_stereo[4, 1, anchor = c(-1, 0)] <- Class_stereo <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class_stereo) <- "Select a class variable to classify the points."
 

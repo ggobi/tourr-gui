@@ -1,25 +1,25 @@
-##' Scatmat Tour GUI                                   
-##' Displays an Scatmat Tour GUI                       
+##' Scatmat Tour GUI
+##' Displays an Scatmat Tour GUI
 ##'
 ##' This GUI allows users to control the scatter matrix tour by simply moving and clicking their mouses.
 ##' The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-##' All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-##' Color isn't implemented with the scatmat tour yet. 
-##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-##' The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour. 
+##' All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names.
+##' Color isn't implemented with the scatmat tour yet.
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp)
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
+##' The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour.
 ##' The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 ##' The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
 ##' The Apply button allows users to update the nD tour, when it doesn't automatically update.
 ##' The Quit button allows users to close thie GUI window.
 ##' The Help button provides information about the tour and also what this GUI can do.
 ##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-##'  
+##'
 ##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 ##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 ##' @keywords display_scatmat
 ##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
 ##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
@@ -36,56 +36,56 @@ gui_scatmat <- function(data = flea, ...) {
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
-  
+
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
     tour <<- .create_mat_tour(data,
       var_selected = svalue(Variables),
-      cat_selected = svalue(Class), 
-      projdim_selected = svalue(Projections), 
+      cat_selected = svalue(Class),
+      projdim_selected = svalue(Projections),
       tour_type = svalue(TourType),
       guided_type = svalue(GuidedType),
       lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
-    
+
     tour$display$init(tour$data)
  #  tour$display$render_frame()
-    
+
     TRUE
   }
-  
+
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(TRUE)  
+    if (is.null(tour)) return(TRUE)
 
     tour_step <- tour_anim(svalue(sl) / 33)
     if (os == "win") {
       tour$display$render_frame()
     } else {
-      tour$display$render_transition()      
+      tour$display$render_transition()
     }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
-    
+
     TRUE
   }
-  
-  
+
+
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
   vbox <- glayout(container = w)
 
   # Variable selection column
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
-  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
+  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
   tooltip(Variables) <- "Select variables to display in the nD Tour."
 
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class) <- "Select a class variable to classify the points."
 
@@ -111,14 +111,14 @@ gui_scatmat <- function(data = flea, ...) {
   vbox[1, 3, anchor = c(-1, 0)] <- "Projection Dimension"
   projections <- c(2:length(data[num]))
   vbox[2, 3, anchor = c(-1, 0)] <- Projections <- gradio(projections)
-  tooltip(Projections) <- "Select pojection dimension for the nD tour."	
+  tooltip(Projections) <- "Select pojection dimension for the nD tour."
 
   # speed and pause
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   tooltip(sl) <- "Drag to set the speed of the nD Tour."
 
-  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause",
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the nD Tour."
 
@@ -134,8 +134,8 @@ gui_scatmat <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
-  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)
+
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", container = buttonGroup, handler = function(...){
     pause(FALSE)
@@ -148,7 +148,7 @@ gui_scatmat <- function(data = flea, ...) {
     pause(TRUE)
     dispose(w)
   })
-  tooltip(button2) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  tooltip(button2) <- "Click here to close this window."
 
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help",container = buttonGroup, handler = function(...) {
@@ -164,28 +164,21 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
   vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
-  
+
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
     #require(Cairo)
     CairoX11()
   }
-  
+
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
-  
+
   invisible()
 }
 
-##' Scatmat Tour Plotting
-##' Plots the Scatmat Tour
-##'
-##' Initializes the scatterplot matrix tour
-##'
-##' @keywords internal
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 .create_mat_tour <- function(data, var_selected, cat_selected, projdim_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
@@ -194,26 +187,26 @@ tooltip(message1) <- "Click here for help."
 
   # cat("names:\n");print(names(data))
   # cat("\n\ndimnames:\n");print(dimnames(data))
-  display <- display_scatmat()  
+  display <- display_scatmat()
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(as.numeric(projdim_selected)), 
-    "Little" = little_tour(as.numeric(projdim_selected)), 
-    "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(projdim_selected)), 
+    "Grand" = grand_tour(as.numeric(projdim_selected)),
+    "Little" = little_tour(as.numeric(projdim_selected)),
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(projdim_selected)),
 				"cmass"=guided_tour(cmass,as.numeric(projdim_selected)),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(projdim_selected)),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda),as.numeric(projdim_selected))),
     "Local" = local_tour(basis_init(length(var_selected), 2))
   )
-    
+
   sel <- data[,var_selected]
   # browser()
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)
   }
-      
+
   list(
     data = rescale(sel),
     tour_path = tour,

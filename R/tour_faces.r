@@ -1,11 +1,3 @@
-#' Faces Tour Plotting
-#' Plots the Faces Tour in tab g3, internal function used by gui_tour()
-#'
-#' Sets up the gui for the faces tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_faces ====================================
 .interface_faces = function(g3, data, w){
 
   # =============== Function: update_tour_faces ==================
@@ -15,7 +7,7 @@
     tour <<- .create_face_tour(data,
       var_selected = svalue(Variables_faces),
       # VarIndex = svalue(Variables_faces, index = TRUE),
-      cat_selected = svalue(Class_faces), 
+      cat_selected = svalue(Class_faces),
       dim_selected = svalue(Dimensions_faces),
       nface_selected = svalue(Faces_faces),
       tour_type = svalue(TourType_faces),
@@ -31,7 +23,7 @@
     TRUE
   }
   # --------------------- End of update_tour_xy ------------------
-  
+
   # ================= Function: draw_frame =======================
   draw_frame_faces <- function(...) {
     # if there's no tour, don't draw anything
@@ -51,7 +43,7 @@
     TRUE
   }
   # ---------------------- End of draw_frame ---------------------
-  
+
   num <- sapply(data, is.numeric)
   # ==================Controls==========================
   vbox_faces <- glayout(container = g3)
@@ -62,7 +54,7 @@
     tooltip(Variables_faces ) <- "Select variables to display in the nD Tour."
 
     vbox_faces[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-    vbox_faces[4, 1, anchor = c(-1, 0)] <- Class_faces <- gtable(names(data)[!num], 
+    vbox_faces[4, 1, anchor = c(-1, 0)] <- Class_faces <- gtable(names(data)[!num],
     multiple = TRUE)
     tooltip(Class_faces) <- "Select a class variable to classify the data."
 
@@ -82,7 +74,7 @@
     vbox_faces[3, 3, anchor=c(-1, 0)] <-"Lambda"
     vbox_faces[4, 3] <- LambdaValue_faces <- gslider(from=0, to = 1, by = 0.01,value=0.02)
     tooltip(LambdaValue_faces) <- "Select lambda's value to calculate pda index."
-   
+
     # speed and pause
     vbox_faces[5,1, anchor = c(-1, 0)] <- "Speed"
     vbox_faces[6,1, expand = TRUE] <- sl_faces <- gslider(from = 0, to = 5, by = 0.1, value = 1)
@@ -129,7 +121,7 @@
       pause_faces(TRUE)
       dispose(w)
     })
-    tooltip(button2_faces) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    tooltip(button2_faces) <- "Click here to close this window."
 
     vbox_faces[6, 3, anchor = c(0, 1)] <- buttonGroup_faces
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gui_pcp.r
 \name{gui_pcp}
 \alias{gui_pcp}
-\title{PCP Tour GUI                                   
+\title{PCP Tour GUI
 Displays an PCP Tour GUI}
 \usage{
 gui_pcp(data = flea, ...)
@@ -15,13 +15,13 @@ gui_pcp(data = flea, ...)
 \description{
 This GUI allows users to control the pcp tour by simply moving and clicking their mouses. The PCP tour is the animation of nD tour path with a parallel coordinates plot.
 The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-Color isn't implemented with the pcp tour yet. 
-The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD pcp tour. 
+All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names.
+Color isn't implemented with the pcp tour yet.
+The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp)
+is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
+The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD pcp tour.
 Dimension number of pcp tour is the axes number of the parallel coordinates.
 The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
@@ -32,7 +32,7 @@ Tooltips will pop up when the mouse is moved over the GUI, which give hints abou
 }
 \examples{
 \dontrun{
-# When using RStudio it may be necessary to use CairoX11() 
+# When using RStudio it may be necessary to use CairoX11()
 gui_pcp(flea)
 }
 }

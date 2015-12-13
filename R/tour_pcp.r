@@ -1,11 +1,3 @@
-#' PCP Tour Plotting
-#' Plots the PCP Tour in tab g7
-#'
-#' Sets up the interface for the PCP tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_pcp ====================================
 .interface_pcp = function(g7,data, w){
 
   # ================= Function: update_tour_pcp ==================
@@ -14,7 +6,7 @@
   update_tour_pcp <- function(...) {
     tour <<- .create_pcp_tour(data,
       var_selected = svalue(Variables_pcp),
-      cat_selected = svalue(Class_pcp), 
+      cat_selected = svalue(Class_pcp),
       dim_selected = svalue(Dimensions_pcp),
       tour_type = svalue(TourType_pcp),
       guided_type = svalue(GuidedType_pcp),
@@ -29,8 +21,8 @@
     TRUE
   }
   # -------------------- End of update_tour_pcp -----------------
-  
-  
+
+
   # ================= Function: draw_frame_pcp ==================
   draw_frame_pcp <- function(...) {
     # if there's no tour, don't draw anything
@@ -63,7 +55,7 @@
 
 
   vbox_pcp[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox_pcp[4, 1, anchor = c(-1, 0)] <- Class_pcp  <- gtable(names(data)[!num], 
+  vbox_pcp[4, 1, anchor = c(-1, 0)] <- Class_pcp  <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class_pcp) <- "Select a class variable to classify the points."
 
@@ -128,9 +120,9 @@
     pause_pcp(TRUE)
     dispose(w)
   })
-  tooltip(button2_pcp) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  tooltip(button2_pcp) <- "Click here to close this window."
 
   vbox_pcp[5:6, 3, anchor = c(0, 1)] <- buttonGroup_pcp
-  
+
 }
 # ------------------------------ End of Gui_pcp ---------------------------------

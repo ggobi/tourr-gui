@@ -1,17 +1,17 @@
-##' Image Tour GUI                                   
-##' Displays an Image Tour GUI                       
+##' Image Tour GUI
+##' Displays an Image Tour GUI
 ##'
-##' This GUI allows users to control an image tour plot by simply moving and clicking their mouses. 
-##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-##' The default index would be holes. 
+##' This GUI allows users to control an image tour plot by simply moving and clicking their mouses.
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+##' The default index would be holes.
 ##' The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 ##' The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
 ##' The Apply button allows users to update the 1D tour, when it doesn't automatically update.
 ##' The Quit button allows users to close thie GUI window.
 ##' The Help button provides information about the tour and also what this GUI can do.
 ##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-##' 
+##'
 ##' @param data a 3d array, the first two dimensions are locations on a grid, and the 3rd dimension gives the observations to be mixed with the tour.defaults to ozone dataset
 ##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
 ##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
@@ -31,7 +31,7 @@ gui_image <- function(data = ozone, ...) {
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
-  
+
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
@@ -41,30 +41,30 @@ gui_image <- function(data = ozone, ...) {
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
-    
+
     tour$display$init(tour$data)
     tour$display$render_frame()
-    
+
     TRUE
   }
-  
+
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(TRUE)  
+    if (is.null(tour)) return(TRUE)
 
     tour_step <- tour_anim(svalue(sl) / 33)
     if (os == "win") {
       tour$display$render_frame()
     } else {
-      tour$display$render_transition()      
+      tour$display$render_transition()
     }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
-    
+
     TRUE
   }
-  
-  
+
+
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
   vbox <- glayout(container = w)
@@ -84,8 +84,8 @@ gui_image <- function(data = ozone, ...) {
   vbox[3,1, anchor = c(-1, 0)] <- "Speed"
   vbox[4,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   tooltip(sl) <- "Drag to set the speed of the 1D Tour."
-  
-  vbox[3,2] <- chk_pause <- gcheckbox("Pause", 
+
+  vbox[3,2] <- chk_pause <- gcheckbox("Pause",
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 1D Tour."
 
@@ -101,12 +101,12 @@ gui_image <- function(data = ozone, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
-  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)
+
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", container = buttonGroup, handler = update_tour)
   tooltip(button1) <- "Click here to update the options."
-  
+
   # addSpace(buttonGroup,10)
   button2<- gbutton("Quit",container = buttonGroup, handler = function(...) {
     pause(TRUE)
@@ -128,26 +128,21 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
   vbox[4, 2, anchor = c(0, 1)] <- buttonGroup
-  
+
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
     #require(Cairo)
     CairoX11()
   }
-  
+
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
-  
+
   invisible()
 }
 
-##' Image Tour Plotting
-##' Plots the Image Tour
-##'
-##' @keywords internal
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 .create_image_tour <- function(data, tour_type, guided_type, aps) {
  if (aps > 9999) {
    gmessage("Please quit", icon = "warning")
@@ -162,13 +157,13 @@ tooltip(message1) <- "Click here for help."
   display <- display_image(xs, ys)
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(1), 
-    "Little" = little_tour(), 
+    "Grand" = grand_tour(1),
+    "Little" = little_tour(),
     "Local" = local_tour(),
-    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes),
 				"cmass"=guided_tour(cmass))
   )
-      
+
   list(
     data = rescale(data),
     tour_path = tour,

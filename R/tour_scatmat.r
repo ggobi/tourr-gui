@@ -1,11 +1,3 @@
-#' Scatmat Tour Plotting
-#' Plots the Scatmat Tour in tab g8
-#'
-#' Sets up the interface for the scatterplot matrix tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
-# =============================== Gui_scatmat ================================
 .interface_scatmat = function(g8,data, w){
 
   # =============== Function: update_tour_scatmat ==================
@@ -14,7 +6,7 @@
   update_tour_scatmat <- function(...) {
     tour <<- .create_mat_tour(data,
       var_selected = svalue(Variables_scatmat),
-      cat_selected = svalue(Class_scatmat), 
+      cat_selected = svalue(Class_scatmat),
       projdim_selected = svalue(Projections_scatmat),
       tour_type = svalue(TourType_scatmat),
       guided_type = svalue(GuidedType_scatmat),
@@ -29,7 +21,7 @@
     TRUE
   }
   # --------------------- End of update_tour_scatmat ----------------
-  
+
   # ================= Function: draw_frame_scatmat ==================
   draw_frame_scatmat <- function(...) {
     # if there's no tour, don't draw anything
@@ -49,7 +41,7 @@
     TRUE
   }
   # ---------------------- End of draw_frame_scatmat -----------------
-  
+
   num <- sapply(data, is.numeric)
   # ==================Controls==========================
   vbox_scatmat <- glayout(container = g8)
@@ -60,7 +52,7 @@
     tooltip(Variables_scatmat) <- "Select variables to display in the nD Tour."
 
     vbox_scatmat[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-    vbox_scatmat [4, 1, anchor = c(-1, 0)] <- Class_scatmat <- gtable(names(data)[!num], 
+    vbox_scatmat [4, 1, anchor = c(-1, 0)] <- Class_scatmat <- gtable(names(data)[!num],
       multiple = TRUE)
     tooltip(Class_scatmat) <- "Select a class variable to classify the points."
 
@@ -86,7 +78,7 @@
     vbox_scatmat[1, 3, anchor = c(-1, 0)] <- "Projection Dimension"
     projections <- c(2:length(data[num]))
     vbox_scatmat[2, 3, anchor = c(-1, 0)] <- Projections_scatmat <- gradio(projections)
-    tooltip(Projections_scatmat) <- "Select pojection dimension for the nD tour."	
+    tooltip(Projections_scatmat) <- "Select pojection dimension for the nD tour."
 
 
     # speed and pause
@@ -125,7 +117,7 @@
       pause_scatmat(TRUE)
       dispose(w)
     })
-    tooltip(button2_scatmat) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    tooltip(button2_scatmat) <- "Click here to close this window."
 
     vbox_scatmat[5:6, 3, anchor = c(0, 1)] <- buttonGroup_scatmat
 

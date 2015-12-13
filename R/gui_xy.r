@@ -3,14 +3,14 @@
 ##'
 ##' This GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
 ##' The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
+##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names.
 ##' If users don't specify the class variable, the selected numeric variables will be considered as one class, and all points will be black.
-##' After users specify the class variable, the points will be considered as different classes according to this 
+##' After users specify the class variable, the points will be considered as different classes according to this
 ##' categorical variable, and these will appear as rainbow colors in the scatterplot tour.
-##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-##' The default index is holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first. The Guided(pda_pp) 
-##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+##' The default index is holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first. The Guided(pda_pp)
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
 ##' For very high-dimensional data a value closer to 1 would be advised.
 ##' The Axes Locations column contains three types. Users can specify where tour axes will be displayed. The choices are center, bottomleft and off.
 ##' The Speed slider can control the speed of the 2D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
@@ -31,7 +31,7 @@
 ##' @export
 ##' @examples
 ##' \dontrun{
-##' # When using RStudio it may be necessary to use CairoX11() 
+##' # When using RStudio it may be necessary to use CairoX11()
 ##' gui_xy(flea)
 ##' }
 gui_xy <- function(data = flea, ...) {
@@ -40,17 +40,17 @@ gui_xy <- function(data = flea, ...) {
   #require("gWidgets")
   #require("RGtk2")
   options("guiToolkit"="RGtk2")
- 
+
 
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
-  
+
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
     tour <<- .create_xy_tour(data,
-      var_selected = svalue(Variables), 
-      cat_selected = svalue(Class), 
+      var_selected = svalue(Variables),
+      cat_selected = svalue(Class),
       axes_location = svalue(dl),
       tour_type = svalue(TourType),
       guided_type = svalue(GuidedType),
@@ -61,53 +61,53 @@ gui_xy <- function(data = flea, ...) {
     tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 2)))
 
     tour$display$init(tour$data)
-    tour$display$render_frame()    
+    tour$display$render_frame()
 
     TRUE
   }
-  
+
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(FALSE)  
+    if (is.null(tour)) return(FALSE)
 
     tour_step <- tour_anim(svalue(sl) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
-    
+
     if (os == "win") {
       tour$display$render_frame()
     } else {
-      tour$display$render_transition()      
+      tour$display$render_transition()
     }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
-    
+
     TRUE
   }
-  
-  
+
+
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
   vbox <- glayout(container = w)
 
   # Variable selection column
   # Divide all the variable names into two parts according to numeric variables and categorical variables.
-  # The numeric variable names go under Variable Selection column, 
+  # The numeric variable names go under Variable Selection column,
   # and the categorical variable names go under Class Selection column.
 
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
-  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
+  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
   tooltip(Variables) <- "Select variables to display in the 2D Tour."
 
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class) <- "Select a class variable to color the points."
 
 
   # Tour selection column
   # The are seven kinds of tour type which allow users to switch willingfully.
- 
+
   vbox[1, 2, anchor=c(-1, 0)] <- "Tour Type"
   tour_types <- c("Grand", "Little", "Local", "Guided")
   vbox[2, 2] <- TourType <- gradio(tour_types)
@@ -120,7 +120,7 @@ gui_xy <- function(data = flea, ...) {
   IntIndex <- c("holes", "cmass", "lda_pp", "pda_pp")
   vbox[4, 2, anchor=c(-1,-1)] <- GuidedType <- gdroplist(IntIndex)
   tooltip(GuidedType) <- "Select an index type for guided tour."
-  
+
   # Lambda selection column
   # Lambda's range is from 0 to 1.
 
@@ -135,9 +135,9 @@ gui_xy <- function(data = flea, ...) {
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   tooltip(sl) <- "Drag to set the speed of the 2D Tour."
- 
+
   # Pause box allow users to pause the dynamic 2D tour and have a close examination on the details.
-  vbox[6, 2] <- chk_pause <- gcheckbox("Pause", 
+  vbox[6, 2] <- chk_pause <- gcheckbox("Pause",
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 2D Tour."
 
@@ -160,23 +160,23 @@ gui_xy <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  
-  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
-  
+
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)
+
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", container = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
   tooltip(button1) <- "Click here to update the options."
- 
+
   # addSpace(buttonGroup,10)
   button2<-gbutton("Quit", container = buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
   tooltip(button2) <- "Click here to close this window."
- 
+
 
   # addSpace(buttonGroup,10)
   message1<-gbutton("Help", container = buttonGroup, handler = function(...) {
@@ -193,7 +193,7 @@ tooltip(message1) <- "Click here for help."
 
 
   vbox[5:6, 3, anchor = c(0, 1)] <- buttonGroup
-  
+
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
@@ -205,27 +205,20 @@ tooltip(message1) <- "Click here for help."
     # Turn off display list to maximise speed
     dev.control(displaylist = "inhibit")
   }
-  
+
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
-  
+
   invisible()
 }
 
-##' Scatterplot Tour Plotting
-##' Plots the scatterplot Tour
-##'
-##' Creates tour for gui_xy
-##'
-##' @keywords internal
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 .create_xy_tour <- function(data, var_selected, cat_selected, axes_location, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
   }
-  
+
   # Work out point colours
   cat <- data[cat_selected]
   if (length(cat_selected) > 0) {
@@ -236,28 +229,28 @@ tooltip(message1) <- "Click here for help."
   } else {
     col <- "black"
   }
-  
+
   display <- display_xy(axes = axes_location, center = TRUE, col = col)
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(), 
-    "Little" = little_tour(), 
-    "Guided" = switch(guided_type, "holes" = guided_tour(holes), 
+    "Grand" = grand_tour(),
+    "Little" = little_tour(),
+    "Guided" = switch(guided_type, "holes" = guided_tour(holes),
 				"cmass" = guided_tour(cmass),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
     # "Local" = local_tour()
     "Local" = local_tour(basis_init(length(var_selected), 2))
   )
-  
-  
+
+
   sel <- data[var_selected]
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)
   }
-  
+
   list(
     data = rescale(sel),
     tour_path = tour,

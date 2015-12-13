@@ -1,11 +1,3 @@
-#' Stars Tour Plotting
-#' Plots the Stars Tour in tab g4
-#'
-#' Sets up the interface for the stars tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_stars==============================
 .interface_stars = function(g4, data, w){
   # =============== Function: update_tour_stars ==================
   tour <- NULL
@@ -13,7 +5,7 @@
   update_tour_stars <- function(...) {
     tour <<- .create_stars_tour(data,
       var_selected = svalue(Variables_stars),
-      cat_selected = svalue(Class_stars), 
+      cat_selected = svalue(Class_stars),
       dim_selected = svalue(Dimensions_stars),
       nstar_selected = svalue(Star_stars),
       tour_type = svalue(TourType_stars),
@@ -29,7 +21,7 @@
     TRUE
   }
   # --------------------- End of update_tour_stars ----------------
-  
+
   # ================= Function: draw_frame_stars ==================
   draw_frame_stars <- function(...) {
     # if there's no tour, don't draw anything
@@ -49,7 +41,7 @@
     TRUE
   }
   # -------------------- End of draw_frame_stars -----------------
-  
+
   num <- sapply(data, is.numeric)
   # ================== Controls ==========================
   vbox_stars <- glayout(container = g4)
@@ -61,7 +53,7 @@
   tooltip(Variables_stars) <- "Select variables to display in the nD Tour."
 
   vbox_stars[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox_stars[4, 1, anchor = c(-1, 0)] <- Class_stars <- gtable(names(data)[!num], 
+  vbox_stars[4, 1, anchor = c(-1, 0)] <- Class_stars <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class_stars) <- "Select a class variable to classify the data."
 
@@ -132,6 +124,6 @@
   tooltip(button2_stars) <- "Click here to update the options."
 
   vbox_stars[6,3, anchor = c(0, 1)] <- buttonGroup_stars
-  
+
 }
 # ------------------------- End of Gui_stars ----------------------------

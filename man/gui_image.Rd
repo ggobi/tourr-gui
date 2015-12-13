@@ -2,7 +2,7 @@
 % Please edit documentation in R/gui_image.r
 \name{gui_image}
 \alias{gui_image}
-\title{Image Tour GUI                                   
+\title{Image Tour GUI
 Displays an Image Tour GUI}
 \usage{
 gui_image(data = ozone, ...)
@@ -13,10 +13,10 @@ gui_image(data = ozone, ...)
 \item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
 }
 \description{
-This GUI allows users to control an image tour plot by simply moving and clicking their mouses. 
-The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-The default index would be holes. 
+This GUI allows users to control an image tour plot by simply moving and clicking their mouses.
+The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+The default index would be holes.
 The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
 The Apply button allows users to update the 1D tour, when it doesn't automatically update.

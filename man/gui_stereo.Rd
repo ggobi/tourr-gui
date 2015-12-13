@@ -2,7 +2,7 @@
 % Please edit documentation in R/gui_stereo.r
 \name{gui_stereo}
 \alias{gui_stereo}
-\title{Stereo Tour GUI                                   
+\title{Stereo Tour GUI
 Displays an Stereo Tour GUI}
 \usage{
 gui_stereo(data = flea, ...)
@@ -15,11 +15,11 @@ gui_stereo(data = flea, ...)
 \description{
 This GUI allows users to control the Stereo tour by simply moving and clicking their mouses.
 The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names.
+The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp)
+is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
 For high-dimensional data a value closer to 1 would be advised.
 The Speed slider can control the speed of the 3D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 The Pause check box allow users to pause the dynamic 3D tour and have a close examination on the details.

@@ -1,17 +1,17 @@
-##' Face Tour GUI                                   
-##' Displays a Chernoff's Face Tour GUI                       
+##' Face Tour GUI
+##' Displays a Chernoff's Face Tour GUI
 ##'
 ##' This GUI allows users to control the faces tour by simply moving and clicking their mouses.
 ##' The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-##' All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-##' Color isn't implemented with the faces tour yet. 
-##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names.
+##' Color isn't implemented with the faces tour yet.
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp)
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
 ##' The Choose Dimension radio buttons allow us to choose the dimension number n to animate a nD tour path with Andrews' curves. Dimension n ranges from 2 to the
-##' total number of the numeric variables of this dataset. The maximum dimension is 18 because that is the limit of facial features to map to variables. 
-##' The Choose Face Number slider allows users to specify how many faces to display. Face number ranges from 2 to the number of observations in this dataset. 
+##' total number of the numeric variables of this dataset. The maximum dimension is 18 because that is the limit of facial features to map to variables.
+##' The Choose Face Number slider allows users to specify how many faces to display. Face number ranges from 2 to the number of observations in this dataset.
 ##' Default face number is 4.
 ##' The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 ##' The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
@@ -19,7 +19,7 @@
 ##' The Quit button allows users to close thie GUI window.
 ##' The Help button provides information about the tour and also what this GUI can do.
 ##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-##' 
+##'
 ##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 ##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
 ##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
@@ -32,23 +32,23 @@
 ##' @examples
 ##' \dontrun{gui_faces(flea)}
 gui_faces <- function(data = flea, ...) {
-  #require(tourr)  
+  #require(tourr)
   #require(gWidgets)
   #require(RGtk2)
   options("guiToolkit"="RGtk2")
-  require(TeachingDemos)  
+  require(TeachingDemos)
 
-  
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
-  
+
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
     tour <<- .create_face_tour(data,
-      var_selected = svalue(Variables), 
+      var_selected = svalue(Variables),
       #VarIndex = svalue(Variables, index = TRUE),
-      cat_selected = svalue(Class), 
+      cat_selected = svalue(Class),
       dim_selected = svalue(Dimensions),
       nface_selected = svalue(Faces),
       tour_type = svalue(TourType),
@@ -57,42 +57,42 @@ gui_faces <- function(data = flea, ...) {
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path))
-    
+
     tour$display$init(tour$data)
     tour$display$render_frame()
-    
+
     TRUE
   }
-  
+
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(TRUE)  
+    if (is.null(tour)) return(TRUE)
 
     tour_step <- tour_anim(svalue(sl) / 33)
     if (os == "win") {
       tour$display$render_frame()
     } else {
-      tour$display$render_transition()      
+      tour$display$render_transition()
     }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
-    
+
     TRUE
   }
-  
-  
+
+
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
   vbox <- glayout(container = w)
 
   # Variable selection column
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
-  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
+  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
   tooltip(Variables) <- "Select variables to display in the nD Tour."
 
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class) <- "Select a class variable to classify the data."
 
@@ -128,8 +128,8 @@ gui_faces <- function(data = flea, ...) {
   vbox[5, 1, anchor = c(-1, 0)] <- "Choose Face Number"
   vbox[6, 1, expand = TRUE] <- Faces <- gslider(from = 2, to = nrow(data), by = 1, value = 4 )
   tooltip(Faces) <- "Drag to choose the face number."
-  
-  vbox[5, 3] <- chk_pause <- gcheckbox("Pause", 
+
+  vbox[5, 3] <- chk_pause <- gcheckbox("Pause",
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the nD Tour."
 
@@ -145,8 +145,8 @@ gui_faces <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
-  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)
+
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", container = buttonGroup, handler = function(...){
     pause(FALSE)
@@ -159,7 +159,7 @@ gui_faces <- function(data = flea, ...) {
     pause(TRUE)
     dispose(w)
   })
-  tooltip(button2) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  tooltip(button2) <- "Click here to close this window."
 
  # addSpace(buttonGroup,10)
   message1<-gbutton("Help",container = buttonGroup, handler = function(...) {
@@ -175,28 +175,21 @@ title="gui_help",icon="info")
 tooltip(message1) <- "Click here for help."
 
   vbox[6, 3, anchor = c(0, 1)] <- buttonGroup
-  
+
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
     #require(Cairo)
     CairoX11()
   }
-  
+
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
-  
+
   invisible()
 }
 
-##' Faces Tour Plotting
-##' Plots the Faces Tour
-##'
-##' Starts off the faces tour
-##'
-##' @keywords internal
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
 .create_face_tour <- function(data, var_selected, nface_selected, cat_selected, dim_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
@@ -207,22 +200,22 @@ tooltip(message1) <- "Click here for help."
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(as.numeric(dim_selected)), 
-    "Little" = little_tour(as.numeric(dim_selected)), 
-    "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(dim_selected)), 
+    "Grand" = grand_tour(as.numeric(dim_selected)),
+    "Little" = little_tour(as.numeric(dim_selected)),
+    "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(dim_selected)),
 				"cmass"=guided_tour(cmass,as.numeric(dim_selected)),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(dim_selected)),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda),as.numeric(dim_selected))),
     # "Local" = local_tour()
     "Local" = local_tour(basis_init(length(var_selected), 2))
   )
-  
+
   sel <- data[1: nface_selected, var_selected]
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)
   }
-    
+
   list(
     data = rescale(sel),
     tour_path = tour,

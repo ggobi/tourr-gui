@@ -1,11 +1,3 @@
-#' Andrews Tour Plotting
-#' Plots the Andrews Tour in tab g5
-#'
-#' Sets up the interface for the Andrews tour gui
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_andrews ===============================
 .interface_andrews = function(g5, data,w){
 
 
@@ -30,8 +22,8 @@
     TRUE
   }
   # ----------------- End of update_tour_andrews -----------------
-  
-  
+
+
   # =============== Function: draw_frame_andrews ==================
   draw_frame_andrews <- function(...) {
     # if there's no tour, don't draw anything
@@ -129,7 +121,7 @@ anim_id <- NULL
     pause_andrews(TRUE)
     dispose(w)
   })
-  tooltip(button2_andrews ) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  tooltip(button2_andrews ) <- "Click here to close this window."
 
   vbox_andrews[5:6, 3, anchor = c(0, 1)] <- buttonGroup_andrews
 

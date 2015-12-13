@@ -1,11 +1,3 @@
-#' Scatterplot Tour Plotting
-#' Plots the scatterplot Tour in tab g1
-#'
-#' Sets up the interface for the xy tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-# =============================== Gui_xy ================================
 .interface_xy = function (g1,data,w) {
 
   # ================= Function: update_tour_xy =======================

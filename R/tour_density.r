@@ -1,11 +1,3 @@
-#' Density Tour Plotting
-#' Plots the Density Tour in tab g2
-#'
-#' Sets up the interface for the density tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
-# =============================== Gui_density ==========================================
 .interface_density = function(g2,data, w){
 
   # =============== Function: update_tour_density ===============
@@ -14,7 +6,7 @@
   update_tour_density <- function(...) {
     tour <<- .create_1d_tour(data,
       var_selected = svalue(Variables_density),
-      cat_selected = svalue(Class_density), 
+      cat_selected = svalue(Class_density),
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
       tour_type = svalue(TourType_density),
@@ -64,7 +56,7 @@
   tooltip(Variables_density) <- "Select variables to display in the 1D Tour."
 
   vbox_density[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox_density[4, 1, anchor = c(-1, 0)] <- Class_density <- gtable(names(data)[!num], 
+  vbox_density[4, 1, anchor = c(-1, 0)] <- Class_density <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class_density) <- "Select a class variable to classify the data."
 

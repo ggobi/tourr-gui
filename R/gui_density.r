@@ -1,18 +1,18 @@
-##' Density Tour GUI                                   
-##' Displays a Density Tour GUI                       
+##' Density Tour GUI
+##' Displays a Density Tour GUI
 ##'
 ##' This GUI allows users to control the density tour by simply moving and clicking their mouses.
 ##' The Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
-##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
-##' Color isn't implemented with the density tour yet. 
-##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names.
+##' Color isn't implemented with the density tour yet.
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired.
+##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp)
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp).
 ##' For high-dimensional data a value closer to 1 would be advised.
-##' The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot. 
+##' The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot.
 ##' The distribution of data projected into 1d can be displayed correspondingly as a histogram, kernel density estimate and average shifted histogram.
-##' The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, 
+##' The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes,
 ##' FALSE means the tour will wander to the left and right. The default value is TRUE.
 ##' The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
 ##' The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
@@ -20,10 +20,10 @@
 ##' The Quit button allows users to close thie GUI window.
 ##' The Help button provides information about the tour and also what this GUI can do.
 ##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-##' 
+##'
 ##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
 ##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 ##' @keywords display_density
 ##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
 ##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
@@ -32,7 +32,7 @@
 ##' @export
 ##' @examples
 ##' \dontrun{
-##' # When using RStudio it may be necessary to use CairoX11() 
+##' # When using RStudio it may be necessary to use CairoX11()
 ##' gui_density(flea)
 ##' }
 gui_density <- function(data = flea, ...) {
@@ -42,16 +42,16 @@ gui_density <- function(data = flea, ...) {
   options("guiToolkit"="RGtk2")
   require(ash)
 
-  
+
   os <- find_platform()$os
   num <- sapply(data, is.numeric)
-  
+
   tour <- NULL
   tour_anim <- NULL
   update_tour <- function(...) {
     tour <<- .create_1d_tour(data,
-      var_selected = svalue(Variables), 
-      cat_selected = svalue(Class), 
+      var_selected = svalue(Variables),
+      cat_selected = svalue(Class),
       method_selected = svalue(MethodType),
       center_selected = svalue(CenterType),
       tour_type = svalue(TourType),
@@ -60,16 +60,16 @@ gui_density <- function(data = flea, ...) {
       aps = svalue(sl)
     )
     tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 1)))
-    
+
     tour$display$init(tour$data)
     tour$display$render_frame()
-    
+
     TRUE
   }
-  
+
   draw_frame <- function(...) {
     # if there's no tour, don't draw anything
-    if (is.null(tour)) return(FALSE)  
+    if (is.null(tour)) return(FALSE)
 
     tour_step <- tour_anim(svalue(sl) / 33)
     if (is.null(tour_step$proj)) return(FALSE)
@@ -77,27 +77,27 @@ gui_density <- function(data = flea, ...) {
     if (os == "win") {
       tour$display$render_frame()
     } else {
-      tour$display$render_transition()      
+      tour$display$render_transition()
     }
     with(tour_step, tour$display$render_data(tour$data, proj, target))
     Sys.sleep(1/33)
-    
+
     TRUE
   }
-  
-  
+
+
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
   vbox <- glayout(container = w)
 
   # Variable selection column
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
-  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]), 
+  vbox[2, 1] <- Variables <- gcheckboxgroup(names(data[num]),
     checked = TRUE, horizontal = FALSE)
   tooltip(Variables) <- "Select variables to display in the 1D Tour."
-  
+
   vbox[3, 1, anchor = c(-1, 0)] <- "Class Selection"
-  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num], 
+  vbox[4, 1, anchor = c(-1, 0)] <- Class <- gtable(names(data)[!num],
     multiple = TRUE)
   tooltip(Class) <- "Select a class variable to classify the data."
 
@@ -122,8 +122,8 @@ gui_density <- function(data = flea, ...) {
   vbox[5,1, anchor = c(-1, 0)] <- "Speed"
   vbox[6,1, expand = TRUE] <- sl <- gslider(from = 0, to = 5, by = 0.1, value = 1)
   tooltip(sl) <- "Drag to set the speed of the 1D Tour."
-  
-  vbox[5, 3] <- chk_pause <- gcheckbox("Pause", 
+
+  vbox[5, 3] <- chk_pause <- gcheckbox("Pause",
     handler = function(h, ...) pause(svalue(h$obj)))
   tooltip(chk_pause) <- "Click here to pause or continue the 1D Tour."
 
@@ -132,7 +132,7 @@ gui_density <- function(data = flea, ...) {
   method_types <- c("density","hist","ash")
   vbox[2, 3, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
   tooltip(MethodType) <- "Select a display method for the 1D tour."
-    
+
   # center control
   vbox[5,2, anchor=c(-1,0)] <- "Axes Locations"
   center_types <- c("TRUE", "FALSE")
@@ -152,15 +152,15 @@ gui_density <- function(data = flea, ...) {
     }
   }
 
-  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
-  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)
+
   # addSpace(buttonGroup,10)
   button1<- gbutton("Apply", container = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
   tooltip(button1) <- "Click here to update the options."
-  
+
   # addSpace(buttonGroup,10)
   button2<- gbutton("Quit",container = buttonGroup, handler = function(...) {
     pause(TRUE)
@@ -182,7 +182,7 @@ title="gui_help",icon="info")
 tooltip(message1_den) <- "Click here for help."
 
   vbox[6, 3, anchor = c(0, 1)] <- buttonGroup
-  
+
   # If on a mac, open a Cairo device, if there's not already one open
   # The cairo device has a much better refresh rate than Quartz
   if (find_platform()$os == "mac" && names(dev.cur()) != "Cairo") {
@@ -198,43 +198,37 @@ tooltip(message1_den) <- "Click here for help."
   update_tour()
   pause(FALSE)
   visible(w) <- TRUE
-  
+
   invisible()
 }
 
-##' For generating 1D projections
-##'
-##' The 1D projection is used for the density tour
-##'
-##' @keywords internal
-##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu},and Hadley Wickham \email{hadley@@rice.edu} 
 .create_1d_tour <- function(data, var_selected, cat_selected, method_selected, center_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 2) {
     gmessage("Please select at least two variables", icon = "warning")
     return()
   }
-   
-  display <- display_dist(method = method_selected, center = center_selected ,col=col) 
+
+  display <- display_dist(method = method_selected, center = center_selected ,col=col)
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
-    "Grand" = grand_tour(1), 
-    "Little" = little_tour(), 
+    "Grand" = grand_tour(1),
+    "Little" = little_tour(),
     "Guided" = switch(guided_type,
-               "holes"=guided_tour(holes, 1), 
+               "holes"=guided_tour(holes, 1),
 	       "cmass"=guided_tour(cmass, 1),
 	       "lda_pp" = guided_tour(lda_pp(data[,cat_selected]), 1),
 	       "pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda)), 1),
     # "Local" = local_tour()
     "Local" = local_tour(basis_init(length(var_selected), 2))
   )
-  
+
   sel <- data[var_selected]
   # Sphere the data if we're using a guided tour
   if (length(grep(tour_type, "Guided")) > 0) {
     sel <- sphere(sel)
   }
-      
+
   list(
     data = rescale(sel),
     tour_path = tour,
