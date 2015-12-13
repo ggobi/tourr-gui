@@ -1,14 +1,14 @@
 Package: tourrGui
-Type: Package
 Title: A Tour GUI using gWidgets
-Version: 0.5
-Date: 2012-06-17
-Author: Bei <beihuang@iastate.edu>, Dianne Cook
-    <dicook@iastate.edu>, Hadley Wickham <h.wickham@gmail.com>
-Maintainer: Dianne Cook <dicook@iastate.edu>
+Version: 0.5.9000
 Description: The GUI allows user to control the tour by checkboxes
     for the variable selection, slider for the speed, and toggle
     boxes for pause.
+Authors@R: c(
+    person("Bei", "Huang", , "beihuang@iastate.edu", "aut"),
+    person("Dianne", "Cook", , "dicook@iastate.edu", c("aut", "cre")),
+    person("Hadley", "Wickham", , "hadley@rstudio.com", "ctb")
+    )
 Depends:
     R (>= 2.14.0),
     tourr (>= 0.5.1),
@@ -17,7 +17,9 @@ Depends:
     gWidgets,
     Cairo
 Suggests:
-    TeachingDemos,ggplot2,ash
+    ash,
+    ggplot2,
+    TeachingDemos
 License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 5.0.0
