@@ -6,7 +6,7 @@ Description: The GUI allows user to control the tour by checkboxes
     boxes for pause.
 Authors@R: c(
     person("Bei", "Huang", , "beihuang@iastate.edu", "aut"),
-    person("Dianne", "Cook", , "dicook@iastate.edu", c("aut", "cre")),
+    person("Dianne", "Cook", , "dicook@monash.edu", c("aut", "cre")),
     person("Hadley", "Wickham", , "hadley@rstudio.com", "ctb")
     )
 Depends:
