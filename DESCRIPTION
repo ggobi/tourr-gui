@@ -1,7 +1,7 @@
 Package: tourrGui
-Title: A Tour GUI using gWidgets
+Title: A Tour GUI using 'gWidgets'
 Version: 0.5.1
-Description: The GUI allows user to control the tour by checkboxes
+Description: The GUI allows user to control the tour by check boxes
     for the variable selection, slider for the speed, and toggle
     boxes for pause.
 Authors@R: c(
