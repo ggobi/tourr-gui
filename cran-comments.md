@@ -7,12 +7,7 @@
 
 0 errors | 0 warnings | 1 note
 
-* The maintainer email address has changed. I will send a confirmation 
-  from my old email address shortly.
-
-# Update to fix CRAN checks
-
-This is an update that fixes CRAN checks, a few incorrect packages constructions.
+* The maintainer has changed from Hadley Wickham to Di Cook.
 
 ## Reverse dependencies
 
