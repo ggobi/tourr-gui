@@ -1,7 +1,7 @@
 citHeader("To cite tourrGui in publications use:")
 
 citEntry(entry = "Article",
-  title = "{tourrGui}: A gWidgets GUI for the Tour to Explore High-Dimensional Data Using Low-Dimensional Projections} ",
+  title = "{tourrGui}: A gWidgets GUI for the Tour to Explore High-Dimensional Data Using Low-Dimensional Projections",
   author = personList(as.person("Bei Huang"),
                    as.person("Dianne Cook"),
                    as.person("Hadley Wickham")),
